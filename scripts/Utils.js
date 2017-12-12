@@ -1,0 +1,81 @@
+/**
+ * Created by Administrator on 2017/12/6.
+ * 工具模块，尽量将工具封装
+ */
+var fs = require('fs');
+
+
+var utils = {
+
+    //连接参数
+    con: {
+        host: 'localhost',
+        user: 'root',
+        password: '123456',
+        database: 'pxtar'
+    },
+
+    //sql语句封装
+    sqls: {
+        register: {
+            toUsers: 'insert into userinfo(UUID,userName,profession) values(?,?,?)',
+            toLogin: 'insert into logininfo(UUID,userinfos,password) values(?,?,?)'
+        },
+        modifyInfo: {
+            toIdentity: 'update userinfo set identity = ? where uuid=?',
+            toDiscription: 'update userinfo set discription = ? where uuid=?',
+            toPhoto: 'update userinfo set photo = ? where uuid=?',
+            toAddress: 'update userinfo set address = ? where uuid=?',
+            toProduction: 'update userinfo set production = ? where uuid=?'
+        },
+        logincheck:'select * from logininfo where userinfos like ?',
+        selectUserinfo: 'select * from userinfo where uuid=?',
+        selectLogininfo: 'select * from logininfo where uuid=?'
+    },
+
+
+    //复制当前路径下的文件夹到当前路径的新文件夹中
+    createAndCopy: function (existDir, createDir) {
+        var source = __dirname + '/' + existDir;
+        var destination = __dirname + '/' + createDir;
+        fs.mkdir(destination, function (err) {
+            if (err)
+                return console.error(err);
+            else
+                console.log("Create dir " + createDir + " finish");
+        });
+
+        var list = fs.readdirSync(source);
+
+        for (var i = 0; i < list.length; i++) {
+            fs.createReadStream(source + '/' + list[i]).pipe(fs.createWriteStream(destination + '/' + list[i]));
+        }
+        console.log('Files copy success!');
+    },
+
+    //生成uuid
+    uuid: function () {
+        var s = [];
+        var hexDigits = "0123456789abcdef";
+        for (var i = 0; i < 36; i++) {
+            s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+        }
+        s[14] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
+        s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
+        s[8] = s[13] = s[18] = s[23] = "-";
+
+        var uuid = s.join("");
+        return uuid;
+    },
+
+    //检验对应参数是否符合规范
+    check: function (username, password, phone, email) {
+        var err = '';
+        if (1) {
+            //依次检验用户名、密码、手机、邮箱
+        }
+        return err;
+    }
+};
+
+exports = module.exports = utils;
