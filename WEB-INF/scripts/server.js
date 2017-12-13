@@ -9,6 +9,7 @@
  * userInfo为主表，loginInfo为附表，操作主表对应的信息附表随之变化（UUID）
  * 清空表后使自增重新开始alter table table_name auto_increment=1;
  * */
+
 var express = require('express');
 var path = require('path');
 var bodyParser = require('body-parser');
@@ -55,13 +56,18 @@ var loginResults = {
  console.log(cookie);
  })
  */
+
+
 app.set('title', 'Pxtar Engine');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
-app.set('views', path.join(__dirname, 'views'));
+
+var currentDir = __dirname.split('WEB-INF');
+// console.log(currentDir[0],__dirname);
+app.set('views', path.join(currentDir[0],'public','views'));
+
 app.set('view engine', 'html');
 app.engine('html', require('ejs').renderFile);
-
 app.set('port', process.env.PORT || 3000);
 
 var connection = mysql.createConnection(utils.con);
@@ -72,23 +78,25 @@ var connection = mysql.createConnection(utils.con);
 //     邮箱:'633'
 // });
 connection.connect();
+/*console.log(process.cwd());
+process.chdir('G:/Pxtar/LoaclGit/pxtar');
+console.log(process.cwd());*/
 
-
-//测试数据：往数据库中添加对应信息
-// var addUserParams=[uuid,'没名字','漫画家'];
-// var addUserParams2 = [uuid,userinfos,'123456789'];
-// connection.query(addUserToUsers,addUserParams,function (err,result,fields) {
-//     if(err)
-//         return console.error(err);
-//     else
-//         console.log(result);
-// });
-// connection.query(addUserToLogin,addUserParams2,function (err,result,fields) {
-//     if(err)
-//         return console.error(err);
-//     else
-//         console.log(result);
-// });
+/*测试数据：往数据库中添加对应信息
+var addUserParams=[uuid,'没名字','漫画家'];
+var addUserParams2 = [uuid,userinfos,'123456789'];
+connection.query(addUserToUsers,addUserParams,function (err,result,fields) {
+    if(err)
+        return console.error(err);
+    else
+        console.log(result);
+});
+connection.query(addUserToLogin,addUserParams2,function (err,result,fields) {
+    if(err)
+        return console.error(err);
+    else
+        console.log(result);
+});*/
 app.get('/login', function (req, res) {
     res.type('html');
     res.render('login', {result: ''});
