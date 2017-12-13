@@ -5,11 +5,18 @@
     <title>homePage</title>
 </head>
 <body>
+<header>
+    <% include header.html%>
+</header>
+
 <div>
     <%- Hello %>
     <input type="button" value="sendMail" id="send">
     <!--文件夹上传写法-->
    <!-- <input type="file" id="file" webkitdirectory directory>-->
 </div>
+<footer>
+    <% include footer.html %>
+</footer>
 </body>
 </html>
