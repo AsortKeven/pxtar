@@ -246,13 +246,7 @@ app.get('/result', function (req, res) {
 app.use(function (req, res) {
     res.type('html');
     res.status(404);
-    res.send('404 - Not Found');
-});
-
-app.use(function (req, res) {
-    res.type('html');
-    res.status(500);
-    res.send('500 - Server Error')
+    res.render('404');
 });
 
 app.listen(app.get('port'), function () {
