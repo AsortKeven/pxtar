@@ -193,8 +193,7 @@ app.post('/register', upload.array(), function (req, res, next) {
     var email = req.body.email;
     var job = req.body.job;
     var uuid = utils.uuid();
-    // var userRandom = utils.userRandom();
-    var userRandom = 'pxtar148295';
+    var userRandom = utils.userRandom();
     var flag = true;
     var str = '%' + userRandom + '%';
     var rel;
