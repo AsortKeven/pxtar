@@ -64,7 +64,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 var currentDir = __dirname.split('WEB-INF');
 // console.log(currentDir[0],__dirname);
-app.set('views', path.join(currentDir[0],'public','views'));
+app.set('views', path.join(currentDir[0], 'public', 'views'));
 
 app.set('view engine', 'html');
 app.engine('html', require('ejs').renderFile);
@@ -77,26 +77,27 @@ var connection = mysql.createConnection(utils.con);
 //     手机:'222',
 //     邮箱:'633'
 // });
+
 connection.connect();
 /*console.log(process.cwd());
-process.chdir('G:/Pxtar/LoaclGit/pxtar');
-console.log(process.cwd());*/
+ process.chdir('G:/Pxtar/LoaclGit/pxtar');
+ console.log(process.cwd());*/
 
 /*测试数据：往数据库中添加对应信息
-var addUserParams=[uuid,'没名字','漫画家'];
-var addUserParams2 = [uuid,userinfos,'123456789'];
-connection.query(addUserToUsers,addUserParams,function (err,result,fields) {
-    if(err)
-        return console.error(err);
-    else
-        console.log(result);
-});
-connection.query(addUserToLogin,addUserParams2,function (err,result,fields) {
-    if(err)
-        return console.error(err);
-    else
-        console.log(result);
-});*/
+ var addUserParams=[uuid,'没名字','漫画家'];
+ var addUserParams2 = [uuid,userinfos,'123456789'];
+ connection.query(addUserToUsers,addUserParams,function (err,result,fields) {
+ if(err)
+ return console.error(err);
+ else
+ console.log(result);
+ });
+ connection.query(addUserToLogin,addUserParams2,function (err,result,fields) {
+ if(err)
+ return console.error(err);
+ else
+ console.log(result);
+ });*/
 app.get('/login', function (req, res) {
     res.type('html');
     res.render('login', {result: ''});
@@ -108,28 +109,27 @@ app.post('/login', upload.array(), function (req, res, next) {
     var password = req.body.password;
     var temp;
     console.log(username, password);
-
-    if (username !== '用户名' && username !== '手机' && username !== '邮箱') {
+   if (utils.check(username,password)) {
         var str = '%' + username + '%';
-                connection.query(utils.sqls.logincheck, str, function (err, result) {
-                    if (err || !result) {
-                        return console.error(err);
-                    }
-                    else if(result.length  === 0){
-                        temp = '用户名不存在！';
-                    }
-                    else if (password !== result[0].password) {
-                        temp = '密码错误！请核对！';
-                        console.log(result);
-                        console.log(temp);
-                    } else {
-                        loginResults.loginStatus = true;
-                        loginResults.uuid = result[0].UUID;
-                        console.log("loginstatus:"+loginResults.loginStatus);
-                        console.log("uuid:"+loginResults.uuid);
-                        temp = '欢迎您,' + JSON.parse(result[0].userInfos).用户名 + ',登陆成功！';
-                    }
-                });
+        connection.query(utils.sqls.logincheck, str, function (err, result) {
+            if (err || !result) {
+                return console.error(err);
+            }
+            else if (result.length === 0) {
+                temp = '用户名不存在！';
+            }
+            else if (password !== result[0].password) {
+                temp = '密码错误！请核对！';
+                console.log(result);
+                console.log(temp);
+            } else {
+                loginResults.loginStatus = true;
+                loginResults.uuid = result[0].UUID;
+                console.log("loginstatus:" + loginResults.loginStatus);
+                console.log("uuid:" + loginResults.uuid);
+                temp = '欢迎您,' + JSON.parse(result[0].userInfos).用户名 + ',登陆成功！';
+            }
+        });
     } else {
         temp = 'illegal input！';
     }
@@ -185,32 +185,54 @@ app.get('/register', function (req, res) {
     res.render('register');
 });
 
-//提交注册数据，存储到数据库，regitser页面显示当前注册用户职业
+//提交注册数据，存储到数据库，regitser页面显示当前注册用户用户名
 app.post('/register', upload.array(), function (req, res, next) {
-    var username = req.body.username;
+    var nickname = req.body.nickname;
     var password = req.body.password;
     var phone = req.body.phone;
     var email = req.body.email;
     var job = req.body.job;
     var uuid = utils.uuid();
-    var tousers = [uuid, username, job];
-    var userinfo = JSON.stringify({用户名: username, 手机: phone, 邮箱: email});
-    var tologin = [uuid, userinfo, password];
-    console.log(username, password, phone, email, job, uuid);
-    connection.query(utils.sqls.register.toUsers, tousers, function (err, result) {
+    // var userRandom = utils.userRandom();
+    var userRandom = 'pxtar148295';
+    var flag = true;
+    var str = '%' + userRandom + '%';
+    var rel;
+    connection.query(utils.sqls.logincheck, str, function (err, result) {
         if (err) {
             return console.error(err);
         } else
-            console.log(result);
+            rel = result;
+    });
+    setTimeout(function () {
+        if (rel.length !== 0) {
+            do {
+                if (JSON.parse(rel[0].userInfos).用户名 === userRandom) {
+                    userRandom = utils.userRandom();
+                }
+                else {
+                    flag = false;
+                }
+            } while (flag);
+        }
+    }, 50);
+
+    var tousers = [uuid, nickname, job];
+    var userinfo = JSON.stringify({用户名: userRandom, 手机: phone, 邮箱: email});
+    var tologin = [uuid, userinfo, password];
+    console.log(nickname, password, phone, email, job, uuid);
+    connection.query(utils.sqls.register.toUsers, tousers, function (err, result) {
+        if (err) {
+            return console.error(err);
+        }
     });
     connection.query(utils.sqls.register.toLogin, tologin, function (err, result) {
         if (err) {
             return console.error(err);
-        } else
-            console.log(result);
+        }
     });
     res.type('html');
-    res.render('about', {Hello: job});
+    res.render('about', {Hello: userRandom});
 });
 
 
