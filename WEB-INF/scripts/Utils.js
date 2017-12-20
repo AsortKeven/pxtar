@@ -3,7 +3,7 @@
  * 工具模块，尽量将工具封装
  */
 var fs = require('fs');
-
+var pinyin = require('pinyin');
 
 var utils = {
 
@@ -18,7 +18,7 @@ var utils = {
     //sql语句封装
     sqls: {
         register: {
-            toUsers: 'insert into userinfo(UUID,userName,profession) values(?,?,?)',
+            toUsers: 'insert into userinfo(UUID,nickName,profession) values(?,?,?)',
             toLogin: 'insert into logininfo(UUID,userinfos,password) values(?,?,?)'
         },
         modifyInfo: {
@@ -28,7 +28,7 @@ var utils = {
             toAddress: 'update userinfo set address = ? where uuid=?',
             toProduction: 'update userinfo set production = ? where uuid=?'
         },
-        logincheck:'select * from logininfo where userinfos like ?',
+        logincheck: 'select * from logininfo where userinfos like ?',
         selectUserinfo: 'select * from userinfo where uuid=?',
         selectLogininfo: 'select * from logininfo where uuid=?'
     },
@@ -68,13 +68,45 @@ var utils = {
         return uuid;
     },
 
-    //检验对应参数是否符合规范
-    check: function (username, password, phone, email) {
-        var err = '';
-        if (1) {
-            //依次检验用户名、密码、手机、邮箱
+    //生成用户名
+    userRandom: function () {
+        var s = 'pxtar';
+        var hexDigits = '0123456789';
+        for (var i = 0; i < 6; i++) {
+            s += hexDigits.substr(Math.floor(Math.random() * 10), 1);
         }
-        return err;
+        return s;
+    },
+
+    //汉字转拼音
+    chToPy: function (str) {
+        var temp = pinyin(str, {
+            style: pinyin.STYLE_FIRST_LETTER,
+            hetetonym: true
+        });
+        var final = '';
+        for (var i = 0; i < temp.length; i++) {
+            final += temp[i].toString();
+        }
+        return final;
+    },
+
+//检验对应参数是否符合规范
+    check: function (userstr, password) {
+        if (userstr.match(/^(pxtar)/)) {
+            console.log("it's username");
+            return true;
+        }
+        else if (userstr.match(/.*@.*/)) {
+            console.log("it's email");
+            return true;
+        }
+        else if ((/^1[3|4|5|8][0-9]\d{8}$/.test(userstr))) {
+            console.log("it's a phone");
+            return true;
+        }
+        else
+            return false;
     }
 };
 

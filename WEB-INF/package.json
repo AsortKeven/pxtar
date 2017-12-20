@@ -9,6 +9,11 @@
     "mysql": "^2.15.0",
     "nodemailer": "^4.4.0",
     "nodemailer-smtp-transport": "^2.7.4",
+    "pinyin": "^2.8.3",
     "unzip": "^0.1.11"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1"
   }
 }
