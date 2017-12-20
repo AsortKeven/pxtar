@@ -16,6 +16,13 @@ function result(str) {
     return final;
 }
 
-
-
 console.log(result('中国'));
+
+
+var str = '123456';
+//加密
+str = utils.strToBase64(str,'its my key');
+console.log(str);
+//解密
+var str2 = utils.base64ToStr(str,'its my key');
+console.log(str2);
