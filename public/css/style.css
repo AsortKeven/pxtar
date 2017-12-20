@@ -1,0 +1,7 @@
+*{padding:0;margin:0}
+.padding_left{padding-left: 30px;}
+ul{list-style: none}
+.clearfix1:after{content:"";height:0;line-height:0;display:block;visibility:hidden;clear:both;}
+.clearfix1{zoom:1;}
+.float_right{float: right;}
+.border_bottom{border-bottom: 1px solid #9d9d9d}

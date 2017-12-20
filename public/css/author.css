@@ -1,0 +1,17 @@
+body{font-size:12px;}
+.xk-user-header{width:20%;text-align:center;padding-top: 40px;border-right: 1px solid #9d9d9d;float:left;height:100%;}
+.xk-user-header ul{line-height: 56px;}
+.xk-user-header li{border-bottom: 1px solid #9d9d9d}
+.xk-user-user{width:100%;height:278px;line-height: 30px;border-bottom: 1px solid #9d9d9d}
+.xk-user-img{width:120px;height:120px;border: 1px solid #9d9d9d;border-radius: 50%;margin:0 auto;}
+.xk-user-works{float:left;width:79.9%}
+.xk-user-titel{line-height: 78px;border-bottom: 1px solid #9d9d9d;}
+.xk-user-works button{width:134px;line-height:36px;border: 1px solid #9d9d9d;background: #ffffff;border-radius: 6px;margin: 20px 0;}
+.xk-user-cartoon li{width:298px;height:305px;border: 1px solid #9d9d9d;float: left;margin:0 25px 25px 0;}
+.xk-user-content{height:222px;position: relative;}
+.xk-user-content p{position: absolute;right:0;left:0}
+.posibot{bottom: 0}
+.xk-user-cartoon p{padding:0 20px;line-height: 40px;}
+
+
+
