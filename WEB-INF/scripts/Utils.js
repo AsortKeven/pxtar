@@ -4,7 +4,7 @@
  */
 var fs = require('fs');
 var pinyin = require('pinyin');
-
+var crypto = require('crypto.js');
 var utils = {
 
     //连接参数
@@ -90,8 +90,17 @@ var utils = {
         }
         return final;
     },
+    //密码转base64
+    strToBase64: function (str, key) {
+        return crypto.cipher('aes-128-cbc', str, key);
+    },
 
-//检验对应参数是否符合规范
+    //base64转回密码
+    base64ToStr: function (str, key) {
+        return crypto.decipher('aes-128-cbc', str, key);
+    },
+
+    //检验对应参数是否符合规范
     check: function (userstr, password) {
         if (userstr.match(/^(pxtar)/)) {
             console.log("it's username");
