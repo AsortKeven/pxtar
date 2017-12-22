@@ -11,7 +11,7 @@ var utils = {
     con: {
         host: 'localhost',
         user: 'root',
-        password: '123456',
+        password: 'zeng0613',
         database: 'pxtar'
     },
 
