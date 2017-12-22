@@ -1,5 +1,5 @@
 define(function(){
-    // 前端模块路径配置
+    // 前端模块路径配置。
     require.config({
         baseUrl: '../js/',
         paths: {
