@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>编辑界面</title>
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/edit.css" rel="stylesheet">
+    <![endif]-->
+</head>
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav nav-pills">
+                    <li><a href="#">保存全局</a></li>
+                    <li><a href="#">导出动漫条漫包</a></li>
+                    <li><a href="#">上一步</a></li>
+                    <li><a href="#">下一步</a></li>
+                    <li><a href="#">预览全篇</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#">返回我的动态条漫</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <div class="row font12">
+            <div class="col-md-2">
+                <div class="row">
+                    <ul class="nav nav-tabs">
+                        <li><a href="#">移动</a> </li>
+                        <li><a href="#">缩放</a> </li>
+                        <li><a href="#">透明度</a> </li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <ul class="nav nav-tabs">
+                        <li><a href="#">淡入</a> </li>
+                        <li><a href="#">淡出</a> </li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <ul class="nav nav-tabs">
+                        <li><a href="#">闪烁</a> </li>
+                        <li><a href="#">悬浮</a> </li>
+                        <li><a href="#">摇晃</a> </li>
+                        <li><a href="#">旋转</a> </li>
+                        <li><a href="#">逐帧</a> </li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <ul class="nav nav-tabs">
+                        <li><a href="#">音效（仅对组件有效）</a> </li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <ul class="nav nav-tabs">
+                        <li><a href="#">动效设置</a> </li>
+                        <li class="navbar-right"><a href="#">取消</a></li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <ul class="nav nav-tabs nobord">
+                        <li><a href="#">动效说明</a> </li>
+                        <li class="navbar-right"><a href="#">闪烁</a></li>
+                    </ul>
+                    <ul class="list-group">
+                        <li class="list-group-item table-left">动效调节区域</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-7">
+                <div class="row">
+                    <ul class="nav nav-tabs">
+                        <li><a href="#">新建page</a> </li>
+                        <li><a href="#">插入page</a> </li>
+                        <li><a href="#">插入背景音乐（仅对page有效）</a> </li>
+                        <li class="navbar-right"><a href="#">预览选中的page</a> </li>
+                    </ul>
+                </div>
+                <div class="row backcolor">
+                    <ul class="nav nav-tabs nobord">
+                        <li><a href="#">page-1</a> </li>
+                        <li class="navbar-right"><a href="#">删除</a></li>
+                        <li class="navbar-right"><a href="#">高度设置</a></li>
+                        <li class="navbar-right"><a href="#">设置背景</a></li>
+                    </ul>
+                    <div class="page">
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="row">
+                    <ul class="nav nav-tabs">
+                        <li><a href="#">动效组件</a> </li>
+                        <li><a href="#">音效组件</a> </li>
+                        <li class="font10"><a href="#">导入组件</a></li>
+                        <li class="navbar-right font10"><a href="#">取消组件</a></li>
+                    </ul>
+                </div>
+                <div class="row rowheight">
+                    <div class="dropdown">
+                        <div class="dropdown-toggle container-fluid paddingtop"  data-toggle="dropdown">
+                            <ul class="list-group margin-bot0 clearfix1">
+                                <li class="list-group-item table-center"></li>
+                                <li>组件名称<span class="caret navbar-right"></span></li>
+                            </ul>
+                        </div>
+                        <ul class="dropdown-menu rel w100 font10" aria-labelledby="dropdownMenu1">
+                            <li><span>W:200px</span><span class="navbar-right">H:400px</span></li>
+                            <li><span>类型:jpg</span><span class="navbar-right">大小:20kb</span></li>
+                        </ul>
+                    </div>
+                    <div class="dropdown">
+                        <div class="dropdown-toggle container-fluid paddingtop"  data-toggle="dropdown">
+                            <ul class="list-group margin-bot0 clearfix1">
+                                <li class="list-group-item table-center"></li>
+                                <li>组件名称<span class="caret navbar-right"></span></li>
+                            </ul>
+                        </div>
+                        <ul class="dropdown-menu rel w100 font10" aria-labelledby="dropdownMenu1">
+                            <li><span>W:200px</span><span class="navbar-right">H:400px</span></li>
+                            <li><span>类型:jpg</span><span class="navbar-right">大小:20kb</span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row">
+                    <ul class="nav nav-tabs">
+                        <li><a href="#">图层</a> </li>
+                        <li><a href="#">page-1</a> </li>
+                        <li class="navbar-right font10"><a href="#">删除图层</a></li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <div class="dropdown">
+                        <div class="dropdown-toggle container-fluid paddingtop"  data-toggle="dropdown">
+                            <ul class="list-group margin-bot0 clearfix1">
+                                <li class="list-group-item table-center"></li>
+                                <li> 图层名称<span class="caret navbar-right"></span></li>
+                            </ul>
+                            <div class="clear"></div>
+                        </div>
+                        <ul class="dropdown-menu rel w100 font10" aria-labelledby="dropdownMenu1">
+                            <li><span>W:200px（可修改）</span><span class="navbar-right">H:400px（可修改）</span></li>
+                            <li><span>X:15px（可修改）</span><span class="navbar-right">Y:20px（可修改）</span></li>
+                        </ul>
+                    </div>
+                    <div class="dropdown">
+                        <div class="dropdown-toggle container-fluid paddingtop"  data-toggle="dropdown">
+                            <ul class="list-group margin-bot0 clearfix1">
+                                <li class="list-group-item table-center"></li>
+                                <li> 图层名称<span class="caret navbar-right"></span></li>
+                            </ul>
+                            <div class="clear"></div>
+                        </div>
+                        <ul class="dropdown-menu rel w100 font10" aria-labelledby="dropdownMenu1">
+                            <li><span>W:200px（可修改）</span><span class="navbar-right">H:400px（可修改）</span></li>
+                            <li><span>X:15px（可修改）</span><span class="navbar-right">Y:20px（可修改）</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<!--<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>-->
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<!--<script src="js/bootstrap.min.js"></script>-->
+</body>
+</html>
