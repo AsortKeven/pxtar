@@ -140,4 +140,4 @@ const utils = {
     }
 };
 
-module.exports = ES6-Utils;
+module.exports = utils;
