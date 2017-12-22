@@ -116,7 +116,29 @@ var utils = {
         }
         else
             return false;
+    },
+
+    //压缩文件
+    zipFile: function zipFile() {
+        var dirPath = __dirname + '/views/';
+        var dir = fs.readdirSync(dirPath);
+        var zipPath = 'test.zip';
+        var output = fs.createWriteStream(zipPath);
+        var zipArchiver = archiver('zip');
+
+        zipArchiver.pipe(output);
+
+        for (var i = 0; i < dir.length; i++) {
+            zipArchiver.append(fs.createReadStream(dirPath + dir[i]), {'name': dir[i]});
+        }
+        zipArchiver.finalize();
+    },
+
+    //解压文件
+    unzipFile: function unzipFile(filename, unzipPath) {
+        fs.createReadStream(filename).pipe(unzip.Extract({path: unzipPath}));
     }
+
 };
 
 exports = module.exports = utils;
