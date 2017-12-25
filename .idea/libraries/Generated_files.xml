@@ -1,0 +1,36 @@
+<component name="libraryTable">
+  <library name="Generated files" type="javaScript">
+    <properties>
+      <sourceFilesUrls>
+        <item url="file://$PROJECT_DIR$/WEB-INF/scripts/Utils.js" />
+      </sourceFilesUrls>
+    </properties>
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/dist/WEB-INF/scripts/ES6-server.js" />
+      <root url="file://$PROJECT_DIR$/dist/WEB-INF/scripts/ES6-server.js" />
+      <root url="file://$PROJECT_DIR$/js/WEB-INF/scripts/sss.js" />
+      <root url="file://$PROJECT_DIR$/js/WEB-INF/scripts/sss.js" />
+      <root url="file://$PROJECT_DIR$/scripts/server.js" />
+      <root url="file://$PROJECT_DIR$/scripts/Utils.js" />
+      <root url="file://$PROJECT_DIR$/scripts/pinyintest.js" />
+      <root url="file://$PROJECT_DIR$/scripts/ES6-server.js" />
+      <root url="file://$PROJECT_DIR$/scripts/server.js" />
+      <root url="file://$PROJECT_DIR$/scripts/Utils.js" />
+      <root url="file://$PROJECT_DIR$/scripts/ES6-server.js" />
+      <root url="file://$PROJECT_DIR$/scripts/pinyintest.js" />
+      <root url="file://$PROJECT_DIR$/js/WEB-INF/scripts/ES6-server.js" />
+      <root url="file://$PROJECT_DIR$/js/WEB-INF/scripts/ES6-server.js" />
+      <root url="file://$PROJECT_DIR$/js/WEB-INF/scripts/ES6-server.js" />
+      <root url="file://$PROJECT_DIR$/WEB-INF/scripts/ES6-server.js" />
+      <root url="file://$PROJECT_DIR$/js/WEB-INF/scripts/mailConfig.js" />
+      <root url="file://$PROJECT_DIR$/js/WEB-INF/ES6-Scripts/mailConfig.js" />
+      <root url="file://$PROJECT_DIR$/WEB-INF/scripts/ES6-server.js" />
+      <root url="file://$PROJECT_DIR$/js/WEB-INF/scripts/Utils.js" />
+      <root url="file://$PROJECT_DIR$/js/WEB-INF/ES6-Scripts/ES6-Utils.js" />
+      <root url="file://$PROJECT_DIR$/js/WEB-INF/ES6-Scripts/ES6-mail.js" />
+      <root url="file://$PROJECT_DIR$/js/WEB-INF/ES6-Scripts/ES6-server.js" />
+      <root url="file://$PROJECT_DIR$/WEB-INF/scripts/Utils.js" />
+    </CLASSES>
+    <SOURCES />
+  </library>
+</component>

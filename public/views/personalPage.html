@@ -2,70 +2,223 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>个人中心</title>
-    <link href="../css/style.css" rel="stylesheet">
-    <link href="../css/author.css" rel="stylesheet">
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <link href="../css/personalCss.css" rel="stylesheet">
+    <script type="text/javascript" src="../js/lib/jquery-3.1.1.min.js"></script>
 </head>
 <body>
-<div class="xk-user-header clearfix1">
-    <div class="xk-user-user">
-        <div class="xk-user-img"></div>
-        <h3>用户名</h3>
-        <p>合作作者</p>
-    </div>
-    <ul>
-        <li class="hand">我的动态条漫</li>
-        <li class="hand">账号管理</li>
-        <li class="hand">退出登录</li>
-    </ul>
-</div>
-<div class="xk-user-works clearfix1">
-    <div class="xk-user-titel padding_left"><h3>画诡</h3></div>
-    <div class="xk-user-cartoon padding_left">
-        <button class="hand">新建单话</button>
-        <ul>
-            <li>
-                <div class="xk-user-content border_bottom">
-                    <p><span class="hand">预览</span><span class="float_right hand">编辑</span></p>
-                    <p class="posibot hand">删除</p>
-                </div>
-                <p class="border_bottom"><span>画诡</span><span class="float_right">第一话</span></p>
-                <p>最后：2017-12-30 16：15：00</p>
+
+<section class="xk-per-body">
+    <button id="menu-toggle" class="menu-toggle"><span>Menu</span></button>
+    <div class="xk-per-nav xk-per-nav-style">
+        <ul class="xk-per-nav-box">
+            <li class="xk-per-nav-item xk-per-item-img">
+                <img src="../images/LZS1-15-dog.png" class="img-circle xk-per-item-imgstyle xk-per-item-head-pc  ">
+                <p class="xk-per-item-typeText">
+                    <span>用户名</span>
+                    <span>合作作者</span>
+                </p>
+
             </li>
-            <li>
-                <div class="xk-user-content border_bottom">
-                    <p><span class="hand">预览</span><span class="float_right hand">编辑</span></p>
-                    <p class="posibot hand">删除</p>
-                </div>
-                <p class="border_bottom"><span>画诡</span><span class="float_right">第一话</span></p>
-                <p>最后：2017-12-30 16：15：00</p>
+            <li class="xk-per-nav-item xk-per-nav-active">
+                我的动态漫画
             </li>
-            <li>
-                <div class="xk-user-content border_bottom">
-                    <p><span class="hand">预览</span><span class="float_right hand">编辑</span></p>
-                    <p class="posibot hand">删除</p>
-                </div>
-                <p class="border_bottom"><span>画诡</span><span class="float_right">第一话</span></p>
-                <p>最后：2017-12-30 16：15：00</p>
+            <li class="xk-per-nav-item">
+                账号管理
             </li>
-            <li>
-                <div class="xk-user-content border_bottom">
-                    <p><span class="hand">预览</span><span class="float_right hand">编辑</span></p>
-                    <p class="posibot hand">删除</p>
-                </div>
-                <p class="border_bottom"><span>画诡</span><span class="float_right">第一话</span></p>
-                <p>最后：2017-12-30 16：15：00</p>
-            </li>
-            <li>
-                <div class="xk-user-content border_bottom">
-                    <p><span class="hand">预览</span><span class="float_right hand">编辑</span></p>
-                    <p class="posibot hand">删除</p>
-                </div>
-                <p class="border_bottom"><span>画诡</span><span class="float_right">第一话</span></p>
-                <p>最后：2017-12-30 16：15：00</p>
+            <li class="xk-per-nav-item">
+                退出登录
             </li>
         </ul>
     </div>
-</div>
+
+    <div class="xk-per-content xk-per-content-style">
+        <div class="xk-per-cartoon xk-per-content-box">
+            <header class="xk-per-cartoon-title">
+                画诡
+            </header>
+            <div class="xk-per-cartoon-add">
+                <input class="xk-per-cartoon-addbtn" type="button" value="新建单话">
+            </div>
+            <div class="xk-per-list xk-per-list-style">
+                <div class="xk-per-cartoon-box">
+                    <p class="xk-cartoon-box-top xk-cartoon-item-style">
+                        <span class="xk-per-cartoon-txt xk-cartoon-box-btn xk-cartoon-box-left"><a href="#">预览</a></span>
+                        <span class="xk-per-cartoon-txt xk-cartoon-box-btn xk-cartoon-box-right"><a href="#">编辑</a></span>
+                        <span class="xk-per-cartoon-txt xk-cartoon-box-btn xk-cartoon-box-bottom"><a href="#">删除</a></span>
+                        <img class="xk-per-cartoon-img" src="../images/LZS1-15-dog.png">
+                    </p>
+                    <p class="xk-cartoon-box-center xk-cartoon-item-style">
+                        <span class="xk-per-cartoon-txt xk-per-cartoon-name">画诡</span>
+                        <span class="xk-per-cartoon-txt xk-per-cartoon-number">第一话</span>
+                    </p>
+                    <p class="xk-cartoon-box-bottom xk-cartoon-item-style">
+                        <span class="xk-per-cartoon-txt">最后：2017-12-30 16：15：00</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="xk-per-list xk-per-list-style">
+                <div class="xk-per-cartoon-box">
+                    <p class="xk-cartoon-box-top xk-cartoon-item-style">
+                        <span class="xk-per-cartoon-txt xk-cartoon-box-btn xk-cartoon-box-left"><a href="#">预览</a></span>
+                        <span class="xk-per-cartoon-txt xk-cartoon-box-btn xk-cartoon-box-right"><a href="#">编辑</a></span>
+                        <span class="xk-per-cartoon-txt xk-cartoon-box-btn xk-cartoon-box-bottom"><a href="#">删除</a></span>
+                        <img class="xk-per-cartoon-img" src="../images/LZS1-15-dog.png">
+                    </p>
+                    <p class="xk-cartoon-box-center xk-cartoon-item-style">
+                        <span class="xk-per-cartoon-txt xk-per-cartoon-name">画诡</span>
+                        <span class="xk-per-cartoon-txt xk-per-cartoon-number">第一话</span>
+                    </p>
+                    <p class="xk-cartoon-box-bottom xk-cartoon-item-style">
+                        <span class="xk-per-cartoon-txt">最后：2017-12-30 16：15：00</span>
+                    </p>
+                </div>
+            </div>
+            <div class="xk-per-list xk-per-list-style">
+                <div class="xk-per-cartoon-box">
+                    <p class="xk-cartoon-box-top xk-cartoon-item-style">
+                        <span class="xk-per-cartoon-txt xk-cartoon-box-btn xk-cartoon-box-left"><a href="#">预览</a></span>
+                        <span class="xk-per-cartoon-txt xk-cartoon-box-btn xk-cartoon-box-right"><a href="#">编辑</a></span>
+                        <span class="xk-per-cartoon-txt xk-cartoon-box-btn xk-cartoon-box-bottom"><a href="#">删除</a></span>
+                        <img class="xk-per-cartoon-img" src="../images/LZS1-15-dog.png">
+                    </p>
+                    <p class="xk-cartoon-box-center xk-cartoon-item-style">
+                        <span class="xk-per-cartoon-txt xk-per-cartoon-name">画诡</span>
+                        <span class="xk-per-cartoon-txt xk-per-cartoon-number">第一话</span>
+                    </p>
+                    <p class="xk-cartoon-box-bottom xk-cartoon-item-style">
+                        <span class="xk-per-cartoon-txt">最后：2017-12-30 16：15：00</span>
+                    </p>
+                </div>
+            </div>
+            <div class="xk-per-list xk-per-list-style">
+                <div class="xk-per-cartoon-box">
+                    <p class="xk-cartoon-box-top xk-cartoon-item-style">
+                        <span class="xk-per-cartoon-txt xk-cartoon-box-btn xk-cartoon-box-left"><a href="#">预览</a></span>
+                        <span class="xk-per-cartoon-txt xk-cartoon-box-btn xk-cartoon-box-right"><a href="#">编辑</a></span>
+                        <span class="xk-per-cartoon-txt xk-cartoon-box-btn xk-cartoon-box-bottom"><a href="#">删除</a></span>
+                        <img class="xk-per-cartoon-img" src="../images/LZS1-15-dog.png">
+                    </p>
+                    <p class="xk-cartoon-box-center xk-cartoon-item-style">
+                        <span class="xk-per-cartoon-txt xk-per-cartoon-name">画诡</span>
+                        <span class="xk-per-cartoon-txt xk-per-cartoon-number">第一话</span>
+                    </p>
+                    <p class="xk-cartoon-box-bottom xk-cartoon-item-style">
+                        <span class="xk-per-cartoon-txt">最后：2017-12-30 16：15：00</span>
+                    </p>
+                </div>
+            </div>
+            <div class="xk-per-list xk-per-list-style">
+                <div class="xk-per-cartoon-box">
+                    <p class="xk-cartoon-box-top xk-cartoon-item-style">
+                        <span class="xk-per-cartoon-txt xk-cartoon-box-btn xk-cartoon-box-left"><a href="#">预览</a></span>
+                        <span class="xk-per-cartoon-txt xk-cartoon-box-btn xk-cartoon-box-right"><a href="#">编辑</a></span>
+                        <span class="xk-per-cartoon-txt xk-cartoon-box-btn xk-cartoon-box-bottom"><a href="#">删除</a></span>
+                        <img class="xk-per-cartoon-img" src="../images/LZS1-15-dog.png">
+                    </p>
+                    <p class="xk-cartoon-box-center xk-cartoon-item-style">
+                        <span class="xk-per-cartoon-txt xk-per-cartoon-name">画诡</span>
+                        <span class="xk-per-cartoon-txt xk-per-cartoon-number">第一话</span>
+                    </p>
+                    <p class="xk-cartoon-box-bottom xk-cartoon-item-style">
+                        <span class="xk-per-cartoon-txt">最后：2017-12-30 16：15：00</span>
+                    </p>
+                </div>
+            </div>
+            <div class="xk-per-list xk-per-list-style">
+                <div class="xk-per-cartoon-box">
+                    <p class="xk-cartoon-box-top xk-cartoon-item-style">
+                        <span class="xk-per-cartoon-txt xk-cartoon-box-btn xk-cartoon-box-left"><a href="#">预览</a></span>
+                        <span class="xk-per-cartoon-txt xk-cartoon-box-btn xk-cartoon-box-right"><a href="#">编辑</a></span>
+                        <span class="xk-per-cartoon-txt xk-cartoon-box-btn xk-cartoon-box-bottom"><a href="#">删除</a></span>
+                        <img class="xk-per-cartoon-img" src="../images/LZS1-15-dog.png">
+                    </p>
+                    <p class="xk-cartoon-box-center xk-cartoon-item-style">
+                        <span class="xk-per-cartoon-txt xk-per-cartoon-name">画诡</span>
+                        <span class="xk-per-cartoon-txt xk-per-cartoon-number">第一话</span>
+                    </p>
+                    <p class="xk-cartoon-box-bottom xk-cartoon-item-style">
+                        <span class="xk-per-cartoon-txt">最后：2017-12-30 16：15：00</span>
+                    </p>
+                </div>
+            </div>
+            <div class="xk-per-list xk-per-list-style">
+                <div class="xk-per-cartoon-box">
+                    <p class="xk-cartoon-box-top xk-cartoon-item-style">
+                        <span class="xk-per-cartoon-txt xk-cartoon-box-btn xk-cartoon-box-left"><a href="#">预览</a></span>
+                        <span class="xk-per-cartoon-txt xk-cartoon-box-btn xk-cartoon-box-right"><a href="#">编辑</a></span>
+                        <span class="xk-per-cartoon-txt xk-cartoon-box-btn xk-cartoon-box-bottom"><a href="#">删除</a></span>
+                        <img class="xk-per-cartoon-img" src="../images/LZS1-15-dog.png">
+                    </p>
+                    <p class="xk-cartoon-box-center xk-cartoon-item-style">
+                        <span class="xk-per-cartoon-txt xk-per-cartoon-name">画诡</span>
+                        <span class="xk-per-cartoon-txt xk-per-cartoon-number">第一话</span>
+                    </p>
+                    <p class="xk-cartoon-box-bottom xk-cartoon-item-style">
+                        <span class="xk-per-cartoon-txt">最后：2017-12-30 16：15：00</span>
+                    </p>
+                </div>
+            </div>
+            <div class="xk-per-list xk-per-list-style">
+                <div class="xk-per-cartoon-box">
+                    <p class="xk-cartoon-box-top xk-cartoon-item-style">
+                        <span class="xk-per-cartoon-txt xk-cartoon-box-btn xk-cartoon-box-left"><a href="#">预览</a></span>
+                        <span class="xk-per-cartoon-txt xk-cartoon-box-btn xk-cartoon-box-right"><a href="#">编辑</a></span>
+                        <span class="xk-per-cartoon-txt xk-cartoon-box-btn xk-cartoon-box-bottom"><a href="#">删除</a></span>
+                        <img class="xk-per-cartoon-img" src="../images/LZS1-15-dog.png">
+                    </p>
+                    <p class="xk-cartoon-box-center xk-cartoon-item-style">
+                        <span class="xk-per-cartoon-txt xk-per-cartoon-name">画诡</span>
+                        <span class="xk-per-cartoon-txt xk-per-cartoon-number">第一话</span>
+                    </p>
+                    <p class="xk-cartoon-box-bottom xk-cartoon-item-style">
+                        <span class="xk-per-cartoon-txt">最后：2017-12-30 16：15：00</span>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="xk-per-content xk-per-content-style">
+        <div class="xk-per-cartoon xk-per-content-box">
+            <header class="xk-per-cartoon-title">
+                个人信息
+            </header>
+            <div class="xk-per-list xk-per-list-style">
+                <div class="xk-per-cartoon-box">
+                    <p class="xk-cartoon-box-top xk-cartoon-item-style">
+                        <span class="xk-per-cartoon-txt xk-cartoon-box-btn xk-cartoon-box-left"><a href="#">预览</a></span>
+                        <span class="xk-per-cartoon-txt xk-cartoon-box-btn xk-cartoon-box-right"><a href="#">编辑</a></span>
+                        <span class="xk-per-cartoon-txt xk-cartoon-box-btn xk-cartoon-box-bottom"><a href="#">删除</a></span>
+                        <img class="xk-per-cartoon-img" src="../images/LZS1-15-dog.png">
+                    </p>
+                    <p class="xk-cartoon-box-center xk-cartoon-item-style">
+                        <span class="xk-per-cartoon-txt xk-per-cartoon-name">画诡</span>
+                        <span class="xk-per-cartoon-txt xk-per-cartoon-number">第一话</span>
+                    </p>
+                    <p class="xk-cartoon-box-bottom xk-cartoon-item-style">
+                        <span class="xk-per-cartoon-txt">最后：2017-12-30 16：15：00</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+<script>
+    $('.menu-toggle').click(function (e) {
+        if($('.xk-per-nav').hasClass("xk-per-nav-click")){
+            $('.xk-per-nav').removeClass('xk-per-nav-click');
+        }else{
+            $('.xk-per-nav').addClass('xk-per-nav-click');
+        }
+
+    })
+
+</script>
 </body>
 </html>
