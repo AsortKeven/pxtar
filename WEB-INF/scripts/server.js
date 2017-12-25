@@ -111,8 +111,8 @@ app.post('/personalPage', upload.array(), function (req, res, next) {
     };
     searchAll().then(function (msg) {
         connection.query(utils.sqls.selectUserinfo, uuid, function (err, result) {
-            if (err) return console.error(err);else {
-                ;
+            if (err) return console.error(err);
+            else {
                 var _ref3 = [result[0].identity, result[0].discription, result[0].photo, result[0].address, result[0].production, result[0].profession, result[0].authority];
                 msg.ident = _ref3[0];
                 msg.discription = _ref3[1];

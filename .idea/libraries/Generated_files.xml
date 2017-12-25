@@ -2,14 +2,7 @@
   <library name="Generated files" type="javaScript">
     <properties>
       <sourceFilesUrls>
-        <item url="file://$PROJECT_DIR$/js/WEB-INF/scripts/mailConfig.js" />
-        <item url="file://$PROJECT_DIR$/js/WEB-INF/ES6-Scripts/mailConfig.js" />
-        <item url="file://$PROJECT_DIR$/WEB-INF/scripts/ES6-server.js" />
         <item url="file://$PROJECT_DIR$/WEB-INF/scripts/Utils.js" />
-        <item url="file://$PROJECT_DIR$/js/WEB-INF/scripts/Utils.js" />
-        <item url="file://$PROJECT_DIR$/js/WEB-INF/ES6-Scripts/ES6-Utils.js" />
-        <item url="file://$PROJECT_DIR$/js/WEB-INF/ES6-Scripts/ES6-mail.js" />
-        <item url="file://$PROJECT_DIR$/js/WEB-INF/ES6-Scripts/ES6-server.js" />
       </sourceFilesUrls>
     </properties>
     <CLASSES>
@@ -32,11 +25,11 @@
       <root url="file://$PROJECT_DIR$/js/WEB-INF/scripts/mailConfig.js" />
       <root url="file://$PROJECT_DIR$/js/WEB-INF/ES6-Scripts/mailConfig.js" />
       <root url="file://$PROJECT_DIR$/WEB-INF/scripts/ES6-server.js" />
-      <root url="file://$PROJECT_DIR$/WEB-INF/scripts/Utils.js" />
       <root url="file://$PROJECT_DIR$/js/WEB-INF/scripts/Utils.js" />
       <root url="file://$PROJECT_DIR$/js/WEB-INF/ES6-Scripts/ES6-Utils.js" />
       <root url="file://$PROJECT_DIR$/js/WEB-INF/ES6-Scripts/ES6-mail.js" />
       <root url="file://$PROJECT_DIR$/js/WEB-INF/ES6-Scripts/ES6-server.js" />
+      <root url="file://$PROJECT_DIR$/WEB-INF/scripts/Utils.js" />
     </CLASSES>
     <SOURCES />
   </library>
