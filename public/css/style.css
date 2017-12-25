@@ -1,8 +1,11 @@
 *{padding:0;margin:0}
+body{font-size: 16px;color: #95989a}
+a{color: #95989a;text-decoration: none}
 .padding_left{padding-left: 30px;}
 ul{list-style: none}
 .clearfix1:after{content:"";height:0;line-height:0;display:block;visibility:hidden;clear:both;}
 .clearfix1{zoom:1;}
 .float_right{float: right;}
+.float_left{float: left}
 .border_bottom{border-bottom: 1px solid #9d9d9d}
 .hand{cursor: pointer}
