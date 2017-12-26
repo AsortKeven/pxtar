@@ -19,7 +19,6 @@ const loginResult = {
     uuid: '',
     userinfo: {},
     isChecked: '',
-    ident: '',
     discription: '',
     photo: '',
     address: '',
@@ -125,7 +124,6 @@ app.post('/personalPage', upload.array(), (req, res, next) => {
                 return console.error(err);
             else
                 [
-                    msg.ident,
                     msg.discription,
                     msg.photo,
                     msg.address,
@@ -133,7 +131,6 @@ app.post('/personalPage', upload.array(), (req, res, next) => {
                     msg.profession,
                     msg.authority
                 ] = [
-                    result[0].identity,
                     result[0].discription,
                     result[0].photo,
                     result[0].address,
@@ -173,10 +170,10 @@ app.post('/register', upload.array(), (req, res) => {
         utils.uuid()
     ];
     let userRandom = utils.userRandom();
-    let rel;
     let tousers = [user.uuid, user.nickname, user.job];
     let userinfo = JSON.stringify({用户名: user.username, 手机: user.phone, 邮箱: user.email});
     let tologin = [user.uuid, userinfo, user.password];
+    let flag = true;
     console.log(user);
     let checkUser = () => {
         return new Promise((resolve, reject) => {
@@ -186,7 +183,6 @@ app.post('/register', upload.array(), (req, res) => {
                 } else {
                     resolve(result);
                 }
-
             });
         })
     };
