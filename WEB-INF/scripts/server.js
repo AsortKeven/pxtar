@@ -1,5 +1,7 @@
+'use strict';
+
 /**
- * Created by Administrator on 2017/12/22.
+ * Created by Administrator on 2017/12/15.
  */
 /**
  * Created by Administrator on 2017/12/14.
@@ -12,13 +14,13 @@ var multer = require('multer');
 var mysql = require('mysql');
 var upload = multer();
 var app = express();
-var utils = require('./Utils');
+var utils = require('./ES6-Utils');
+
 var loginResult = {
     loginStatus: false,
     uuid: '',
     userinfo: {},
     isChecked: '',
-    ident: '',
     discription: '',
     photo: '',
     address: '',
@@ -27,8 +29,10 @@ var loginResult = {
     authority: ''
 };
 
+app.set('title', 'Pxtar Engine');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
 var currentDir = __dirname.split('WEB-INF');
 // console.log(currentDir[0],__dirname);
 app.set('views', path.join(currentDir[0], 'public', 'views'));
@@ -52,11 +56,11 @@ app.post('/login', upload.array(), function (req, res, next) {
     var temp = void 0;
     var search = void 0;
     console.log(username, password);
-    if (username !== '用户名' && username !== '手机' && username !== '邮箱') {
-        var str = '%' + username + '%';
+    if (utils.check(username, password)) {
+        var _str = '%' + username + '%';
         search = function search() {
             return new Promise(function (resolve, reject) {
-                connection.query(utils.sqls.logincheck, str, function (err, result) {
+                connection.query(utils.sqls.logincheck, _str, function (err, result) {
                     if (err || !result) {
                         return console.error(err);
                     } else if (result.length === 0) {
@@ -111,16 +115,15 @@ app.post('/personalPage', upload.array(), function (req, res, next) {
     };
     searchAll().then(function (msg) {
         connection.query(utils.sqls.selectUserinfo, uuid, function (err, result) {
-            if (err) return console.error(err);
-            else {
-                var _ref3 = [result[0].identity, result[0].discription, result[0].photo, result[0].address, result[0].production, result[0].profession, result[0].authority];
-                msg.ident = _ref3[0];
-                msg.discription = _ref3[1];
-                msg.photo = _ref3[2];
-                msg.address = _ref3[3];
-                msg.production = _ref3[4];
-                msg.profession = _ref3[5];
-                msg.authority = _ref3[6];
+            if (err) return console.error(err);else {
+                ;
+                var _ref3 = [result[0].discription, result[0].photo, result[0].address, result[0].production, result[0].profession, result[0].authority];
+                msg.discription = _ref3[0];
+                msg.photo = _ref3[1];
+                msg.address = _ref3[2];
+                msg.production = _ref3[3];
+                msg.profession = _ref3[4];
+                msg.authority = _ref3[5];
             }msg.userinfo = JSON.parse(msg.userinfo);
             console.log(msg);
             res.type('html');
@@ -137,18 +140,45 @@ app.get('/register', function (req, res) {
 //提交注册数据，存储到数据库，regitser页面显示当前注册用户职业
 app.post('/register', upload.array(), function (req, res) {
     var user = {};
-    var _ref4 = [req.body.username, req.body.password, req.body.phone, req.body.email, req.body.job, utils.uuid()];
-    user.username = _ref4[0];
+    var _ref4 = [req.body.nickname, req.body.password, req.body.phone, req.body.email, req.body.job, utils.uuid()];
+    user.nickname = _ref4[0];
     user.password = _ref4[1];
     user.phone = _ref4[2];
     user.email = _ref4[3];
     user.job = _ref4[4];
     user.uuid = _ref4[5];
 
-    var tousers = [user.uuid, user.username, user.job];
+    var userRandom = utils.userRandom();
+    var tousers = [user.uuid, user.nickname, user.job];
     var userinfo = JSON.stringify({ 用户名: user.username, 手机: user.phone, 邮箱: user.email });
     var tologin = [user.uuid, userinfo, user.password];
+    var flag = true;
     console.log(user);
+    var checkUser = function checkUser() {
+        return new Promise(function (resolve, reject) {
+            connection.query(utils.sqls.logincheck, str, function (err, result) {
+                if (err) {
+                    return console.error(err);
+                } else {
+                    resolve(result);
+                }
+            });
+        });
+    };
+    checkUser().then(function (rel) {
+        if (rel.length !== 0) {
+            console.log("start check");
+            do {
+                if (JSON.parse(rel[0].userInfos).用户名 === userRandom) {
+                    userRandom = utils.userRandom();
+                    console.log("new random");
+                } else {
+                    flag = false;
+                }
+            } while (flag);
+        }
+    });
+
     var addUser = function addUser() {
         return new Promise(function (resolve, reject) {
             connection.query(utils.sqls.register.toUsers, tousers, function (err, result) {
