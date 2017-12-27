@@ -34,7 +34,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 let currentDir = __dirname.split('WEB-INF');
 // console.log(currentDir[0],__dirname);
 app.set('views', path.join(currentDir[0], 'public', 'views'));
-
+app.use(express.static(path.join(currentDir[0], 'public')));
 app.set('view engine', 'html');
 app.engine('html', require('ejs').renderFile);
 app.set('port', process.env.PORT || 3000);
@@ -249,11 +249,8 @@ app.get('/result', (req, res) => {
 let trunk = '<a href="/register">注册</a>';
 
 app.get('/', (req, res) => {
-    req.on('data', (data) => {
-        trunk += data;
-    });
     res.type('html');
-    res.render('home', {Hello: trunk});
+    res.render('index', {Hello: trunk});
 });
 
 app.use('*', (req, res) => {

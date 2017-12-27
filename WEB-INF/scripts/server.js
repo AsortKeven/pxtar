@@ -14,7 +14,7 @@ var multer = require('multer');
 var mysql = require('mysql');
 var upload = multer();
 var app = express();
-var utils = require('./ES6-Utils');
+var utils = require('./Utils');
 
 var loginResult = {
     loginStatus: false,
@@ -36,7 +36,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 var currentDir = __dirname.split('WEB-INF');
 // console.log(currentDir[0],__dirname);
 app.set('views', path.join(currentDir[0], 'public', 'views'));
-
+app.use(express.static(path.join(currentDir[0], 'public','source')));
 app.set('view engine', 'html');
 app.engine('html', require('ejs').renderFile);
 app.set('port', process.env.PORT || 3000);
@@ -45,9 +45,15 @@ var connection = mysql.createConnection(utils.con);
 
 connection.connect();
 
-app.get('/login', function (req, res) {
+/*app.get('/edit', function (req, res) {
     res.type('html');
-    res.render('login', { result: '' });
+    res.render('edit');
+});*/
+
+app.get('/login', function (req, res) {
+
+    res.type('html');
+    res.render('login',{result:'11111'});
 });
 
 app.post('/login', upload.array(), function (req, res, next) {
@@ -93,7 +99,7 @@ app.post('/login', upload.array(), function (req, res, next) {
 
 app.get('/personalPage', function (req, res) {
     res.type('html');
-    res.render('personalPage', { result: 1111 });
+    res.render('personalPage', { datas: '1111' });
 });
 
 //提交uuid到后台数据库，查询数据并返回
@@ -219,11 +225,8 @@ app.get('/result', function (req, res) {
 var trunk = '<a href="/register">注册</a>';
 
 app.get('/', function (req, res) {
-    req.on('data', function (data) {
-        trunk += data;
-    });
     res.type('html');
-    res.render('home', { Hello: trunk });
+    res.render('index', { Hello: trunk });
 });
 
 app.use('*', function (req, res) {

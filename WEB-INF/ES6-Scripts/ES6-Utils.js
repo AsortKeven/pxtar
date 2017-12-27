@@ -140,4 +140,4 @@ const utils = {
     }
 };
 
-module.exports = utils;
+exports = module.exports = utils;
