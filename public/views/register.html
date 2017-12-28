@@ -2,22 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name ="viewport" content="width = device-width,initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/register.css">
     <title>regiter</title>
 </head>
 <body>
-<form action="register" method="post">
-    昵称：<input type="text" name="nickname"><br>
-    密码：<input type="password" name="password"><br>
-    重复密码：<input type="password" name="checkpass"><br>
-    手机：<input type="text" name="phone"><br>
-    邮箱：<input type="email" name="email"><br>
-    职业：<select name="job">
-             <option value="学生">学生</option>
-             <option value="漫画家" selected>漫画家</option>
-             <option value="程序员">程序员</option>
-        </select><br>
-    <input type="submit" value="注册">
-</form>
+<div class="xk-reg-nav">
+    <form action="register" method="post">
+        <p>昵称：<input type="text" name="nickname"></p>
+        <p>密码：<input type="password" name="password"></p>
+        <p>重复密码：<input type="password" name="checkpass"></p>
+        <p>手机：<input type="text" name="phone"></p>
+        <p>邮箱：<input type="email" name="email"></p>
+        <p>职业：<select name="job">
+            <option value="学生">学生</option>
+            <option value="漫画家" selected>漫画家</option>
+            <option value="程序员">程序员</option>
+        </select></p>
+        <input type="submit" value="注册">
+    </form>
+</div>
 
 </body>
 </html>
