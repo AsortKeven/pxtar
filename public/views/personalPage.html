@@ -216,16 +216,22 @@
         <header class="xk-per-cartoon-title" style="text-align: center">
             个人信息
         </header>
-        <div class="xk-per-infos">
+        <form class="xk-per-infos" action="modify" method="post">
             <img class="img-circle" src="images/1.jpg"><br>
-            昵称:<span data-p='input'>XXX</span><br>
-            用户名:<span data-p='input'>pxtar123456</span><br>
-            邮箱:<span data-p='input'>XXX</span><br>
-            QQ:<span data-p='input'>XXX</span><br>
-            电话:<span data-p='input'>XXX</span><br>
-            <input type="button" value="修改信息">
-            <input type="button" value="成为会员">
-        </div>
+            <div class="xk-per-input">
+                <p>昵称:<span id="xk-per-nickname">XXX</span></p>
+                <p>用户名:<span id="xk-per-username">pxtar123456</span></p>
+                <p>QQ:<span id="xk-per-QQ">XXX</span></p>
+                <p>电话:<span id="xk-per-phone">XXX</span></p>
+                <p>邮箱:<span id="xk-per-email">XXX</span></p>
+            </div>
+            <input type="button" value="修改信息" id="xk-per-modify">
+            <input type="button" value="成为会员" id="xk-per-beVip">
+            <div id="xk-per-save" style="display: none">
+                <input type="submit" value="保存" class="xk-per-saveGroup">
+                <input type="button" value="取消" class="xk-per-saveGroup">
+            </div>
+        </form>
     </div>
     <!-- <div class="xk-per-content xk-per-content-style">
          <div class="xk-per-cartoon xk-per-content-box">

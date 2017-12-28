@@ -104,21 +104,21 @@ var utils = {
     },
 
     //检验对应参数是否符合规范
-    check: function (userstr, password) {
+    check: function (userstr) {
         if (userstr.match(/^(pxtar)/)) {
             console.log("it's username");
-            return true;
+            return 'username';
         }
         else if (userstr.match(/.*@.*/)) {
             console.log("it's email");
-            return true;
+            return 'email';
         }
         else if ((/^1[3|4|5|8][0-9]\d{8}$/.test(userstr))) {
             console.log("it's a phone");
-            return true;
+            return 'phone';
         }
         else
-            return false;
+            return console.error('it`s not a correct userstr!');
     },
 
     //压缩文件

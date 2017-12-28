@@ -34,7 +34,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 let currentDir = __dirname.split('WEB-INF');
 // console.log(currentDir[0],__dirname);
 app.set('views', path.join(currentDir[0], 'public', 'views'));
-app.use(express.static(path.join(currentDir[0], 'public')));
+app.use(express.static(path.join(currentDir[0], 'public', 'source')));
 app.set('view engine', 'html');
 app.engine('html', require('ejs').renderFile);
 app.set('port', process.env.PORT || 3000);
@@ -43,11 +43,19 @@ const connection = mysql.createConnection(utils.con);
 
 connection.connect();
 
+//get登录
 app.get('/login', (req, res) => {
     res.type('html');
     res.render('login', {result: ''})
 });
 
+//get个人中心
+app.get('/personalPage', (req, res) => {
+    res.type('html');
+    res.render('personalPage', {datas: '1111'});
+});
+
+//post登录页面
 app.post('/login', upload.array(), (req, res, next) => {
     let username = req.body.username;
     let password = req.body.password;
@@ -146,6 +154,7 @@ app.post('/personalPage', upload.array(), (req, res, next) => {
     })
 });
 
+//get注册
 app.get('/register', (req, res) => {
     res.type('html');
     res.render('register');
