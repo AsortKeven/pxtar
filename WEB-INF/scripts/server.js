@@ -222,8 +222,29 @@ app.get('/result', function (req, res) {
     res.render('result', { Hello: trunk });
 });
 
-var trunk = '<a href="/register">注册</a>';
 
+//获取验证码
+var checkNum ={};
+app.post('/getCheck',upload.array(),function (req,res) {
+    var user = req.body.user;
+    var type = utils.check(user);
+    /* TODO 1 数据库查询，找到邮箱
+    *  TODO 2 随机生成验证码并存储验证码和对应的用户信息
+    *  TODO 3 返回状态给前端
+    * */
+});
+
+//提交验证码
+app.post('/getCheckResult',upload.array(),function (req,res) {
+        /* TODO 1 获取用户传输数据
+        *  TODO 2 检查验证码
+        *  TODO 3 检查数据合法性
+        *  TODO 4 数据库查询，存储数据到对应位置
+        *  TODO 5
+        * */
+});
+
+var trunk = '<a href="/register">注册</a>';
 app.get('/', function (req, res) {
     res.type('html');
     res.render('index', { Hello: trunk });
