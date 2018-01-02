@@ -203,6 +203,9 @@ require(['config'], function () {
                 105: {
                     name: '预览全篇'
                 },
+                106: {
+                    name: '返回我的动态条漫'
+                },
 
                 201: {
                     name: '移动',
