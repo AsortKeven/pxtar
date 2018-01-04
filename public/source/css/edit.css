@@ -23,6 +23,7 @@
 .xk-edit-edit {
     padding-top: 64px;
     padding: 56px 0 0 0;
+    min-width: 800px;
     height: 100%;
     /*height: -moz-calc(100% - 55px);*/
     /*height: -webkit-calc(100% - 55px);*/
@@ -38,8 +39,8 @@
 .xk-edit-left {
     position: fixed;
     width: 290px;
-    /*float: left;*/
-    font-size: 14px
+    border-right: solid 1px #9d9d9d;
+    font-size: 14px;
 }
 .xk-edit-left:before{
     content: " ";
@@ -56,7 +57,7 @@
 
 .xk-edit-left-top {
     height: 40%;
-    min-height: 280px;
+    overflow-y: auto;
     border-bottom: 2px solid #9d9d9d;
     padding: 0 20px;
 }
@@ -80,8 +81,12 @@
     border-bottom: 1px solid #9d9d9d
 }
 .xk-edit-left-bottom-body{
+    height: 90%;
+    height: -moz-calc(100% - 36px );
+    height: -webkit-calc(100% - 36px );
+    height: calc(100% - 36px );
     padding: 0 20px;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 .xk-edit-left-bottom-body p {
     line-height: 46px
@@ -94,9 +99,10 @@
 
 .xk-edit-right {
     position: fixed;
-
-    right: 0;
+    top:55px;
+    right: 0px;
     width: 290px;
+    border-left: 1px solid #9d9d9d;
     font-size: 14px;
 }
 .xk-edit-right-item{
@@ -123,7 +129,7 @@
     height: -moz-calc(100% - 45px );
     height: -webkit-calc(100% - 45px );
     height: calc(100% - 45px );
-    overflow-y: scroll;
+    overflow-y: auto;
     border-bottom: 1px solid #9d9d9d
 }
 
@@ -145,7 +151,7 @@
 }
 
 .xk-edit-right-data {
-    margin-left: 2px;
+    padding: 0 1px;
     background: #dedede;
     font-size: 12px
 }
@@ -157,14 +163,13 @@
     width: -webkit-calc(100% - (290px + 290px) );
     width: calc(100% - (290px + 290px) );
     min-width: 590px;
+    padding: 0 1px;
     left: 290px;
     /*min-height: 600px;*/
     /*height: 100%;*/
     overflow: hidden;
     font-size: 12px;
     /*margin: 0 291px;*/
-    border-right: 1px solid #9d9d9d;
-    border-left: 1px solid #9d9d9d;
 }
 
 .xk-edit-center-top {
@@ -211,7 +216,7 @@ input[type=range]:focus {
     height: -webkit-calc(100% - 45px );
     height: calc(100% - 45px );
     /*padding: 0 60px;*/
-    overflow-y: scroll;
+    overflow-y: auto;
     background: #dbdbdb
 }
 .xk-edit-center-page ul{
