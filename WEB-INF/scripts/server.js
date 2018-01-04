@@ -45,10 +45,10 @@ var connection = mysql.createConnection(utils.con);
 
 connection.connect();
 
-/*app.get('/edit', function (req, res) {
+app.get('/edit', function (req, res) {
     res.type('html');
     res.render('edit');
-});*/
+});
 
 app.get('/login', function (req, res) {
 
