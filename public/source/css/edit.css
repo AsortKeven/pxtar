@@ -57,7 +57,7 @@
 
 .xk-edit-left-top {
     height: 40%;
-    min-height: 280px;
+    overflow-y: auto;
     border-bottom: 2px solid #9d9d9d;
     padding: 0 20px;
 }
@@ -81,8 +81,12 @@
     border-bottom: 1px solid #9d9d9d
 }
 .xk-edit-left-bottom-body{
+    height: 90%;
+    height: -moz-calc(100% - 36px );
+    height: -webkit-calc(100% - 36px );
+    height: calc(100% - 36px );
     padding: 0 20px;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 .xk-edit-left-bottom-body p {
     line-height: 46px
@@ -125,7 +129,7 @@
     height: -moz-calc(100% - 45px );
     height: -webkit-calc(100% - 45px );
     height: calc(100% - 45px );
-    overflow-y: scroll;
+    overflow-y: auto;
     border-bottom: 1px solid #9d9d9d
 }
 
@@ -212,7 +216,7 @@ input[type=range]:focus {
     height: -webkit-calc(100% - 45px );
     height: calc(100% - 45px );
     /*padding: 0 60px;*/
-    overflow-y: scroll;
+    overflow-y: auto;
     background: #dbdbdb
 }
 .xk-edit-center-page ul{
