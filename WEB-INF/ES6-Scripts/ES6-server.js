@@ -43,26 +43,23 @@ const connection = mysql.createConnection(utils.con);
 
 connection.connect();
 
-//get登录
+app.get('/edit', (req, res) => {
+    res.type('html');
+    res.render('edit');
+});
+
 app.get('/login', (req, res) => {
     res.type('html');
     res.render('login', {result: ''})
 });
 
-//get个人中心
-app.get('/personalPage', (req, res) => {
-    res.type('html');
-    res.render('personalPage', {datas: '1111'});
-});
-
-//post登录页面
 app.post('/login', upload.array(), (req, res, next) => {
     let username = req.body.username;
     let password = req.body.password;
     let temp;
     let search;
     console.log(username, password);
-    if (utils.check(username, password)) {
+    if (utils.check(username)) {
         let str = '%' + username + '%';
         search = () => {
             return new Promise((resolve, reject) => {
@@ -92,7 +89,7 @@ app.post('/login', upload.array(), (req, res, next) => {
     search().then((msg) => {
         console.log(msg);
         res.type('html');
-        res.render('login', {result: msg});
+        res.render('personalPage', {result: msg});
     })
 });
 
@@ -154,7 +151,6 @@ app.post('/personalPage', upload.array(), (req, res, next) => {
     })
 });
 
-//get注册
 app.get('/register', (req, res) => {
     res.type('html');
     res.render('register');
@@ -253,6 +249,92 @@ app.get('/result', (req, res) => {
     console.log(trunk);
     res.type('html');
     res.render('result', {Hello: trunk});
+});
+
+//获取验证码
+let curChecks = {
+    userstr: [],
+    checkNum: []
+};
+app.post('/getCheck', upload.array(), (req, res) => {
+    let user = req.body.user;
+    let type = utils.check(user);
+    let email;
+    let search;
+    if (type) {
+        let str = '%' + user + '%';
+        search = () => {
+            return new Promise((resolve, reject) => {
+                connection.query(utils.sqls.logincheck, str, (err, result) => {
+                    if (err || !result) {
+                        return console.error(err || 'result不存在!');
+                    } else {
+                        email = JSON.parse(result[0].userInfos).邮箱;
+                        let _checkNUm = utils.checkNum();
+                        let strs = '您的验证码为:' + '<strong>' + _checkNUm + '</strong>' + '，30分钟内有效，' +
+                            '请不要告诉任何人此验证码，以免造成不必要的损失，如不是您本人操作，请忽略';
+                        sendMail(email, '来自动态条漫在线编辑器的验证码', strs);
+                        curChecks.checkNum.push(_checkNUm);
+                        curChecks.userstr.push(user);
+                    }
+                    resolve(user);
+                });
+            });
+        };
+
+    } else {
+        return console.error('未找到用户！');
+    }
+    search().then((msg) => {
+        res.send('CheckNum has been send!');
+    })
+});
+
+//提交验证码检验
+app.post('/getCheckResult', upload.array(), (req, res) => {
+    let checkResult = false;
+    let user = req.body.user;
+    let checkNum = req.body.checkNum;
+    for (let i in curChecks.userstr) {
+        if (user === curChecks.userstr[i]) {
+            if (checkNum === curChecks.checkNum[i]) {
+                checkResult = true;
+            }
+        }
+    }
+    res.send(checkResult);
+});
+
+//修改密码
+app.post('/resetPass',upload.array(),(req,res)=>{
+    let user = req.body.user;
+    let newPass = req.body.password;
+    let userstr = '%' + user +'%';
+    let curUUID;
+    let search = ()=>{
+        return new Promise((resolve,reject)=>{
+            connection.query(utils.sqls.logincheck,userstr,(err,result)=>{
+                if(err || !result){
+                    return console.error(err || 'result不存在!');
+                }else {
+                    curUUID = result[0].UUID;
+                }
+                resolve(curUUID,newPass);
+            })
+        })
+    };
+    search().then((uuid,pass)=>{
+        let strs = [pass,uuid];
+        connection.query(utils.sqls.modifyInfo.toPassword,strs,(err,result)=>{
+            if(err){
+                return console.error(err);
+            }else {
+                res.type('html');
+                res.render('login');
+            }
+        })
+    })
+
 });
 
 let trunk = '<a href="/register">注册</a>';

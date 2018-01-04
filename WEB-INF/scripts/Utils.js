@@ -14,7 +14,7 @@ var utils = {
     con: {
         host: 'localhost',
         user: 'root',
-        password: 'rung',
+        password: '123456',
         database: 'pxtar'
     },
 
@@ -79,6 +79,16 @@ var utils = {
             s += hexDigits.substr(Math.floor(Math.random() * 10), 1);
         }
         return s;
+    },
+
+    //生成验证码
+    checkNum: function checkNum() {
+        var s = [];
+        var hexDigits = '0123456789abcdefghijklmnopqretuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        for (var i = 0; i < 6; i++) {
+            s[i] = hexDigits.substr(Math.floor(Math.random() * 62), 1);
+        }
+        return s.join("");
     },
 
     //汉字转拼音

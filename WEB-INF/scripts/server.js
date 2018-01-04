@@ -45,10 +45,10 @@ var connection = mysql.createConnection(utils.con);
 
 connection.connect();
 
-/*app.get('/edit', function (req, res) {
+app.get('/edit', function (req, res) {
     res.type('html');
     res.render('edit');
-});*/
+});
 
 app.get('/login', function (req, res) {
 
@@ -62,7 +62,7 @@ app.post('/login', upload.array(), function (req, res, next) {
     var temp = void 0;
     var search = void 0;
     console.log(username, password);
-    if (utils.check(username, password)) {
+    if (utils.check(username)) {
         var _str = '%' + username + '%';
         search = function search() {
             return new Promise(function (resolve, reject) {
@@ -222,27 +222,89 @@ app.get('/result', function (req, res) {
     res.render('result', { Hello: trunk });
 });
 
-
 //获取验证码
-var checkNum ={};
-app.post('/getCheck',upload.array(),function (req,res) {
+var curChecks = {
+    userstr: [],
+    checkNum: []
+};
+app.post('/getCheck', upload.array(), function (req, res) {
     var user = req.body.user;
     var type = utils.check(user);
-    /* TODO 1 数据库查询，找到邮箱
-    *  TODO 2 随机生成验证码并存储验证码和对应的用户信息
-    *  TODO 3 返回状态给前端
-    * */
+    var email = void 0;
+    var search = void 0;
+    if (type) {
+        var _str2 = '%' + user + '%';
+        search = function search() {
+            return new Promise(function (resolve, reject) {
+                connection.query(utils.sqls.logincheck, _str2, function (err, result) {
+                    if (err || !result) {
+                        return console.error(err || 'result不存在!');
+                    } else {
+                        email = JSON.parse(result[0].userInfos).邮箱;
+                        var _checkNUm = utils.checkNum();
+                        var strs = '您的验证码为:' + '<strong>' + _checkNUm + '</strong>' + '，30分钟内有效，' + '请不要告诉任何人此验证码，以免造成不必要的损失，如不是您本人操作，请忽略';
+                        sendMail(email, '来自动态条漫在线编辑器的验证码', strs);
+                        curChecks.checkNum.push(_checkNUm);
+                        curChecks.userstr.push(user);
+                    }
+                    resolve(user);
+                });
+            });
+        };
+    } else {
+        return console.error('未找到用户！');
+    }
+    search().then(function (msg) {
+        res.send('CheckNum has been send!');
+    });
 });
 
-//提交验证码
-app.post('/getCheckResult',upload.array(),function (req,res) {
-        /* TODO 1 获取用户传输数据
-        *  TODO 2 检查验证码
-        *  TODO 3 检查数据合法性
-        *  TODO 4 数据库查询，存储数据到对应位置
-        *  TODO 5
-        * */
+//提交验证码检验
+app.post('/getCheckResult', upload.array(), function (req, res) {
+    var checkResult = false;
+    var user = req.body.user;
+    var checkNum = req.body.checkNum;
+    for (var i in curChecks.userstr) {
+        if (user === curChecks.userstr[i]) {
+            if (checkNum === curChecks.checkNum[i]) {
+                checkResult = true;
+            }
+        }
+    }
+    res.send(checkResult);
 });
+
+//修改密码
+app.post('/resetPass', upload.array(), function (req, res) {
+    var user = req.body.user;
+    var newPass = req.body.password;
+    var userstr = '%' + user + '%';
+    var curUUID = void 0;
+    var search = function search() {
+        return new Promise(function (resolve, reject) {
+            connection.query(utils.sqls.logincheck, userstr, function (err, result) {
+                if (err || !result) {
+                    return console.error(err || 'result不存在!');
+                } else {
+                    curUUID = result[0].UUID;
+                }
+                resolve(curUUID, newPass);
+            });
+        });
+    };
+    search().then(function (uuid, pass) {
+        var strs = [pass, uuid];
+        connection.query(utils.sqls.modifyInfo.toPassword, strs, function (err, result) {
+            if (err) {
+                return console.error(err);
+            } else {
+                res.type('html');
+                res.render('login');
+            }
+        });
+    });
+});
+
 
 var trunk = '<a href="/register">注册</a>';
 app.get('/', function (req, res) {
@@ -259,4 +321,3 @@ app.use('*', function (req, res) {
 app.listen(app.get('port'), function () {
     console.log('Express started on http://localhost:' + app.get('port'));
 });
-//# sourceMappingURL=server.js.map
