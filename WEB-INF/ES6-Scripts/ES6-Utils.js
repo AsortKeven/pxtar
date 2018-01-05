@@ -1,12 +1,12 @@
 /**
- * Created by Administrator on 2017/12/21.
- */
-/**
  * Created by Administrator on 2017/12/14.
  */
 const fs = require('fs');
 const pinyin = require('pinyin');
 const crypto = require('crypto.js');
+const  archiver = require('archiver');
+const unzip = require("unzip");
+
 const utils = {
     con:{
         host:'localhost',
@@ -25,7 +25,8 @@ const utils = {
             toDiscription: 'update userinfo set discription = ? where uuid=?',
             toPhoto: 'update userinfo set photo = ? where uuid=?',
             toAddress: 'update userinfo set address = ? where uuid=?',
-            toProduction: 'update userinfo set production = ? where uuid=?'
+            toProduction: 'update userinfo set production = ? where uuid=?',
+            toPassword: 'update logininfo set password = ? where uuid = ?'
         },
         logincheck:'select * from logininfo where userinfos like ?',
         selectUserinfo: 'select * from userinfo where uuid=?',
@@ -65,7 +66,7 @@ const utils = {
         return s.join("");
     },
 
-    //
+    //生成用户名
     userRandom: ()=>{
         let s ='pxtar';
         let hexDigits = '0123456789';
@@ -73,6 +74,16 @@ const utils = {
             s += hexDigits.substr(Math.floor(Math.random() * 10), 1);
         }
         return s;
+    },
+
+    //生成验证码
+    checkNum:()=>{
+        let s =[];
+        let hexDigits ='0123456789abcdefghijklmnopqretuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        for(let i = 0; i < 6; i++){
+            s[i] = hexDigits.substr(Math.floor(Math.random() * 62),1);
+        }
+        return s.join("");
     },
 
     //汉字转拼音
@@ -102,7 +113,7 @@ const utils = {
     },
 
     //检查登录信息
-    checkInfo:(userstr,password)=>{
+    check:(userstr)=>{
         if (userstr.match(/^(pxtar)/)) {
             console.log("it's username");
             return true;
@@ -118,6 +129,7 @@ const utils = {
         else
             return false;
     },
+
     //压缩文件
     zipFile:()=>{
         const dirPath = __dirname + '/views/';
