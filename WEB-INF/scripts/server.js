@@ -274,7 +274,7 @@ app.post('/getCheckResult', upload.array(), function (req, res) {
     res.send(checkResult);
 });
 
-//修改密码
+//找回密码
 app.post('/resetPass', upload.array(), function (req, res) {
     var user = req.body.user;
     var newPass = req.body.password;
@@ -303,6 +303,27 @@ app.post('/resetPass', upload.array(), function (req, res) {
             }
         });
     });
+});
+
+//修改密码
+app.post('/modifyPass', upload.array(), function (req, res) {
+    var password = req.body.password;
+    var newPass = req.body.newPass;
+    var loginStatus = req.body.loginStatus;
+    var curUUID = req.body.uuid;
+    var modifyResult = false;
+    if (loginStatus === false || !curUUID) {
+        return console.error('LoginStatus or UUID error! Please correct your loginStatus and UUID!');
+    }
+    var strs = [newPass, curUUID];
+    connection.query(utils.sqls.modifyInfo.toPassword, strs, function (err, result) {
+        if (err || !result) {
+            return console.error(err || 'result不存在!');
+        } else {
+            modifyResult = true;
+        }
+    });
+    res.send(modifyResult);
 });
 
 
