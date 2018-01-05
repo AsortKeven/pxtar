@@ -305,7 +305,7 @@ app.post('/getCheckResult', upload.array(), (req, res) => {
     res.send(checkResult);
 });
 
-//修改密码
+//找回密码
 app.post('/resetPass',upload.array(),(req,res)=>{
     let user = req.body.user;
     let newPass = req.body.password;
@@ -335,6 +335,27 @@ app.post('/resetPass',upload.array(),(req,res)=>{
         })
     })
 
+});
+
+//修改密码
+app.post('/modifyPass', upload.array(), (req, res) => {
+    let password = req.body.password;
+    let newPass = req.body.newPass;
+    let loginStatus = req.body.loginStatus;
+    let curUUID = req.body.uuid;
+    let modifyResult = false;
+    if (loginStatus === false || !curUUID) {
+        return console.error('LoginStatus or UUID error! Please correct your loginStatus and UUID!');
+    }
+    let strs = [newPass, curUUID];
+    connection.query(utils.sqls.modifyInfo.toPassword, strs, (err, result) => {
+        if (err || !result) {
+            return console.error(err || 'result不存在!');
+        } else {
+            modifyResult = true;
+        }
+    });
+    res.send(modifyResult);
 });
 
 let trunk = '<a href="/register">注册</a>';
