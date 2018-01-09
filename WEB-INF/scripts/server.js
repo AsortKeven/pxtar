@@ -326,6 +326,102 @@ app.post('/modifyPass', upload.array(), function (req, res) {
     res.send(modifyResult);
 });
 
+//修改无需验证的个人信息
+app.post('/modifyNormal', upload.array(), function (req, res) {
+    var datas = req.body.datas;
+    var modifyResult = false;
+    var search = function search() {
+        return new Promise(function (resolve, reject) {
+            var strs = [datas.nickname, datas.photo, datas.qq, datas.uuid];
+            connection.query(utils.sqls.modifyInfo.toPassword, strs, function (err, result) {
+                if (err || !result) {
+                    return console.error(err || 'result不存在!');
+                } else {
+                    modifyResult = true;
+                    resolve(modifyResult);
+                }
+            });
+        });
+    };
+    search().then(function (msg) {
+        res.send(msg);
+    });
+});
+
+//修改手机、邮箱
+app.post('/modifyPhoneOrEmail', upload.array(), function (req, res) {
+    var userstr = req.body.phone || req.body.email;
+    var uuid = req.body.uuid;
+    var search = function search() {
+        return new Promise(function (resolve, reject) {
+            connection.query(utils.sqls.modifyInfo.selectUserInfos, uuid, function (err, result) {
+                if (err) {
+                    return console.error(err);
+                } else {
+                    var temp = JSON.parse(result[0].userInfos);
+                    if (req.body.phone) {
+                        temp.手机 = userstr;
+                    } else {
+                        temp.邮箱 = userstr;
+                    }
+                    resolve(temp);
+                }
+            });
+        });
+    };
+    search().then(function (msg) {
+        connection.query(utils.sqls.modifyInfo.toUserInfo, msg, function (err, result) {
+            if (err) {
+                return console.error(err);
+            } else {
+                return console.log('userinfos has been updated!');
+            }
+        });
+    }).then(function () {
+        res.send('userinfos has been updated!');
+    });
+});
+
+//申请VIP
+app.get('/becomeVip', upload.array(), function (req, res) {
+    var inviteNum = req.body.inviteNum;
+    var uuid = req.body.uuid;
+    var curAuthority = void 0;
+    var search = function search() {
+        return new Promise(function (resolve, reject) {
+            connection.query(utils.sqls.inviteNums.isUsed, inviteNum, function (err, result) {
+                if (err || !result) {
+                    return console.error(err || 'illeagal invite num!');
+                } else {
+                    if (result[0].usable === 1) {
+                        connection.query(utils.sqls.inviteNums.changeUsable, inviteNum, function (err, result) {
+                            if (err) {
+                                return console.error(err);
+                            } else {
+                                resolve();
+                            }
+                        });
+                    } else {
+                        return console.error('This inviteNum has been used!');
+                    }
+                }
+            });
+        });
+    };
+    search().then(function () {
+        connection.query(utils.sqls.modifyInfo.toAuthority, uuid, function (err, result) {
+            if (err) {
+                return console.error(err);
+            } else {
+                curAuthority = 2;
+                res.send({
+                    'curuuid': uuid,
+                    'curAuthority': curAuthority
+                });
+            }
+        });
+    });
+});
 
 var trunk = '<a href="/register">注册</a>';
 app.get('/', function (req, res) {

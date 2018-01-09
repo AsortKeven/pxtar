@@ -14,27 +14,33 @@ var utils = {
     con: {
         host: 'localhost',
         user: 'root',
-        password: 'rung',
+        password: '123456789',
         database: 'pxtar'
     },
 
     //sql语句封装
-    sqls: {
-        register: {
-            toUsers: 'insert into userinfo(UUID,nickName,profession) values(?,?,?)',
-            toLogin: 'insert into logininfo(UUID,userinfos,password) values(?,?,?)'
-        },
-        modifyInfo: {
-            toIdentity: 'update userinfo set identity = ? where uuid=?',
-            toDiscription: 'update userinfo set discription = ? where uuid=?',
-            toPhoto: 'update userinfo set photo = ? where uuid=?',
-            toAddress: 'update userinfo set address = ? where uuid=?',
-            toProduction: 'update userinfo set production = ? where uuid=?'
-        },
-        logincheck: 'select * from logininfo where userinfos like ?',
-        selectUserinfo: 'select * from userinfo where uuid=?',
-        selectLogininfo: 'select * from logininfo where uuid=?'
+    inviteNums: {
+        getAll: 'select * from inviteNums',
+        isUsed: 'select usable from invitenums where inviteNum = ?',
+        changeUsable: 'update invitenums set usable = "0" where inviteNum = ?'
     },
+    register: {
+        toUsers: 'insert into userinfo(UUID,nickName,profession) values(?,?,?)',
+        toLogin: 'insert into logininfo(UUID,userInfos,password) values(?,?,?)'
+    },
+    modifyInfo: {
+        toAuthority: 'update userinfo set authority = "2" where uuid = ?',
+        toDiscription: 'update userinfo set discription = ? where uuid = ?',
+        toAddress: 'update userinfo set address = ? where uuid = ?',
+        toProduction: 'update userinfo set production = ? where uuid = ?',
+        toPassword: 'update logininfo set password = ? where uuid = ?',
+        toNormal: 'update userinfo set nickname = ?,photo = ?,qq = ? where uuid = ?',
+        toUserInfo: 'update logininfo set userInfos = ? where uuid = ?',
+        selectUserInfos: 'select userInfos from logininfo where uuid = ?'
+    },
+    logincheck: 'select * from logininfo where userinfos like ?',
+    selectUserinfo: 'select * from userinfo where uuid=?',
+    selectLogininfo: 'select * from logininfo where uuid=?',
 
 
     //复制当前路径下的文件夹到当前路径的新文件夹中
