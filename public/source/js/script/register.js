@@ -38,7 +38,7 @@ $('input[type=submit]').click(function () {
             alertcolor(users.phone,'1px solid red');
         }else {
             alertcolor(users.checkpass,'1px solid #ddd')
-        }
+        };
 
     }
 });
