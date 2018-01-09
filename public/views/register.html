@@ -9,7 +9,7 @@
 </head>
 <body>
 <div class="xk-reg-nav">
-    <form action="register" method="post">
+    <form action="register" method="post" onsubmit="return false">
         <p>昵称：<input type="text" name="nickname"></p>
         <p>密码：<input type="password" name="password"></p>
         <p>重复密码：<input type="password" name="checkpass"></p>
@@ -23,6 +23,7 @@
         <input type="submit" value="注册">
     </form>
 </div>
-
+<script src="js/lib/jquery-3.1.1.min.js"></script>
+<script src="js/script/register.js"></script>
 </body>
 </html>
