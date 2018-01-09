@@ -43,6 +43,7 @@ const connection = mysql.createConnection(utils.con);
 
 connection.connect();
 
+//暂时测试用，之后edit页面需要改为post请求，详情查看文档
 app.get('/edit', (req, res) => {
     res.type('html');
     res.render('edit');
@@ -357,6 +358,108 @@ app.post('/modifyPass', upload.array(), (req, res) => {
     });
     res.send(modifyResult);
 });
+
+
+//修改无需验证的个人信息
+app.post('/modifyNormal', upload.array(), (req, res) => {
+    let datas = req.body.datas;
+    let modifyResult = false;
+    let search = () => {
+        return new Promise((resolve, reject) => {
+            let strs = [datas.nickname, datas.photo, datas.qq, datas.uuid];
+            connection.query(utils.sqls.modifyInfo.toPassword, strs, (err, result) => {
+                if (err || !result) {
+                    return console.error(err || 'result不存在!');
+                } else {
+                    modifyResult = true;
+                    resolve(modifyResult);
+                }
+            });
+        })
+    };
+    search().then((msg) => {
+        res.send(msg);
+    });
+});
+
+//修改手机、邮箱
+app.post('/modifyPhoneOrEmail', upload.array(), (req, res) => {
+    let userstr = req.body.phone || req.body.email;
+    let uuid = req.body.uuid;
+    let search = () => {
+        return new Promise((resolve, reject) => {
+            connection.query(utils.sqls.modifyInfo.selectUserInfos, uuid, (err, result) => {
+                if (err) {
+                    return console.error(err);
+                }
+                else {
+                    let temp = JSON.parse(result[0].userInfos);
+                    if (req.body.phone) {
+                        temp.手机 = userstr;
+                    } else {
+                        temp.邮箱 = userstr;
+                    }
+                    resolve(temp);
+                }
+
+            })
+        })
+    };
+    search()
+        .then((msg) => {
+            connection.query(utils.sqls.modifyInfo.toUserInfo, msg, (err, result) => {
+                if (err) {
+                    return console.error(err);
+                } else {
+                    return console.log('userinfos has been updated!');
+                }
+            });
+        }).then(() => {
+        res.send('userinfos has been updated!');
+    })
+});
+
+//申请VIP
+app.post('/becomeVip', upload.array(), (req, res) => {
+    let inviteNum = req.body.inviteNum;
+    let uuid = req.body.uuid;
+    let curAuthority;
+    let search = () => {
+        return new Promise((resolve, reject) => {
+            connection.query(utils.sqls.inviteNums.isUsed, inviteNum, (err, result) => {
+                if (err || !result) {
+                    return console.error(err || 'illeagal invite num!');
+                } else {
+                    if (result[0].usable === 1) {
+                        connection.query(utils.sqls.inviteNums.changeUsable, inviteNum, (err, result) => {
+                            if (err) {
+                                return console.error(err);
+                            } else {
+                                resolve();
+                            }
+                        });
+                    } else {
+                        return console.error('This inviteNum has been used!');
+                    }
+                }
+            })
+        })
+    };
+    search().then(() => {
+        connection.query(utils.sqls.modifyInfo.toAuthority, uuid, (err, result) => {
+            if (err) {
+                return console.error(err);
+            } else {
+                curAuthority = 2;
+                res.send({
+                    'curuuid': uuid,
+                    'curAuthority': curAuthority
+                });
+            }
+        });
+    })
+});
+
 
 let trunk = '<a href="/register">注册</a>';
 
