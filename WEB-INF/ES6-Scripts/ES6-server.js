@@ -420,7 +420,7 @@ app.post('/modifyPhoneOrEmail', upload.array(), (req, res) => {
 });
 
 //申请VIP
-app.get('/becomeVip', upload.array(), (req, res) => {
+app.post('/becomeVip', upload.array(), (req, res) => {
     let inviteNum = req.body.inviteNum;
     let uuid = req.body.uuid;
     let curAuthority;

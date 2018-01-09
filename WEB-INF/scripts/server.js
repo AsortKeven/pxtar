@@ -383,7 +383,7 @@ app.post('/modifyPhoneOrEmail', upload.array(), function (req, res) {
 });
 
 //申请VIP
-app.get('/becomeVip', upload.array(), function (req, res) {
+app.post('/becomeVip', upload.array(), function (req, res) {
     var inviteNum = req.body.inviteNum;
     var uuid = req.body.uuid;
     var curAuthority = void 0;
