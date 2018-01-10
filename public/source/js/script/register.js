@@ -20,27 +20,32 @@ $('input[type=submit]').click(function () {
         email:users.email.val(),
         job:users.job.val()
     }
-    if (user.name.length!==0&&user.phone!==''&&user.password!==''&&user.checkpass!==''&&user.email!==''){
+    if (user.name.length!==0&&user.phone!==''&&user.password!==''&&user.checkpass!==''&&user.email!==''){//判断注册信息是否完整
         if(user.password==user.checkpass&&user.email.match(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/)){
             $('form').attr('onsubmit','');
         };
-        if (!user.email.match(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/)){
+        if (!user.email.match(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/)){//判断邮箱格式是否合格
             alertcolor(users.email,'1px solid red');
         }else{
             alertcolor(users.email,'1px solid #ddd')
         };
-        if (user.password!==user.checkpass){
+        if (user.password!==user.checkpass){//判断密码是否合格
             alertcolor(users.checkpass,'1px solid red');
         }else{
             alertcolor(users.checkpass,'1px solid #ddd')
         };
-        if(!(/^1[34578]\d{9}$/.test(user.phone))){
+        if(!(/^1[34578]\d{9}$/.test(user.phone))){//判断手机号码是否合格
             alertcolor(users.phone,'1px solid red');
         }else {
             alertcolor(users.checkpass,'1px solid #ddd')
         };
-
+    }else{
+        alert('请输入完整注册信息')
     }
+    $('input').focus(function () {//获取焦点时效果
+        $(this).css('border','1px solid #ddd')
+    });
+
 });
 function alertcolor(obj,color) {
     obj.css('border',color)

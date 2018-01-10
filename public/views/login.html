@@ -9,11 +9,13 @@
 </head>
 <body>
 <div class="xk-log-sub">
-    <form action="login" method="post">
+    <form action="login" method="post" onsubmit="return false">
         <p>用户名：<input type="text" name="username" placeholder="用户名/账号/邮箱"></p>
         <p>密&nbsp;&nbsp;&nbsp;码：<input type="password" name="password"></p>
-        <button>注册</button><input type="submit" value="登陆">
+        <button><a href="/register" >注册</a></button><input type="submit" value="登陆">
     </form>
 </div>
 </body>
+<script src="js/lib/jquery-3.1.1.min.js"></script>
+<script src="js/script/login.js"></script>
 </html>
