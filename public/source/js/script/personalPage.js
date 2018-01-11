@@ -92,5 +92,34 @@ $('#xk-per-beVip').click(function () {
 
 //新建单话
 $('.xk-per-cartoon-addbtn').click(function () {
-    alert('新建单话');
+    var html=$('.xk-per-list').html()
+    var Html='<div class="xk-per-list xk-per-list-style">'+html+'</div>';
+    $('.xk-per-cinter-nav').prepend(Html)
 });
+
+//鼠标悬浮到单话
+$('.xk-cartoon-box-top').hover(function () {
+    $(this).find('.xk-cartoon-box-top-top').animate({top:0});
+    var _this=$(this);
+    $(this).find('.xk-cartoon-box-bottom .xk-cartoon-box-left').click(function () {
+        _this.parent().parent().remove();
+    });
+},function () {
+    $(this).find('.xk-cartoon-box-top-top').animate({top:'-1.5rem'})
+});
+
+$('.xk-cartoon-box-top').hover(function () {
+    $(this).find('.xk-cartoon-box-bottom').animate({bottom:0})
+},function () {
+    $(this).find('.xk-cartoon-box-bottom').animate({bottom:'-1.5rem'})
+});
+
+//预览
+$('.xk-cartoon-box-top .xk-cartoon-box-top-top .xk-cartoon-box-left').click(function () {
+    alert('这是预览');
+    console.log($(this))
+});
+//编辑
+$('.xk-cartoon-box-top .xk-cartoon-box-top-top .xk-cartoon-box-right').click(function () {
+    alert('这是编辑')
+})
