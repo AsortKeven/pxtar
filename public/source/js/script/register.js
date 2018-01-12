@@ -2,51 +2,75 @@
  * Created by P on 2018/1/9.
  */
 //前端判断注册数据是否合格数据是否合格
+var users = {
+    name: $('input[name=nickname]'),
+    password: $('input[name=password]'),
+    checkpass: $('input[name=checkpass]'),
+    phone: $('input[name=phone]'),
+    email: $('input[name=email]'),
+    job: $('option:selected')
+};
+var user = {
+    name: "",
+    password: "",
+    checkpass: "",
+    phone: "",
+    email: "",
+    job: ""
+};
 
-$('input[type=submit]').click(function () {
-    var users={
-        name:$('input[name=nickname]'),
-        password:$('input[name=password]'),
-        checkpass:$('input[name=checkpass]'),
-        phone:$('input[name=phone]'),
-        email:$('input[name=email]'),
-        job:$('option:selected')
-    }
-    var user={
-        name:users.name.val(),
-        password:users.password.val(),
-        checkpass:users.checkpass.val(),
-        phone:users.phone.val(),
-        email:users.email.val(),
-        job:users.job.val()
-    }
-    if (user.name.length!==0&&user.phone!==''&&user.password!==''&&user.checkpass!==''&&user.email!==''){//判断注册信息是否完整
-        if(user.password==user.checkpass&&user.email.match(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/)){
-            $('form').attr('onsubmit','');
-        };
-        if (!user.email.match(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/)){//判断邮箱格式是否合格
-            alertcolor(users.email,'1px solid red');
-        }else{
-            alertcolor(users.email,'1px solid #ddd')
-        };
-        if (user.password!==user.checkpass){//判断密码是否合格
-            alertcolor(users.checkpass,'1px solid red');
-        }else{
-            alertcolor(users.checkpass,'1px solid #ddd')
-        };
-        if(!(/^1[34578]\d{9}$/.test(user.phone))){//判断手机号码是否合格
-            alertcolor(users.phone,'1px solid red');
-        }else {
-            alertcolor(users.checkpass,'1px solid #ddd')
-        };
-    }else{
-        alert('请输入完整注册信息')
-    }
-    $('input').focus(function () {//获取焦点时效果
-        $(this).css('border','1px solid #ddd')
-    });
-
+$('input').focus(function () {//input获取焦点时效果
+    $(this).css('border', '');
+    $(this).css('border', '1px solid #ddd')
 });
-function alertcolor(obj,color) {
-    obj.css('border',color)
+
+users.name.blur(function () {
+    user.name = users.name.val();
+    if (user.name === '') {
+        alertcolor(users.name, '1px solid red')
+    } else {
+        console.log(user.name);
+    }
+});
+
+users.password.blur(function () {
+    user.password = users.password.val();
+    if (!user.password.match(/^[a-zA-Z][a-zA-Z0-9_]{5,15}/)) {
+        //英文字母开头并且长度为6-16位
+        alertcolor(users.password, '1px solid red');
+    } else {
+        console.log(user.password);
+    }
+});
+users.checkpass.blur(function () {
+    user.checkpass = users.checkpass.val();
+    if (user.checkpass !== user.password || user.checkpass === '') {
+        //两次输入不一致！
+        alertcolor(users.checkpass, '1px solid red');
+    } else {
+        console.log(user.password);
+    }
+});
+users.phone.blur(function () {
+    user.phone = users.phone.val();
+    if (!user.phone.match(/^1[34578]\d{9}$/)) {
+        //手机以1 34578开头，后面9位任意
+        alertcolor(users.phone, '1px solid red');
+    } else {
+        console.log(user.phone);
+    }
+});
+
+users.email.blur(function () {
+    user.email = users.email.val();
+    if (!user.email.match(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/)) {
+        //邮箱判定
+        alertcolor(users.email, '1px solid red');
+    } else {
+        console.log(user.email);
+    }
+});
+
+function alertcolor(obj, color) {
+    obj.css('border', color)
 }
