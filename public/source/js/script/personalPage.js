@@ -117,7 +117,7 @@ $('.xk-cartoon-box-top').hover(function () {
 //预览
 $('.xk-cartoon-box-top .xk-cartoon-box-top-top .xk-cartoon-box-left').click(function () {
     alert('这是预览');
-    console.log($(this))
+    console.log($(this));
 });
 //编辑
 $('.xk-cartoon-box-top .xk-cartoon-box-top-top .xk-cartoon-box-right').click(function () {
