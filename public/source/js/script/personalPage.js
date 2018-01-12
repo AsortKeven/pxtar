@@ -94,7 +94,7 @@ $('#xk-per-beVip').click(function () {
 $('.xk-per-cartoon-addbtn').click(function () {
     var html=$('.xk-per-list').html()
     var Html='<div class="xk-per-list xk-per-list-style">'+html+'</div>';
-    $('.xk-per-cinter-nav').prepend(Html)
+    $('.xk-per-cinter-nav').prepend(Html);
 });
 
 //鼠标悬浮到单话
