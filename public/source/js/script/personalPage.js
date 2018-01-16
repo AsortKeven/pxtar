@@ -98,28 +98,29 @@ $('.xk-per-cartoon-addbtn').click(function () {
 });
 
 //鼠标悬浮到单话
-$('.xk-cartoon-box-top').hover(function () {
-    $(this).find('.xk-cartoon-box-top-top').animate({top:0});
+$('.xk-per-cinter-nav').on('mouseenter mouseleave','.xk-cartoon-box-top',function (event) {
     var _this=$(this);
-    $(this).find('.xk-cartoon-box-bottom .xk-cartoon-box-left').click(function () {
-        _this.parent().parent().remove();
-    });
-},function () {
-    $(this).find('.xk-cartoon-box-top-top').animate({top:'-1.5rem'})
-});
+    if(event.type == "mouseenter"){
+        //鼠标悬浮
+        $(this).find('.xk-cartoon-box-top-top').animate({top:0});
+        $(this).find('.xk-cartoon-box-bottom').animate({bottom:0});
+        $(this).find('.xk-cartoon-box-bottom .xk-cartoon-box-left').click(function () {
+            _this.parent().parent().remove();
+        });
+    }else if(event.type == "mouseleave"){
+        //鼠标离开
+        $(this).find('.xk-cartoon-box-bottom').animate({bottom:'-1.5rem'});
+        $(this).find('.xk-cartoon-box-top-top').animate({top:'-1.5rem'})
+    }
 
-$('.xk-cartoon-box-top').hover(function () {
-    $(this).find('.xk-cartoon-box-bottom').animate({bottom:0})
-},function () {
-    $(this).find('.xk-cartoon-box-bottom').animate({bottom:'-1.5rem'})
 });
 
 //预览
-$('.xk-cartoon-box-top .xk-cartoon-box-top-top .xk-cartoon-box-left').click(function () {
+$('.xk-per-cinter-nav').on('click','.xk-cartoon-box-top .xk-cartoon-box-top-top .xk-cartoon-box-left',function () {
     alert('这是预览');
     console.log($(this))
 });
 //编辑
-$('.xk-cartoon-box-top .xk-cartoon-box-top-top .xk-cartoon-box-right').click(function () {
+$('.xk-per-cinter-nav').on('click','.xk-cartoon-box-top .xk-cartoon-box-top-top .xk-cartoon-box-right',function () {
     alert('这是编辑')
 })
