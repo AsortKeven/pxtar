@@ -96,7 +96,7 @@ app.post('/login', upload.array(), (req, res, next) => {
 
 app.get('/personalPage', (req, res) => {
     res.type('html');
-    res.render('personalPage', {result: 1111});
+    res.render('personalPage', {datas: 1111});
 });
 
 //提交uuid到后台数据库，查询数据并返回

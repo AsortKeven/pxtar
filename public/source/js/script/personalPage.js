@@ -78,10 +78,10 @@ $('#xk-per-beVip').click(function () {
         var node = document.createElement('form');
         var childnode = document.createElement('input');
         var submit = document.createElement('input');
-        node.action = 'beVip';
+        node.action = 'becomeVip';
         node.method = 'post';
         childnode.value = '';
-        childnode.id = 'vipInvite';
+        childnode.name = 'inviteNum';
         submit.type = 'submit';
         submit.value = '提交';
         node.appendChild(childnode);
