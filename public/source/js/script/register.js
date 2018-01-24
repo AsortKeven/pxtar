@@ -26,7 +26,7 @@ $('input').focus(function () {//input获取焦点时效果
 
 users.name.blur(function () {
     user.name = users.name.val();
-    if (user.name === '') {
+    if (user.name ==='') {
         alertcolor(users.name, '1px solid red')
     } else {
         console.log(user.name);

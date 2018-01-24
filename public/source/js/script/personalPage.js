@@ -176,16 +176,20 @@ $('.xk-per-cartoon-addbtn').click(function () {
 
 //鼠标悬浮到单话
 $('.xk-per-cinter-nav').on('mouseenter mouseleave','.xk-cartoon-box-top',function (event) {
-    var _this=$(this);
+    var _this=$(this),timer;
     if(event.type == "mouseenter"){
         //鼠标悬浮
-        $(this).find('.xk-cartoon-box-top-top').animate({top:0});
-        $(this).find('.xk-cartoon-box-bottom').animate({bottom:0});
-        $(this).find('.xk-cartoon-box-bottom .xk-cartoon-box-left').click(function () {
-            _this.parent().parent().remove();
-        });
+        // timer=setTimeout(function () {
+            _this.find('.xk-cartoon-box-top-top').animate({top:0});
+            _this.find('.xk-cartoon-box-bottom').animate({bottom:0});
+            _this.find('.xk-cartoon-box-bottom .xk-cartoon-box-left').click(function () {
+                _this.parent().parent().remove();
+            });
+        // },1000)
+
     }else if(event.type == "mouseleave"){
         //鼠标离开
+        // clearTimeout(timer);
         $(this).find('.xk-cartoon-box-bottom').animate({bottom:'-1.5rem'});
         $(this).find('.xk-cartoon-box-top-top').animate({top:'-1.5rem'})
     }
