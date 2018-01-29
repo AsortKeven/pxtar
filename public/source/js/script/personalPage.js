@@ -113,6 +113,15 @@ $('.xk-per-cartoon-addbtn').click(function () {
             time:date.toLocaleString(),
             url:objUrl
         };
+        $.ajax({
+            type:'post',
+            url:'/personalPage',
+            datatype:'josn',
+            data:nav,
+            success:function (data) {
+                console.log(data)
+            }
+        })
         html='<div class="xk-per-list xk-per-list-style">'+
             '<div class="xk-per-cartoon-box">'+
             '<div class="xk-cartoon-box-top xk-cartoon-item-style">'+
