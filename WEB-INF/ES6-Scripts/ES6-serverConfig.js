@@ -496,9 +496,15 @@ const serverConfig = (app,express) => {
     });
 
     let trunk = '<a href="/register">注册</a>';
+
     app.get('/', (req, res) => {
         res.type('html');
         res.render('index', {Hello: trunk});
+    });
+
+    app.use('*',(req,res)=>{
+        res.type('html');
+        res.render('404');
     });
 
     app.listen(app.get('port'), () => {

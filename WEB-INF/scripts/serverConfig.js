@@ -465,6 +465,12 @@ var serverConfig = function serverConfig(app,express) {
         res.render('index', {Hello: trunk});
     });
 
+    app.use('*',function (req,res) {
+        res.type('html');
+        res.render('404');
+    });
+
+
     app.listen(3000, function () {
         console.log('Express started on http://localhost:' + app.get('port'));
     });
