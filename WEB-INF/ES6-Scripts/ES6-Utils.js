@@ -35,10 +35,22 @@ const utils = {
             toUserInfo:'update logininfo set userInfos = ? where uuid = ?',
             selectUserInfos:'select userInfos from logininfo where uuid = ?'
         },
+        updateComic: 'select * from comics where uuid = ?',
         logincheck: 'select * from logininfo where userinfos like ?',
         selectUserinfo: 'select * from userinfo where uuid=?',
         selectLogininfo: 'select * from logininfo where uuid=?'
     },
+
+    //新建配置文件,当前默认到桌面
+    newFile: (name, infos) => {
+        let destination = 'C:/Users/Administrator/Desktop/' + name;
+        fs.writeFile(destination, infos, (err) => {
+            if (err)
+                return console.error(err);
+        });
+        return true;
+    },
+
     //文件夹的复制
     createAndCopy:(exsitDir, newDir)=>{
         let source = __dirname + '/' + exsitDir;

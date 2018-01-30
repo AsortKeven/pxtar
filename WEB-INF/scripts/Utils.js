@@ -1,16 +1,15 @@
+'use strict';
+
 /**
- * Created by Administrator on 2017/12/27.
- */
-/**
- * Created by Administrator on 2017/12/6.
- * 工具模块，尽量将工具封装
+ * Created by Administrator on 2017/12/14.
  */
 var fs = require('fs');
 var pinyin = require('pinyin');
 var crypto = require('crypto.js');
-var utils = {
+var archiver = require('archiver');
+var unzip = require("unzip");
 
-    //连接参数
+var utils = {
     con: {
         host: 'localhost',
         user: 'root',
@@ -18,67 +17,74 @@ var utils = {
         database: 'pxtar'
     },
 
-    //sql语句封装
-    inviteNums: {
-        getAll: 'select * from inviteNums',
-        isUsed: 'select usable from invitenums where inviteNum = ?',
-        changeUsable: 'update invitenums set usable = "0" where inviteNum = ?'
+    sqls: {
+        inviteNums: {
+            getAll: 'select * from inviteNums',
+            isUsed: 'select usable from invitenums where inviteNum = ?',
+            changeUsable: 'update invitenums set usable = "0" where inviteNum = ?'
+        },
+        register: {
+            toUsers: 'insert into userinfo(UUID,nickName,profession) values(?,?,?)',
+            toLogin: 'insert into logininfo(UUID,userInfos,password) values(?,?,?)'
+        },
+        modifyInfo: {
+            toAuthority: 'update userinfo set authority = "2" where uuid = ?',
+            toDiscription: 'update userinfo set discription = ? where uuid = ?',
+            toAddress: 'update userinfo set address = ? where uuid = ?',
+            toProduction: 'update userinfo set production = ? where uuid = ?',
+            toPassword: 'update logininfo set password = ? where uuid = ?',
+            toNormal: 'update userinfo set nickname = ?,photo = ?,qq = ? where uuid = ?',
+            toUserInfo: 'update logininfo set userInfos = ? where uuid = ?',
+            selectUserInfos: 'select userInfos from logininfo where uuid = ?'
+        },
+        updateComic: 'select * from comics where uuid = ?',
+        logincheck: 'select * from logininfo where userinfos like ?',
+        selectUserinfo: 'select * from userinfo where uuid=?',
+        selectLogininfo: 'select * from logininfo where uuid=?'
     },
-    register: {
-        toUsers: 'insert into userinfo(UUID,nickName,profession) values(?,?,?)',
-        toLogin: 'insert into logininfo(UUID,userInfos,password) values(?,?,?)'
-    },
-    modifyInfo: {
-        toAuthority: 'update userinfo set authority = "2" where uuid = ?',
-        toDiscription: 'update userinfo set discription = ? where uuid = ?',
-        toAddress: 'update userinfo set address = ? where uuid = ?',
-        toProduction: 'update userinfo set production = ? where uuid = ?',
-        toPassword: 'update logininfo set password = ? where uuid = ?',
-        toNormal: 'update userinfo set nickname = ?,photo = ?,qq = ? where uuid = ?',
-        toUserInfo: 'update logininfo set userInfos = ? where uuid = ?',
-        selectUserInfos: 'select userInfos from logininfo where uuid = ?'
-    },
-    logincheck: 'select * from logininfo where userinfos like ?',
-    selectUserinfo: 'select * from userinfo where uuid=?',
-    selectLogininfo: 'select * from logininfo where uuid=?',
 
+    //新建配置文件,当前默认到桌面
+    newFile: function newFile(name, infos) {
+        var destination = 'C:/Users/Administrator/Desktop/' + name;
+        fs.writeFile(destination, infos, function (err) {
+            if (err) return console.error(err);
+        });
+        return true;
+    },
 
-    //复制当前路径下的文件夹到当前路径的新文件夹中
-    createAndCopy: function (existDir, createDir) {
-        var source = __dirname + '/' + existDir;
-        var destination = __dirname + '/' + createDir;
+    //文件夹的复制
+    createAndCopy: function createAndCopy(exsitDir, newDir) {
+        var source = __dirname + '/' + exsitDir;
+        var destination = __dirname + '/' + newDir;
+
         fs.mkdir(destination, function (err) {
-            if (err)
-                return console.error(err);
-            else
-                console.log("Create dir " + createDir + " finish");
+            if (err) return console.error(err);else console.log('Create dir' + newDir + 'success');
         });
 
         var list = fs.readdirSync(source);
 
-        for (var i = 0; i < list.length; i++) {
+        for (var i in list) {
             fs.createReadStream(source + '/' + list[i]).pipe(fs.createWriteStream(destination + '/' + list[i]));
         }
         console.log('Files copy success!');
     },
 
-    //生成uuid
-    uuid: function () {
+    //uuid生成
+    uuid: function uuid() {
         var s = [];
-        var hexDigits = "0123456789abcdef";
+        var hexDigits = '0123456789abcdef';
+
         for (var i = 0; i < 36; i++) {
             s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
         }
-        s[14] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
-        s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
+        s[14] = "4";
+        s[19] = hexDigits.substr(s[19] & 0x3 | 0x8, 1);
         s[8] = s[13] = s[18] = s[23] = "-";
-
-        var uuid = s.join("");
-        return uuid;
+        return s.join("");
     },
 
     //生成用户名
-    userRandom: function () {
+    userRandom: function userRandom() {
         var s = 'pxtar';
         var hexDigits = '0123456789';
         for (var i = 0; i < 6; i++) {
@@ -98,43 +104,43 @@ var utils = {
     },
 
     //汉字转拼音
-    chToPy: function (str) {
+    chToPy: function chToPy(str) {
+
         var temp = pinyin(str, {
             style: pinyin.STYLE_FIRST_LETTER,
-            hetetonym: true
+            heteronym: true
         });
+
         var final = '';
         for (var i = 0; i < temp.length; i++) {
             final += temp[i].toString();
         }
+
         return final;
     },
-    //密码转base64
-    strToBase64: function (str, key) {
+
+    //字符串转base64
+    strToBase64: function strToBase64(str, key) {
         return crypto.cipher('aes-128-cbc', str, key);
     },
 
-    //base64转回密码
-    base64ToStr: function (str, key) {
+    //base64转字符串
+    base64ToStr: function base64ToStr(str, key) {
         return crypto.decipher('aes-128-cbc', str, key);
     },
 
-    //检验对应参数是否符合规范
-    check: function (userstr) {
+    //检查登录信息
+    check: function check(userstr) {
         if (userstr.match(/^(pxtar)/)) {
             console.log("it's username");
-            return 'username';
-        }
-        else if (userstr.match(/.*@.*/)) {
+            return true;
+        } else if (userstr.match(/.*@.*/)) {
             console.log("it's email");
-            return 'email';
-        }
-        else if ((/^1[3|4|5|8][0-9]\d{8}$/.test(userstr))) {
+            return true;
+        } else if (/^1[3|4|5|8][0-9]\d{8}$/.test(userstr)) {
             console.log("it's a phone");
-            return 'phone';
-        }
-        else
-            return console.error('it`s not a correct userstr!');
+            return true;
+        } else return false;
     },
 
     //压缩文件
@@ -148,16 +154,16 @@ var utils = {
         zipArchiver.pipe(output);
 
         for (var i = 0; i < dir.length; i++) {
-            zipArchiver.append(fs.createReadStream(dirPath + dir[i]), {'name': dir[i]});
+            zipArchiver.append(fs.createReadStream(dirPath + dir[i]), { 'name': dir[i] });
         }
         zipArchiver.finalize();
     },
 
     //解压文件
     unzipFile: function unzipFile(filename, unzipPath) {
-        fs.createReadStream(filename).pipe(unzip.Extract({path: unzipPath}));
+        fs.createReadStream(filename).pipe(unzip.Extract({ path: unzipPath }));
     }
-
 };
 
-exports = module.exports = utils;
+module.exports = utils;
+//# sourceMappingURL=Utils.js.map
