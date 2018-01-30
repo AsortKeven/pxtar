@@ -4,26 +4,40 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>编辑界面1111</title>
+    <title>编辑界面</title>
     <link href="css/style.css" rel="stylesheet">
     <link href="css/edit.css" rel="stylesheet">
     <script type="text/javascript" src="js/lib/require.min.js" data-main="js/script/index.js"></script>
 </head>
 <body>
-<div class="xk-edit-nav clearfix1">
-    <ul class="hand">
-        <li data-id="101">保存全局1</li>
-        <li data-id="102">导出动态条漫1</li>
-        <li data-id="103">上一步</li>
-        <li data-id="104">下一步</li>
-        <li data-id="105">预览全篇</li>
-        <li class="fl_right" data-id="106">返回我的动态条漫</li>
+<div class="xk-edit-nav noselect">
+    <ul class="xk-edit-nav-list">
+        <li>
+            <span data-id="101">保存全局</span>
+        </li>
+        <li>
+            <span data-id="102">导出动态条漫</span>
+        </li>
+        <li>
+            <span data-id="103">上一步</span>
+        </li>
+        <li>
+            <span data-id="104">下一步</span>
+        </li>
+        <li>
+            <span data-id="105">预览全篇</span>
+        </li>
+        <li class="xk-edit-nav-list-back">
+            <span data-id="106">
+                返回我的动态条漫
+            </span>
+        </li>
     </ul>
 </div>
-<div class="xk-edit-edit clearfix1">
+<div class="xk-edit-edit">
     <div class="xk-edit-left xk-edit-edit-style">
-        <div class="xk-edit-left-top">
-            <ul class="hand" data-id="200">
+        <div class="xk-edit-left-top noselect">
+            <ul class="" data-id="200">
                 <li>
                     <span data-id="201">移动</span>
                     <span data-id="203">缩放</span>
@@ -44,119 +58,173 @@
             </ul>
         </div>
 
-        <div class="xk-edit-left-bottom">
-            <p class="xk-edit-left-bottom-title">
-                <span>动效设置</span>
-                <span class="float_right hand">删除</span>
+        <div id="xk-edit-effect-edit" class="xk-edit-left-bottom">
+            <p class="xk-edit-left-bottom-title noselect">
+                <span class="xk-edit-left-bottom-nav">动效设置</span>
+                <span class="xk-edit-left-bottom-nav hand" data-id="221">删除</span>
             </p>
+            <div id="xk-edit-effect-panel" class="xk-edit-effect-item">
+                <ul class="xk-edit-left-bottom-body">
+                    <li>
+                        <p class="noselect"><span class="hand">动效说明</span><span class="float_right hand">闪烁</span></p>
+                        <div class="xk-edit-left-body-box">
 
-            <ul class="xk-edit-left-bottom-body">
-                <li>
-                    <p><span class="hand">动效说明</span><span class="float_right hand">闪烁</span></p>
-                    <div class="xk-edit-left-nav"></div>
-                </li>
-                <li>
-                    <p><span class="hand">动效说明</span><span class="float_right hand">闪烁</span></p>
-                    <div class="xk-edit-left-nav"></div>
-                </li>
-            </ul>
+
+                        </div>
+                    </li>
+                    <li>
+                        <p class="noselect"><span class="hand">动效说明</span><span class="float_right hand">闪烁</span></p>
+                        <div class="xk-edit-left-body-box"></div>
+                    </li>
+                </ul>
+            </div>
+
         </div>
     </div>
+
     <div class="xk-edit-center xk-edit-edit-style">
-        <div class="xk-edit-center-top">
-            <div class="float_left"><span class="hand">新建page</span><span class="hand">插入page</span><span class="hand">插入背景音乐（仅对page有效）</span></div>
-            <div class="float_right">缩小<input type="range" value="50">放大<span class="hand">预览选中的page</span></div>
+        <div class="xk-edit-center-top noselect">
+            <button id="menu-tool" class="xk-edit-center-menu"><span>Menu</span></button>
+            <div class="xk-edit-center-top-nav">
+                <span class="hand" data-id="301">新建page</span>
+                <span class="hand" data-id="302">插入page</span>
+                <span class="hand" data-id="303">插入背景音乐（仅对page有效）</span>
+            </div>
+            <div class="float_right">
+                缩小<input type="range" value="50" data-id="304">放大
+                <span class="hand" data-id="305">预览选中的page</span>
+            </div>
         </div>
-        <div class="xk-edit-center-page">
+        <div id="xk-edit-center-edit" class="xk-edit-center-page">
             <ul>
                 <li>
-                    <p><span class="float_left">page-1</span><span class="float_right"><span class="hand">高度设置</span><span class="hand">设置背景图</span><span class="hand">删除</span></span></p>
+                    <p class="noselect">
+                        <span class="float_left">page-1</span>
+                        <span class="float_right">
+                            <span class="hand" data-id="311">高度设置</span>
+                            <span class="hand" data-id="312">设置背景图</span>
+                            <span class="hand" data-id="313">删除</span>
+                        </span>
+                    </p>
                     <div class="xk-edit-center-page-page"></div>
                 </li>
-                <li>
-                    <p><span class="float_left">page-1</span><span class="float_right"><span class="hand">高度设置</span><span class="hand">设置背景图</span><span class="hand">删除</span></span></p>
-                    <div class="xk-edit-center-page-page"></div>
-                </li>
+
             </ul>
         </div>
     </div>
-    <div class="xk-edit-right xk-edit-edit-style clearfix1">
-        <div class="xk-edit-right-item">
-            <div class="xk-edit-right-nav clearfix1">
-                <h4 class="hand">动效组件</h4>
-                <h4 class="hand">音效组件</h4>
-                <span class="hand">导入组件</span>
-                <span class="hand">删除组件</span>
+
+    <div class="xk-edit-right xk-edit-edit-style">
+        <div id="xk-edit-sub-edit" class="xk-edit-right-item">
+            <div class="xk-edit-right-nav noselect">
+                <span data-id="401" id="xk-edit-sub-edit-img" class="xk-edit-right-nav-list xk-edit-right-nav-title xk-edit-right-nav-subbox opacity-show hand">动效组件</span>
+                <span data-id="402" id="xk-edit-sub-edit-music" class="xk-edit-right-nav-list xk-edit-right-nav-title xk-edit-right-nav-subbox hand">音效组件</span>
+                <span data-id="403" class="xk-edit-right-nav-list xk-edit-right-nav-inpot hand">导入组件</span>
+                <span data-id="404" class="xk-edit-right-nav-list xk-edit-right-nav-unpot hand">删除组件</span>
             </div>
 
-            <ul>
-                <li>
-                    <div class="xk-edit-right-top">
-                        <div class="xk-edit-right-img"></div>
-                        <span class="float_left">组件名称</span>
-                        <span class="float_right"></span>
-                    </div>
-                    <div class="xk-edit-right-data">
-                        <div>W:<span>200px</span><div class="float_right">H:<span>400px</span></div></div>
-                        <div>类型:<span>JPG</span><div class="float_right">大小:<span>20kb</span></div></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="xk-edit-right-top">
-                        <div class="xk-edit-right-img"></div>
-                        <span class="float_left">组件名称</span>
-                        <span class="float_right"></span>
-                    </div>
-                    <div class="xk-edit-right-data">
-                        <div>W:<span>200px</span><div class="float_right">H:<span>400px</span></div></div>
-                        <div>类型:<span>JPG</span><div class="float_right">大小:<span>20kb</span></div></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="xk-edit-right-top">
-                        <div class="xk-edit-right-img"></div>
-                        <span class="float_left">组件名称</span>
-                        <span class="float_right"></span>
-                    </div>
-                    <div class="xk-edit-right-data">
-                        <div>W:<span>200px</span><div class="float_right">H:<span>400px</span></div></div>
-                        <div>类型:<span>JPG</span><div class="float_right">大小:<span>20kb</span></div></div>
-                    </div>
-                </li>
-            </ul>
+            <div id="xk-edit-sub-panel" class="xk-edit-sub-item">
+                <ul id="xk-edit-sub-img">
+                    <li>
+                        <div class="xk-edit-right-top">
+                            <span data-id="422" class="xk-edit-right-label xk-edit-right-img"> </span>
+                            <span data-id="423" class="xk-edit-right-label ">组件名称</span>
+                            <span data-id="425" class="xk-edit-right-label xk-edit-right-label-dir"></span>
+                        </div>
+                        <div class="xk-edit-right-data xk-edit-right-data-none">
+                            <p><span>W:<i>200px</i></span><span class="">H:<i>400px</i></span></p>
+                            <p><span>类型：<i>JPG</i></span><span class="">大小:<i>20kb</i></span></p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="xk-edit-right-top">
+                            <span data-id="422" class="xk-edit-right-label xk-edit-right-img"></span>
+                            <span data-id="423" class="xk-edit-right-label">组件名称</span>
+                            <span data-id="425" class="xk-edit-right-label xk-edit-right-label-dir "></span>
+                        </div>
+                        <div class="xk-edit-right-data xk-edit-right-data-none">
+                            <p><span>W:<i>200px</i></span><span class="">H:<i>400px</i></span></p>
+                            <p><span>类型：<i>JPG</i></span><span class="">大小:<i>20kb</i></span></p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="xk-edit-right-top">
+                            <span data-id="422" class="xk-edit-right-label xk-edit-right-img"></span>
+                            <span data-id="423" class="xk-edit-right-label">组件名称</span>
+                            <span data-id="425" class="xk-edit-right-label xk-edit-right-label-dir"></span>
+                        </div>
+                        <div class="xk-edit-right-data xk-edit-right-data-none">
+                            <p><span>W:<i>200px</i></span><span class="">H:<i>400px</i></span></p>
+                            <p><span>类型：<i>JPG</i></span><span class="">大小:<i>20kb</i></span></p>
+                        </div>
+                    </li>
+                </ul>
+                <ul id="xk-edit-sub-music" class="display-none">
+                    <li>
+                        <div class="xk-edit-right-top">
+                            <span data-id="422" class="xk-edit-right-label xk-edit-right-img"></span>
+                            <span data-id="423" class="xk-edit-right-label">音乐名称</span>
+                            <span data-id="425" class="xk-edit-right-label xk-edit-right-label-dir xk-edit-right-label-dirbottom"></span>
+                        </div>
+                        <div class="xk-edit-right-data xk-edit-right-data-none">
+                            <p><span>W:<i>200px</i></span><span class="">H:<i>400px</i></span></p>
+                            <p><span>类型：<i>JPG</i></span><span class="">大小:<i>20kb</i></span></p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
         </div>
 
-        <div class="xk-edit-right-item">
-            <div class="xk-edit-right-nav clearfix1">
-                <h4 class="hand">图层</h4>
-                <h4 class="hand">音效组件</h4>
-                <span class="hand float_right">删除图层</span>
+        <div id="xk-edit-layer-edit" class="xk-edit-right-item">
+            <div class="xk-edit-right-nav noselect">
+                <span class="xk-edit-right-nav-list xk-edit-right-nav-title hand">图层</span>
+                <span class="xk-edit-right-nav-list xk-edit-right-nav-title hand">page-1</span>
+                <span data-id="406" class="xk-edit-right-nav-list xk-edit-right-nav-del hand">删除图层</span>
+            </div>
+            <div id="xk-edit-layer-panel"  class="xk-edit-sub-item">
+                <ul>
+                    <li>
+                        <div class="xk-edit-right-top">
+                            <span data-id="421" class="xk-edit-right-label xk-edit-right-label-eyes"></span>
+                            <span data-id="422" class="xk-edit-right-label xk-edit-right-img"></span>
+                            <span data-id="423" class="xk-edit-right-label">图层名称</span>
+                            <span data-id="424" class="xk-edit-right-label xk-edit-right-label-abled"></span>
+                            <span data-id="425" class="xk-edit-right-label xk-edit-right-label-dir"></span>
+                        </div>
+                        <div class="xk-edit-right-data xk-edit-right-data-none">
+                            <p><span>W11111111111:<i>200px1111111（可修改）</i></span><span class="">H:<i>400px（可修改）</i></span></p>
+                            <p><span>X:<i>20px（可修改）</i></span><span class="">Y:<i>40px（可修改）</i></span></p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="xk-edit-right-top">
+                            <span data-id="421" class="xk-edit-right-label xk-edit-right-label-eyes"></span>
+                            <span data-id="422" class="xk-edit-right-label xk-edit-right-img"></span>
+                            <span data-id="423" class="xk-edit-right-label">图层名称</span>
+                            <span data-id="424" class="xk-edit-right-label xk-edit-right-label-abled"></span>
+                            <span data-id="425" class="xk-edit-right-label xk-edit-right-label-dir"></span>
+                        </div>
+                        <div class="xk-edit-right-data xk-edit-right-data-none">
+                            <p><span>W:<i>200px（可修改）</i></span><span class="">H:<i>400px（可修改）</i></span></p>
+                            <p><span>X:<i>20px（可修改）</i></span><span class="">Y:<i>40px（可修改）</i></span></p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="xk-edit-right-top">
+                            <span data-id="421" class="xk-edit-right-label xk-edit-right-label-eyes"></span>
+                            <span data-id="422" class="xk-edit-right-label xk-edit-right-img"></span>
+                            <span data-id="423" class="xk-edit-right-label">图层名称</span>
+                            <span data-id="424" class="xk-edit-right-label xk-edit-right-label-abled"></span>
+                            <span data-id="425" class="xk-edit-right-label xk-edit-right-label-dir"></span>
+                        </div>
+                        <div class="xk-edit-right-data xk-edit-right-data-none">
+                            <p><span>W:<i>200px（可修改）</i></span><span class="">H:<i>400px（可修改）</i></span></p>
+                            <p><span>X:<i>20px（可修改）</i></span><span class="">Y:<i>40px（可修改）</i></span></p>
+                        </div>
+                    </li>
+                </ul>
             </div>
 
-            <ul>
-                <li>
-                    <div class="xk-edit-right-top">
-                        <div class="xk-edit-right-img"></div>
-                        <span class="float_left">图层名称</span>
-                        <span class="float_right"></span>
-                    </div>
-                    <div class="xk-edit-right-data">
-                        <div>W:<span>200px</span>(可修改)<div class="float_right">H:<span>400px</span>(可修改)</div></div>
-                        <div>类型:<span>JPG</span>(可修改)<div class="float_right">大小:<span>20kb</span>(可修改)</div></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="xk-edit-right-top">
-                        <div class="xk-edit-right-img"></div>
-                        <span class="float_left">图层名称</span>
-                        <span class="float_right"></span>
-                    </div>
-                    <div class="xk-edit-right-data">
-                        <div>W:<span>200px</span>(可修改)<div class="float_right">H:<span>400px</span>(可修改)</div></div>
-                        <div>类型:<span>JPG</span>(可修改)<div class="float_right">大小:<span>20kb</span>(可修改)</div></div>
-                    </div>
-                </li>
-            </ul>
         </div>
 
     </div>

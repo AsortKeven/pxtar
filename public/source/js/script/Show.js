@@ -2,7 +2,7 @@
     // 前端弹窗
     if(typeof  define ==='function' && define.amd){
         // define('Show',factory);
-        define(['./Utils'],factory);
+        define(['Utils'],factory);
     }
     if(typeof module !=='undefined'){
         module.exports = factory();
@@ -15,7 +15,7 @@
 
 
 })(function(){
-    var Utils = require('./Utils');
+    var Utils = require('Utils');
     var Show = (function () {
 
         var _alert  = {};
