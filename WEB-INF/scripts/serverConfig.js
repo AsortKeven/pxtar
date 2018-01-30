@@ -18,10 +18,10 @@ var serverConfig = function serverConfig(app,express) {
     app.use(bodyParser.urlencoded({extended: true}));
 
     let currentDir = __dirname.split('WEB-INF');
-    console.log(currentDir[0], __dirname);
+   // console.log(currentDir[0], __dirname);
     app.set('views', path.join(currentDir[0], 'public', 'views'));
     // app.set('views', path.join(__dirname, 'views'));
-    app.use(express.static(path.join(currentDir[0], 'public')));
+    app.use(express.static(path.join(currentDir[0], 'public','source')));
     app.set('view engine', 'html');
     app.engine('html', require('ejs').renderFile);
     app.set('port', process.env.PORT || 3000);
@@ -32,7 +32,7 @@ var serverConfig = function serverConfig(app,express) {
 
     //暂时测试用，之后edit页面需要改为post请求，详情查看文档
     app.get('/edit', function (req, res) {
-        res.type('html');
+        //res.type('html');
         res.render('edit');
     });
 
@@ -84,7 +84,7 @@ var serverConfig = function serverConfig(app,express) {
 
     app.get('/personalPage', function (req, res) {
         res.type('html');
-        res.render('personalPage', {result: 1111});
+        res.render('personalPage', {datas: 1111});
     });
 
     //提交uuid到后台数据库，查询数据并返回
