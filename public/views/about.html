@@ -70,10 +70,12 @@
         list-style-type: none;
         display: none;
     }
-    #container p{
+
+    #container p {
         cursor: pointer;
     }
-    #container p:hover{
+
+    #container p:hover {
         background-color: darkgray;
     }
 </style>
@@ -103,23 +105,25 @@
 <script>
 
     document.getElementById('test').addEventListener('click', function () {
-       /* var obj = {
-            type: 'image',
-            name: '1.jpg',
-            w: '300',
-            h: '600',
-            value: 'images/1.jpg'
-        };*/
-          var node = document.getElementById('form').cloneNode(true);
-         var obj = {
-         type: 'node',
-         name: '新建图层',
-         value:node,
-         fn:myfunc
-         };
-         function myfunc() {
-         alert('ok');
-         }
+        /* var obj = {
+         type: 'image',
+         name: '1.jpg',
+         w: '300',
+         h: '600',
+         value: 'images/1.jpg'
+         };*/
+        var node = document.getElementById('form').cloneNode(true);
+        var obj = {
+            type: 'node',
+            name: '新建图层',
+            value: node,
+            fn: myfunc
+        };
+
+        function myfunc() {
+            alert('ok');
+        }
+
         alertClass(obj);
     });
 

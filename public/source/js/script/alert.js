@@ -121,13 +121,13 @@ var alertClass = function (obj) {
     });
 
     title.onmousedown = function (ev) {
-        var oevent = ev || event;
+        var oevent = ev || window.event;
 
         var distanceX = oevent.clientX - div.offsetLeft;
         var distanceY = oevent.clientY - div.offsetTop;
 
         document.onmousemove = function (ev) {
-            var oevent = ev || event;
+            var oevent = ev || window.event;
             var clientWidth = document.documentElement.clientWidth - div.offsetWidth;
             var clientHeight = document.documentElement.clientHeight - div.offsetHeight;
             var disW = oevent.clientX - distanceX;
@@ -138,12 +138,14 @@ var alertClass = function (obj) {
             disH = disH > clientHeight ? clientHeight : disH;
 
             //设置图片的关闭按钮
-            if (disW >= clientWidth) {
-                close.style.display = 'none';
-            } else {
-                close.style.display = 'block';
+            if(close){
+                if (disW >= clientWidth) {
+                    close.style.display = 'none';
+                } else {
+                    close.style.display = 'block';
+                }
             }
-
+            console.log(div.style);
             div.style.left = disW + 'px';
             div.style.top = disH + 'px';
         };
