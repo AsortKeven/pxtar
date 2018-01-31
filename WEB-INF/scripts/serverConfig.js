@@ -459,6 +459,12 @@ var serverConfig = function serverConfig(app,express) {
         });
     });
 
+    //about页面
+    app.get('/about', function (req, res) {
+        res.type('html');
+        res.render('about', { Hello: 'aboutPage' });
+    });
+
     var trunk = '<a href="/register">注册</a>';
     app.get('/', function (req, res) {
         res.type('html');
