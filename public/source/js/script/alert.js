@@ -158,17 +158,17 @@ var alertClass = function (obj) {
 
 
 //禁止网页的右键菜单
-function doProhibit() {
+(function() {
     // if(window.Event)
     //     document.captureEvents(Event.MOUSEUP);
 
-    function nocontextmenu() {
+    function noContextMenu() {
         event.cancelBubble = true;
         event.returnvalue = false;
         return false;
     }
 
-    function norightclick(e) {
+    function noRightClick(e) {
         if (window.Event) {
             if (e.which === 2 || e.which === 3)
                 return false;
@@ -180,12 +180,12 @@ function doProhibit() {
         }
     }
 
-    document.oncontextmenu = nocontextmenu;  // for IE5+
-    document.onmousedown = norightclick;
-}
+    document.oncontextmenu = noContextMenu;  // for IE5+
+    document.onmousedown = noRightClick;
+})();
 
 //自定义右键菜单
-function menu() {
+(function() {
 
     var forRight = document.getElementById("right-menu");//获取右键面板
     var container = document.getElementById('container');
@@ -209,4 +209,4 @@ function menu() {
            alert(this.getAttribute('id'));
        })
    }
-}
+})();
