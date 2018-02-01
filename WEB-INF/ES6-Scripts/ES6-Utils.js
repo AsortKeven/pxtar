@@ -141,7 +141,7 @@ const utils = {
             console.log("it's email");
             return true;
         }
-        else if ((/^1[3|4|5|8][0-9]\d{8}$/.test(userstr))) {
+        else if (/^1[3|4|5|8][0-9]\d{8}$/.test(userstr)) {
             console.log("it's a phone");
             return true;
         }

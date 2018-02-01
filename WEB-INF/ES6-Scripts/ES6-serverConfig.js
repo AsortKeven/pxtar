@@ -11,6 +11,19 @@ const serverConfig = (app,express) => {
     const utils = require('./ES6-Utils');
     const sendMail = require('./ES6-mail');
 
+    const loginResult = {
+        loginStatus: false,
+        uuid: '',
+        userinfo: {},
+        isChecked: '',
+        discription: '',
+        photo: '',
+        address: '',
+        production: '',
+        profession: '',
+        authority: ''
+    };
+
     app.set('title', 'Pxtar Engine');
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({extended: true}));
