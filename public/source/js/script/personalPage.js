@@ -1,9 +1,6 @@
 /**
  * Created by Administrator on 2017/12/26.
  */
-
-
-
 var curId = 1;
 
 var contens = document.querySelectorAll('.xk-per-content');
