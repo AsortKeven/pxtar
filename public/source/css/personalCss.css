@@ -323,7 +323,7 @@ a{
     padding: 10px;
     width: 230px;
 }
-.xk-per-box button{
+.xk-per-box input[type=button]{
     padding: 5px;
     background: #ffffff;
     border-radius: 4px;

@@ -17,7 +17,7 @@ var serverConfig = function serverConfig(app,express) {
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({extended: true}));
 
-    let currentDir = __dirname.split('WEB-INF');
+    var currentDir = __dirname.split('WEB-INF');
    // console.log(currentDir[0], __dirname);
     app.set('views', path.join(currentDir[0], 'public', 'views'));
     // app.set('views', path.join(__dirname, 'views'));
@@ -423,9 +423,19 @@ var serverConfig = function serverConfig(app,express) {
     //新建单话 暂停
     //存储封面及信息到userinfo的production中
     //同时建立txt配置文件
-    /*app.post('/newComic',upload.array(),(req,res)=>{
-     let
-     });*/
+    var storage = multer.diskStorage({
+        destination: function(req, file, cb) {//文件储存目录
+            cb(null, './uploads');
+        },
+        filename: function(req, file, cb) {//文件储存名称
+            cb(null, file.fieldname+"_"+file.originalname)
+        }
+    })
+    var uploads = multer({ storage: storage });
+    app.post('/newComic',uploads.single('file', 40),function (req, res) {
+        console.log(req.file)
+        console.log(req.body)
+    });
 
     //用户主动触发保存 或者每隔五分钟保存
     //当前路径为桌面，部署到服务器再进行配置

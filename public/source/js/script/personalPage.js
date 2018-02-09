@@ -19,7 +19,7 @@ $('#nav li').click(function () {
 });
 
 //点击判定
-function checkId(id) {
+function checkId(id) {fangfa
    // console.log(id);
     for (var i = 0; i < contens.length; i++) {
         if (id === '3') {
@@ -94,15 +94,22 @@ $('#xk-per-beVip').click(function () {
 $('.xk-per-cartoon-addbtn').click(function () {
     var box=$('.xk-per-box');
     var inName=$('input[name=name]'),
-        inNumber=$('input[name=number]');
+        inNumber=$('input[name=number]'),
+        upload=$("#upload");
+    var nav,html,objUrl,file,reader;
     box.css('display','block');
-    var nav,html,objUrl;
     //获取封面图片
     $(".xk-per-box-img").unbind('click').click(function () {
-        $("#upload").click();
-        $("#upload").on("change",function(){
-            objUrl = getObjectURL(this.files[0]) ; //获取图片的路径，该路径不是图片在本地的路径
-        });
+        upload.attr('type','file')
+        upload.unbind('click').click();
+
+    });
+    upload.unbind('change').on("change",function(e){
+        var _thisf=e.target.files[0];
+        objUrl=getObjectURL(_thisf);
+        var formdata = new FormData($('.xk-per-box')[0]);
+        reader=formdata;
+        console.log(reader)
     });
     $('.xk-per-box-but-yes').unbind('click').on('click',function () {//确定新建
         var date=new Date();
@@ -111,17 +118,25 @@ $('.xk-per-cartoon-addbtn').click(function () {
             name:inName.val(),
             number:inNumber.val(),
             time:date.toLocaleString(),
-            url:objUrl
         };
+        reader.append('time',nav.time)
         $.ajax({
             type:'post',
-            url:'/personalPage',
+            url:'/newComic',
             datatype:'josn',
-            data:nav,
-            success:function (data) {
-                console.log(data)
+            data:reader,
+            contentType:false,
+            processData: false,
+            success:function (res) {
+                var json=$.parseJSON(res);
+                console.log(json)
             }
-        })
+        });
+        //原生ajax请求
+        // var xhr = new XMLHttpRequest();
+        // xhr.open("post", "/newComic", true);
+        // xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+        // xhr.send(reader);
         html='<div class="xk-per-list xk-per-list-style">'+
             '<div class="xk-per-cartoon-box">'+
             '<div class="xk-cartoon-box-top xk-cartoon-item-style">'+
@@ -132,7 +147,7 @@ $('.xk-per-cartoon-addbtn').click(function () {
             '<p class="xk-cartoon-box-nav xk-cartoon-box-bottom">'+
             '<span class="xk-per-cartoon-txt xk-cartoon-box-btn xk-cartoon-box-left"><a href="##">删除</a></span>'+
             '</p>'+
-            '<img class="xk-per-cartoon-img" src="'+nav.url+'">'+
+            '<img class="xk-per-cartoon-img" src="'+objUrl+'">'+
             '</div>'+
             '<p class="xk-cartoon-box-center xk-cartoon-item-style">'+
             '<span class="xk-per-cartoon-txt xk-per-cartoon-name">'+nav.name+'</span>'+
@@ -143,9 +158,10 @@ $('.xk-per-cartoon-addbtn').click(function () {
             '</p>'+
             '</div>'+
             '</div>';
-        console.log(nav);
+        // console.log(nav);
         inName.val("");
         inNumber.val("");
+        upload.attr('type','txt')
         // console.log(nav);
         $('.xk-per-cinter-nav').prepend(html);
         $('.xk-per-box-but-yes').attr('disabled','disabled');
@@ -154,6 +170,7 @@ $('.xk-per-cartoon-addbtn').click(function () {
         box.css('display','none');
         inName.val("");
         inNumber.val("");
+        upload.attr('type','txt')
         inName.css('border','1px solid #ddd');
         inNumber.css('border','1px solid #ddd');
     });
@@ -172,7 +189,7 @@ $('.xk-per-cartoon-addbtn').click(function () {
     inNumber.change(function () {
         if(inNumber.val()==""){
             inNumber.css('border','1px solid red');
-            $('.xk-per-box-but-yes').attr('disabled','disabled')
+            $('.xk-per-box-but-yes').attr('disabled','disabled');
         }else {
             inNumber.css('border','1px solid #ddd');
         };

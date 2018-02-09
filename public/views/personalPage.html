@@ -224,14 +224,15 @@
              </div>
          </div>
      </div>-->
-    <div class="xk-per-box">
+    <form class="xk-per-box" method="post" enctype = “multipart/form-data”>
         <p>名称:<input type="text" name="name"></p>
         <p>话数:<input type="text" name="number"></p>
-        <button class="xk-per-box-but-yes" disabled="disabled">确定</button>
-        <button class="xk-per-box-but-no">取消</button>
-        <button class="xk-per-box-img">选择封面</button>
+        <input type="button" class="xk-per-box-but-yes" value="确定">
+        <input type="button" class="xk-per-box-but-no" value="取消">
+        <input type="button" class="xk-per-box-img" value="选择封面">
         <input id="upload" name="file" accept="image/*" type="file" style="display: none"/>
-    </div>
+    </form>
+
 </section>
 <script async src="js/script/personalPage.js"></script>
 <script>
@@ -248,6 +249,7 @@
     //除非后台不渲染页面，单纯使用res.send返回数据，由前端渲染
     var data = '<%-datas %>';
     console.log(data);
+
 </script>
 </body>
 </html>
