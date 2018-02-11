@@ -31,13 +31,15 @@ var utils = {
             toAuthority: 'update userinfo set authority = "2" where uuid = ?',
             toDiscription: 'update userinfo set discription = ? where uuid = ?',
             toAddress: 'update userinfo set address = ? where uuid = ?',
+            getProduction:'select production from userinfo where uuid = ?',
             toProduction: 'update userinfo set production = ? where uuid = ?',
             toPassword: 'update logininfo set password = ? where uuid = ?',
             toNormal: 'update userinfo set nickname = ?,photo = ?,qq = ? where uuid = ?',
             toUserInfo: 'update logininfo set userInfos = ? where uuid = ?',
             selectUserInfos: 'select userInfos from logininfo where uuid = ?'
         },
-        updateComic: 'select * from comics where uuid = ?',
+        selectComic: 'select * from comics where uuid = ?',
+        insertComic:'insert into comics(uuid,comicName,sourceName) values(?,?,?)',
         logincheck: 'select * from logininfo where userinfos like ?',
         selectUserinfo: 'select * from userinfo where uuid=?',
         selectLogininfo: 'select * from logininfo where uuid=?'

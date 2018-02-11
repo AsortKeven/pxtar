@@ -1,8 +1,8 @@
 /**
  * Created by Administrator on 2018/1/30.
-*/
+ */
 
-const serverConfig = (app,express) => {
+const serverConfig = (app, express) => {
     const path = require('path');
     const bodyParser = require('body-parser');
     const multer = require('multer');
@@ -93,7 +93,7 @@ const serverConfig = (app,express) => {
 
     app.get('/personalPage', (req, res) => {
         res.type('html');
-        res.render('personalPage', {result: 1111});
+        res.render('personalPage', {datas: 1111});
     });
 
 //提交uuid到后台数据库，查询数据并返回
@@ -467,13 +467,71 @@ const serverConfig = (app,express) => {
         })
     });
 
-//新建单话 暂停
+//新建单话
 //存储封面及信息到userinfo的production中
 //同时建立txt配置文件
-    /*app.post('/newComic',upload.array(),(req,res)=>{
-     let
-     });*/
+// 目前前端数据缺少用户的uuid，需要封装在req中一起传输过来
+    let storage = multer.diskStorage({
+        destination: './uploads', //存储路径
+        filename(req, file, cb){
+            cb(null, file.originalname);
+        } //文件名
+    });
+    let imgUploader = multer({storage: storage});
+    app.post('/newComic', imgUploader.single('file', 40), (req, res) => {
+        let [
+            uuid,
+            name,
+            num,
+            savePath
+        ] = [
+            //req.file.uuid,
+            'bda67ce4-31b1-40d9-8d65-2a8cfe468956',
+            req.body.name,
+            req.body.number,
+            req.file.path
+        ];
+        let str;
+        let search = () => {
+            return new Promise((resolve, reject) => {
+                connection.query(utils.sqls.modifyInfo.getProduction, uuid, (err, result) => {
+                    if (err) {
+                        return console.error(err);
+                    } else {
+                        if(result[0].production !== ""){
+                            let products = result[0].production + ',' + name;
+                            str = [products, uuid];
+                        }else {
+                            str = [name,uuid];
+                        }
+                    }
+                    resolve();
+                });
 
+            })
+        };
+        search().then(() => {
+            console.log(str);
+            connection.query(utils.sqls.modifyInfo.toProduction, str, (err, result) => {
+                if (err) {
+                    return console.error(err);
+                } else {
+                  console.log("新建单话成功！");
+                }
+            })
+        }).then(() => {
+            let str2 = [uuid, name, name + '.txt'];
+            connection.query(utils.sqls.insertComic, str2, (err, result) => {
+                if (err) {
+                    return console.error(err);
+                } else {
+                    if (utils.newFile(name + '.txt', null)) {
+                        console.log('配置文件生成成功');
+                    }
+                }
+            })
+        })
+    });
 
 
 //用户主动触发保存 或者每隔五分钟保存
@@ -493,25 +551,28 @@ const serverConfig = (app,express) => {
         //let datas = req.body.datas;
         //let uuid = datas.uuid;
         // let name = datas.name;
-        // let model = datas.model;
-        let datas = {a:'sadada',b:'swwww',c:'asdasafas'};
-        let file;
-        connection.query(utils.sqls.updateComic,'bda67ce4-31b1-40d9-8d65-2a8cfe468956', (err, result) => {
+        let name = '画诡1.txt';
+        let datas = {a: 'sadada', b: 'swwww', c: 'asdasafas'};
+        connection.query(utils.sqls.selectComic, 'bda67ce4-31b1-40d9-8d65-2a8cfe468956', (err, result) => {
             if (err || !result) {
                 return console.error(err || !result);
-            }else {
-                file =  result[0].sourceName;
-                if(utils.newFile(file,JSON.stringify(datas))){
-                    res.send('信息保存成功！');
+            } else {
+                let length = result.length;
+                for (let i = 0; i < length; i++) {
+                    if (name === result[i].sourceName) {
+                        if (utils.newFile(name, JSON.stringify(datas))) {
+                            res.send('信息保存成功！');
+                        }
+                    }
                 }
             }
         })
     });
 
     //about页面
-    app.get('/about',(req,res)=>{
+    app.get('/about', (req, res) => {
         res.type('html');
-        res.render('about',{Hello:'aboutPage'});
+        res.render('about', {Hello: 'aboutPage'});
     });
 
     let trunk = '<a href="/register">注册</a>';
@@ -521,7 +582,7 @@ const serverConfig = (app,express) => {
         res.render('index', {Hello: trunk});
     });
 
-    app.use('*',(req,res)=>{
+    app.use('*', (req, res) => {
         res.type('html');
         res.render('404');
     });

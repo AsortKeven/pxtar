@@ -438,17 +438,61 @@ var serverConfig = function serverConfig(app,express) {
     //存储封面及信息到userinfo的production中
     //同时建立txt配置文件
     var storage = multer.diskStorage({
-        destination: function(req, file, cb) {//文件储存目录
-            cb(null, './uploads');
-        },
-        filename: function(req, file, cb) {//文件储存名称
-            cb(null, file.fieldname+"_"+file.originalname)
-        }
-    })
-    var uploads = multer({ storage: storage });
-    app.post('/newComic',uploads.single('file', 40),function (req, res) {
-        console.log(req.file)
-        console.log(req.body)
+        destination: './uploads', //存储路径
+        filename: function filename(req, file, cb) {
+            cb(null, file.originalname);
+        } //文件名
+
+    });
+    var imgUploader = multer({ storage: storage });
+    app.post('/newComic', imgUploader.single('file', 40), function (req, res) {
+        var _ref5 = [
+                //req.file.uuid,
+                'bda67ce4-31b1-40d9-8d65-2a8cfe468956', req.body.name, req.body.number, req.file.path],
+            uuid = _ref5[0],
+            name = _ref5[1],
+            num = _ref5[2],
+            savePath = _ref5[3];
+
+        var str = void 0;
+        var search = function search() {
+            return new Promise(function (resolve, reject) {
+                connection.query(utils.sqls.modifyInfo.getProduction, uuid, function (err, result) {
+                    if (err) {
+                        return console.error(err);
+                    } else {
+                        if (result[0].production !== "") {
+                            var products = result[0].production + ',' + name;
+                            str = [products, uuid];
+                        } else {
+                            str = [name, uuid];
+                        }
+                    }
+                    resolve();
+                });
+            });
+        };
+        search().then(function () {
+            console.log(str);
+            connection.query(utils.sqls.modifyInfo.toProduction, str, function (err, result) {
+                if (err) {
+                    return console.error(err);
+                } else {
+                    console.log("新建单话成功！");
+                }
+            });
+        }).then(function () {
+            var str2 = [uuid, name, name + '.txt'];
+            connection.query(utils.sqls.insertComic, str2, function (err, result) {
+                if (err) {
+                    return console.error(err);
+                } else {
+                    if (utils.newFile(name + '.txt', null)) {
+                        console.log('配置文件生成成功');
+                    }
+                }
+            });
+        });
     });
 
     //用户主动触发保存 或者每隔五分钟保存
