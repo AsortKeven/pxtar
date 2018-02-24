@@ -93,7 +93,10 @@ const serverConfig = (app, express) => {
 
     app.get('/personalPage', (req, res) => {
         res.type('html');
-        res.render('personalPage', {datas: 1111});
+        let datas={
+            name:'大神'
+        };
+        res.render('personalPage', {datas:datas});
     });
 
 //提交uuid到后台数据库，查询数据并返回
@@ -491,6 +494,7 @@ const serverConfig = (app, express) => {
             req.body.number,
             req.file.path
         ];
+        console.log(req.body)
         let str;
         let search = () => {
             return new Promise((resolve, reject) => {

@@ -99,7 +99,6 @@ $('.xk-per-cartoon-addbtn').click(function () {
     $(".xk-per-box-img").unbind('click').click(function () {
         upload.attr('type','file')
         upload.unbind('click').click();
-
     });
     upload.unbind('change').on("change",function(e){
         var _thisf=e.target.files[0];
@@ -113,8 +112,8 @@ $('.xk-per-cartoon-addbtn').click(function () {
         box.css('display','none');
         nav={
             name:inName.val(),
-            number:inNumber.val(),
-            time:date.toLocaleString(),
+            num:inNumber.val(),
+            time:date.toLocaleString()
         };
         reader.append('time',nav.time)
         $.ajax({
@@ -148,7 +147,7 @@ $('.xk-per-cartoon-addbtn').click(function () {
             '</div>'+
             '<p class="xk-cartoon-box-center xk-cartoon-item-style">'+
             '<span class="xk-per-cartoon-txt xk-per-cartoon-name">'+nav.name+'</span>'+
-            '<span class="xk-per-cartoon-txt xk-per-cartoon-number">'+nav.number+'</span>'+
+            '<span class="xk-per-cartoon-txt xk-per-cartoon-number">'+nav.num+'</span>'+
             '</p>'+
             '<p class="xk-cartoon-box-bottom xk-cartoon-item-style">'+
             '<span class="xk-per-cartoon-txt">'+'最后:'+nav.time+'</span>'+
