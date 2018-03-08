@@ -10,6 +10,7 @@ const serverConfig = (app, express) => {
     const upload = multer();
     const utils = require('./ES6-Utils');
     const sendMail = require('./ES6-mail');
+    const fs=require('fs');
 
     const loginResult = {
         loginStatus: false,
@@ -93,10 +94,33 @@ const serverConfig = (app, express) => {
 
     app.get('/personalPage', (req, res) => {
         res.type('html');
-        let datas={
-            name:'大神'
+        let imgurl=[];
+        let imgUrl=(path)=>{//图片传输
+             return new Promise((resolve,reject)=>{
+                 fs.readdir(path,(err,files)=>{//读取文件夹内所有图片
+                     if (err){
+                         return console.log(err)
+                     }
+                     files.forEach((filename)=>{
+                         let file=fs.readFileSync(path+'/'+filename);//读取单个图片
+                         let result={
+                             name:'画诡',
+                             num:'第二话',
+                             img:'data:image/png;base64,'+file.toString('base64')
+                         }
+                         imgurl.push(result);
+                     });
+                     resolve(imgurl)
+                 });
+             })
         };
-        res.render('personalPage', {datas:datas});
+        imgUrl('./uploads').then((data)=>{
+            let datas={
+                uuid:'大神',
+                nav:data
+            };
+            res.render('personalPage', {datas:datas});
+        })
     });
 
 //提交uuid到后台数据库，查询数据并返回

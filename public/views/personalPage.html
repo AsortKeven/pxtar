@@ -16,7 +16,7 @@
             <li class="xk-per-nav-item xk-per-item-img" data-id="0">
                 <img src="images/1.jpg" class="img-circle xk-per-item-imgstyle xk-per-item-head-pc">
                 <p class="xk-per-item-typeText">
-                    <span><%=datas.name%></span>
+                    <span><%=datas.uuid%></span>
                     <span>合作作者</span>
                 </p>
 
@@ -170,7 +170,7 @@
                     </div>
                 </div>
 
-                <%for(var i=0;i<datas.length;i++){%>
+                <%for(var i=0;i<datas.nav.length;i++){%>
                 <div class="xk-per-list xk-per-list-style">
                     <div class="xk-per-cartoon-box">
                         <div class="xk-cartoon-box-top xk-cartoon-item-style">
@@ -184,11 +184,11 @@
                             <span class="xk-per-cartoon-txt xk-cartoon-box-btn xk-cartoon-box-left"><a
                                     href="##">删除</a></span>
                             </p>
-                            <img class="xk-per-cartoon-img" src="images/1.jpg">
+                            <img class="xk-per-cartoon-img" src=<%=datas.nav[i].img%>>
                         </div>
                         <p class="xk-cartoon-box-center xk-cartoon-item-style">
-                            <span class="xk-per-cartoon-txt xk-per-cartoon-name"><%=datas[i].name%></span>
-                            <span class="xk-per-cartoon-txt xk-per-cartoon-number"><%=datas[i].num%></span>
+                            <span class="xk-per-cartoon-txt xk-per-cartoon-name"><%=datas.nav[i].name%></span>
+                            <span class="xk-per-cartoon-txt xk-per-cartoon-number"><%=datas.nav[i].num%></span>
                         </p>
                         <p class="xk-cartoon-box-bottom xk-cartoon-item-style">
                             <span class="xk-per-cartoon-txt">最后：2017-12-30 16：15：00</span>
