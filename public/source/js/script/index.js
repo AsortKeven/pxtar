@@ -1,9 +1,16 @@
+// 使用可能有兼容性的方法,后面需要去兼容或者测试:
+// node.insertadjacenthtml
+//
+
+
+
 require(['config'], function () {
     require(['Utils', 'Show'], function (Utils, Show) {
 
         // 获取服务器数据，之前做好的内容
         var serverData = [];
-        
+
+
         // tab组件
         // 供控制器调用
         function Tab_tools(name,list,panelCon) {
@@ -41,7 +48,7 @@ require(['config'], function () {
                         }
                     }
                 })
-                
+
             },
             setShow: function (index) {
                 var that = this;
@@ -52,7 +59,7 @@ require(['config'], function () {
                 that.selectIndex = index;
                 that.tabBox[that.selectIndex].style.opacity = 1;
                 that.panelBox[that.selectIndex].style.display = 'block';
-                console.log(index)
+
             }
         };
 
@@ -68,25 +75,18 @@ require(['config'], function () {
             return list;
         }
 
-        // Utils.addEvent(window, 'mouseup', function (e) {
-        //     Utils.addClass(e.target, 'add-border');
-        //     // console.log(e.target,e.currentTarget,e.target.parentNode,Utils.getRect(e.target));
-        //     // console.log(Show.name, Show.getName());
-        //     console.log(e.target.getAttribute('data-id'));
-        // }, false);
+        function Index(parList,child) {
+            // 返回节点处于父级的位置
+            var i;
+            if(!parList.length && parList.length == undefined) parList = getChildes(parList);
+            for(i in parList){
+                if(parList[i] == child){
+                    return i;
+                }
+            }
+            return null;
+        }
 
-        // var lll = document.getElementById('xk-edit-center-edit');
-        //
-        // // lll[0].getBoundingClientRect().top;
-        // var llli = lll.firstElementChild.childNodes;
-        // Utils.addEvent(lll.firstElementChild,'mouseup',function (e) {
-        //     // console.log(e.currentTarget,e.target,lll.contains(e.target),llli);
-        //     for(var i in llli){
-        //         if(llli[i].nodeType===1 && llli[i].contains(e.target)){
-        //             console.log(i,llli[i])
-        //         }
-        //     }
-        // });
 
         var _View = function (o) {
             var that = this;
@@ -108,23 +108,25 @@ require(['config'], function () {
                 var subEdit_musci = doc.getElementById('xk-edit-sub-edit-music');
                 var subEdit_panel = doc.getElementById('xk-edit-sub-panel');
 
+
+
                 // 组件按钮初始化
                 // subEdit_panel.innerHTML = '';
-
+                //
                 // subEdit = new Tab_tools('组件1',{0:subEdit_img,1:subEdit_musci},subEdit_panel);
 
                 if(page && typeof page !== undefined && typeof page ==='object'){
                     // 初始化page
                     for(i in page){
                         id = ~~page[i].id + 1;
-                        nodeString += '<li style="z-index: '+ i*10 + '"><p class="noselect"><span class="float_left">page-'+ id +
+
+                        nodeString += '<li style="z-index: '+ 0 + '"><p class="noselect"><span class="float_left">page-'+ id +
                             '</span> <span class="float_right"><span class="hand" data-id="311">高度设置</span><span class="hand" data-id="312">设置背景图</span><span class="hand" data-id="313">删除</span></span></p>';
-                        // console.log(page[i].rect);
+
                         var style = '',sty,rect;
                         rect = page[i].rect;
                         for(sty in rect){
                             style += sty + ': '+ rect[sty] +'px; ';
-                            // console.log(sty,layerItem.rect[sty])
                         }
                         nodeString += '<div class="xk-edit-center-page-page" style="'+ style +'">';
                         for(j=0,len=page[i].layerList.length;j<len;j++){
@@ -132,9 +134,8 @@ require(['config'], function () {
                             style = '';
                             for(sty in layerItem.rect){
                                 style += sty + ': '+ layerItem.rect[sty] +'px; ';
-                                // console.log(sty,layerItem.rect[sty])
                             }
-
+                            style +='z-index:' + j;
                             nodeString += '<img src=" ' + layerItem.src + '"' + 'style="' + style + '"' +' >';
                         }
 
@@ -159,7 +160,6 @@ require(['config'], function () {
                         subNameList[tabId] = '';
                     }
 
-                    // console.log(subList);
                     i=0;
                     for(i in subList){
 
@@ -219,6 +219,7 @@ require(['config'], function () {
             insertPage: function () {
                 // 插入一个page
 
+
             },
             insertBgMusic: function () {
                 // 插入一个背景音乐
@@ -233,7 +234,7 @@ require(['config'], function () {
                     len = dataList.length;
                     for(i=0; i<len; i++){
                         dataIndex = dataList[i];
-                        str += '<li>' + that._getLayer(dataIndex) + '</li>';
+                        str += '<li class="noselect">' + that._getLayer(dataIndex) + '</li>';
                     }
                 }
                 ele.firstElementChild.innerHTML = str;
@@ -246,7 +247,7 @@ require(['config'], function () {
                 ele.appendChild(li);
             },
             _getLayer:function (data) {
-              //返回标准化后的单个层级 字符串，供调用
+                //返回标准化后的单个层级 字符串，供调用
 
                 var str='';
                 str = '<div class="xk-edit-right-top">' +
@@ -258,8 +259,8 @@ require(['config'], function () {
                     '<div class="xk-edit-right-data xk-edit-right-data-none"> ' +
                     '<p><span>W: <i>'+ data.rect.width +' </i></span> ' +
                     '<span>H: <i>'+ data.rect.height +' </i></span></p> ' +
-                    '<p><span>X: <i>'+ data.rect.x +' </i></span> ' +
-                    '<span>Y: <i>'+ data.rect.y +' </i></span></p> ' +
+                    '<p><span>X: <i>'+ data.rect.left +' </i></span> ' +
+                    '<span>Y: <i>'+ data.rect.top +' </i></span></p> ' +
                     '</div>';
 
 
@@ -303,13 +304,14 @@ require(['config'], function () {
             effect_currentTarget_select: {},
             eff_select: [],
             pageBox: {},
-            page_currentTarget_select: NaN,
+            page_currentTarget_select: {},
             page_select: [],
             subBox: {},
             sub_show_id: NaN,
             sub_select: [],
             layerBox: {},
             layer_select: [],
+            class_list: [],                 // 组件待清除选中样式的数组
             subBox_layer_curr_select_ul: {},
             subBox_layer_curr_select_li: null,
             subBox_layer_effect_sct_index: NaN,
@@ -323,6 +325,8 @@ require(['config'], function () {
                 // console.log(o);
                 var doc = document, that = this;
 
+                // 顶部div，用来展示(包裹） 拖动组件 所用；
+                that.headDiv = doc.getElementById('xk-edit-body-header');
                 // 画布div
                 that.pagePanel = doc.getElementById('xk-edit-center-edit');
                 // 组件div
@@ -347,8 +351,9 @@ require(['config'], function () {
 
                 });
                 Utils.addEvent(that.pagePanel.firstElementChild,'mouseup',function (e) {
+                    //画布侦听
                     // console.log(e.currentTarget,e.target,lll.contains(e.target),llli);
-                    var element = {}, j=0,pageLen=0, selectIndex;
+                    var element , j=0,pageLen=0, selectIndex;
                     for(var i in llli){
                         if(llli[i].nodeType===1 && llli[i].contains(e.target)){
                             element = llli[i];
@@ -357,13 +362,16 @@ require(['config'], function () {
                                 if( Utils.hasClass(element,'box-bg-green') ){
                                     Utils.removeClass(element,'box-bg-green');
                                     for(j=0,pageLen=that.page_select.length; j<pageLen; j++){
-                                        if(element == that.page_select[j]){
+                                        if(element == that.page_select[j].ele){
                                             that.page_select.splice(j,1);
                                         }
                                     }
                                 }else{
                                     Utils.addClass(element,'box-bg-green');
-                                    that.page_select[that.page_select.length] = element;
+                                    that.page_select[that.page_select.length] ={
+                                        index: selectIndex,
+                                        ele: element
+                                    };
                                 }
 
                             }else{
@@ -376,8 +384,8 @@ require(['config'], function () {
                                         // Utils.removeClass(element,'box-bg-green');
                                     }else{
                                         for(j=0; j<pageLen; j++){
-                                            if(element == that.page_select[j]) continue;
-                                            Utils.removeClass(that.page_select[j],'box-bg-green');
+                                            if(element == that.page_select[j].ele) continue;
+                                            Utils.removeClass(that.page_select[j].ele,'box-bg-green');
                                             that.page_select.splice(j,1);
                                             j--,pageLen--;
                                         }
@@ -386,16 +394,22 @@ require(['config'], function () {
                                     Utils.addClass(element,'box-bg-green');
                                     if(pageLen <= 1){
                                         if(that.page_select[0]){
-                                            Utils.removeClass(that.page_select[0],'box-bg-green');
+                                            Utils.removeClass(that.page_select[0].ele,'box-bg-green');
                                         }
-                                        that.page_select[0] = element;
+                                        that.page_select[0] = {
+                                            index: selectIndex,
+                                            ele: element
+                                        };
                                     }else{
                                         for(j=0; j<pageLen; j++){
-                                            if(element == that.page_select[j]) continue;
-                                            Utils.removeClass(that.page_select[j],'box-bg-green');
+                                            if(element == that.page_select[j].ele) continue;
+                                            Utils.removeClass(that.page_select[j].ele,'box-bg-green');
                                         }
                                         that.page_select = [];
-                                        that.page_select[0] = element;
+                                        that.page_select[0] = {
+                                            index: selectIndex,
+                                            ele: element
+                                        };
                                     }
                                 }
 
@@ -405,208 +419,1452 @@ require(['config'], function () {
                         }
                     }
 
-                    if(that.page_currentTarget_select != selectIndex){
-                        that.page_currentTarget_select = selectIndex;
-                        if(that.layerPanelBox && that.page_currentTarget_select){
-                            var id = ~~_Model.page[that.page_currentTarget_select].id + 1;
+                    if(that.page_currentTarget_select.index != selectIndex && element){
+
+                        // 之前选择的page 层级下降
+                        if(that.page_currentTarget_select.ele)  that.page_currentTarget_select.ele.style.zIndex = 0;
+
+                        // 新选择的page 及 其子节点，层级提示
+                        element.style.zIndex = 1;
+                        var page = element.firstElementChild.nextElementSibling;
+                        var pageChild = page.childNodes;
+                        var pageChildLen = pageChild.length;
+                        while (pageChildLen--){
+                            pageChild[pageChildLen].style.zIndex = pageChildLen ;
+                        }
+
+                        that.page_currentTarget_select = {
+                            index: selectIndex,
+                            ele: element
+                        };
+
+                        if(that.layerPanelBox && that.page_currentTarget_select.index){
+                            var id = ~~_Model.page[that.page_currentTarget_select.index].id + 1;
                             getChildes(that.layerPanel.firstElementChild)[1].innerHTML = 'page-' + id  ;
-                            that.v.initLayer(that.layerPanelBox,_Model.page[that.page_currentTarget_select].layerList);
+                            that.v.initLayer(that.layerPanelBox,_Model.page[that.page_currentTarget_select.index].layerList);
                         }
                     }
                 });
 
 
-                // 组件
-                function subEvent(e) {
-
-                    var list = getChildes(e.currentTarget);
-                    var i = 0, len=list.length, selectUl={}, indexUl=NaN, indexLi=NaN,selectLi,UlChild={},
-                        element = {},
-                        eleId;
-                    var index;
-                    if(that.subBox_layer_curr_select_ul){
+                // 组件方法
+                sub_class();
+                // 键盘方法
+                key_Event();
 
 
-                    }
+                function sub_class() {
+                    //组件,图层，效果层 方法
+                    var duobleClick = false;
+                    // 组件
+                    function subDownEvent(e) {
+                        // 组件，图层，效果层 的按下事件
+                        //
+                        // 组件mousedown 按下
 
-                    element = e.target;
-                    eleId = e.currentTarget.id;
+                        //顶部导航是固定布局，占了55px，因此，如果用的是offsetTop，计算的时候就要考虑
+                        var _headHeight = 55;
+                        var _downTime = Utils.getTime();
 
-                    for(i=0; i<len; i++){
-                        if(list[i].contains(element)){
-                            selectUl = list[i];
-                            indexUl = i;
+                        var list, i = 0, len, selectUl={}, indexUl=NaN, indexLi=NaN, selectLi, UlChild={},
+                            parentEle = {} , element = {}, eleId;
+                        // 拷贝的节点，供拖动;
+                        var isDrop = true, isMove = false, eleName, _x, _y, _mx, _my;
+                        // 拖动的 ul 容器
+                        var moveUl = null;
+                        // 当前容器的的scrolltop
+                        var eleScrrollTop = 0, scrollHeight =  0;
+                        // 拖动对象 当前num，当前节点
+                        var moveNextIndex , nextLi;
 
-                            break;
-                        }
-                    }
+                        var isPanelMove = false;    //多个li拖动
+                        var currIndex = NaN;        //滚条上一个滚动位置
 
-                    //组件当前显示的id
-                    that.sub_show_id = indexUl;
+                        var moveNextCss = '';       // 记录move的li 的border css
+                        var currCss = '';           // 上一个li 的border css
 
-                    UlChild = getChildes(selectUl);
-                    for(i=0,len=UlChild.length; i<len; i++){
-                        if(UlChild[i].contains(element)){
-                            selectLi = UlChild[i];
-                            indexLi = i;
+                        // 双击修改名字或者打开显示
 
-                            break;
-                        }
-                    }
 
-                    var _dataId = ~~element.getAttribute('data-id');
-                    switch(eleId){
-                        case 'xk-edit-effect-panel':
-                            // 效果层
-                            // console.log(e.currentTarget.id,element);
-                            // that.eff_select
-                            clickItem(that.eff_select);
-                            typeItem();
-                            break;
-                        case 'xk-edit-sub-panel':
-                            // 组件层
-                            // console.log(e.currentTarget.id,element,indexUl);
-                            if(!that.sub_select[indexUl]) that.sub_select[indexUl] =[];
-                            // that.sub_select
-                            clickItem(that.sub_select[indexUl]);
-                            typeItem();
-                            break;
-                        case 'xk-edit-layer-panel':
-                            // 图层层
-                            index = that.page_currentTarget_select;
-                            // that.layer_select
-                            clickItem(that.layer_select);
-                            if(index && !isNaN(indexLi)){
-                                that.v.initEffect(that.effectPanelBox,_Model.page[index].layerList[indexLi].animal);
-                                typeItem();
+                        parentEle = e.currentTarget;
+                        element = e.target;
+                        eleId = e.currentTarget.id;
+                        _mx = _x = e.pageX;
+                        _my = _y = e.pageY;
+
+                        list = getChildes(e.currentTarget);
+                        len = list.length;
+
+                        eleScrrollTop = parentEle.scrollTop;
+                        scrollHeight = parentEle.scrollHeight;
+
+                        for(i=0; i<len; i++){
+                            if(list[i].contains(element)){
+                                selectUl = list[i];
+                                indexUl = selectUl.getAttribute('data-tab');
+                                break;
                             }
-                            break;
-                    }
+                        }
 
-                    function clickItem(ulSelectArr) {
-                        // 点击单个 li 相应的显示与数据处理
+
+                        UlChild = getChildes(selectUl);
+
+
+                        for(i=0,len=UlChild.length; i<len; i++){
+                            if(UlChild[i].contains(element)){
+                                selectLi = UlChild[i];
+                                eleName = selectLi.nodeName;
+                                indexLi = i;
+                                that.subBox_layer_effect_sct_index = i;
+                                break;
+                            }
+                        }
+
                         if(!selectLi) return;
-
-                        if(that.ctrl || that.shift || that.ctrl_shift){
-                            if(!Utils.hasClass(selectLi,'box-bg-blue')){
-                                Utils.addClass(selectLi,'box-bg-blue');
-                                ulSelectArr[ulSelectArr.length] = selectLi;
-                            }
-
-                        }else{
-
-                            if(Utils.hasClass(selectLi,'box-bg-blue')){
-                                len=ulSelectArr.length;
-                                if(len>1){
-                                    while(len--){
-                                        if(ulSelectArr[len]){
-                                            if(ulSelectArr[len] == selectLi) continue;
-                                            Utils.removeClass(ulSelectArr[len],'box-bg-blue');
-                                            ulSelectArr.splice(len,1);
-                                        }
-                                    }
-                                }
-                            }else{
-                                // if(that.subBox_layer_curr_select_ul != selectUl){
-                                    len=ulSelectArr.length;
-                                    while(len--){
-                                        if(ulSelectArr[len]){
-                                            Utils.removeClass(ulSelectArr[len],'box-bg-blue');
-                                            ulSelectArr.splice(len,1);
-                                        }
-                                    }
-                                // }else{
-                                //     Utils.removeClass(that.subBox_layer_curr_select_li,'box-bg-blue');
-                                // }
-                                Utils.addClass(selectLi,'box-bg-blue');
-                            }
-                            ulSelectArr[0]=selectLi;
-
-                        }
 
                         if(that.subBox_layer_curr_select_ul != selectUl){
                             that.subBox_layer_curr_select_ul = selectUl;
                         }
                         if(that.subBox_layer_curr_select_li != selectLi){
-                            that.subBox_layer_curr_select_li=selectLi;
+                            that.subBox_layer_curr_select_li = selectLi;
                         }
 
-                    }
+                        var _dataId = ~~element.getAttribute('data-id');
 
 
-                    function typeItem() {
-                        // 处理单个按钮
+                        var selectUlRect = selectUl.getBoundingClientRect();
+                        var copyNodeRect = selectLi.getBoundingClientRect();
 
-                        switch(_dataId){
-                            case 421:
-                                console.log(_dataId,_Model.config[_dataId]);
 
+                        switch(eleId){
+                            case 'xk-edit-effect-panel':
+                                // 效果层
+                                // console.log(e.currentTarget.id,element);
+                                // dropLayer(selectUl,selectLi,that.eff_select,function () {
+                                //     console.log('xk-edit-effect-panel');
+                                // });
                                 break;
-                            case 422:
-                                console.log(_dataId,_Model.config[_dataId]);
-
+                            case 'xk-edit-sub-panel':
+                                // 组件层
+                                // console.log(e.currentTarget.id,element,indexUl);
+                                //组件当前显示的id
+                                if(!that.sub_select[indexUl]) that.sub_select[indexUl] =[];
+                                that.sub_show_id = indexUl;
+                                dropItem(selectUl,selectLi,that.sub_select[indexUl],function () {
+                                    console.log('xk-edit-sub-panel');
+                                });
                                 break;
-                            case 423:
-                                console.log(_dataId,_Model.config[_dataId]);
-
+                            case 'xk-edit-layer-panel':
+                                // 图层层
+                                dropLayer(selectUl,selectLi,that.layer_select,function () {
+                                    console.log('xk-edit-layer-panel');
+                                });
                                 break;
-                            case 424:
-                                console.log(_dataId,_Model.config[_dataId]);
+                        }
 
-                                break;
-                            case 425:
-                                // console.log(id,_Model.config[id]);
-                                var list = getChildes(that.subBox_layer_curr_select_li);
-                                console.log(that.subBox_layer_curr_select_li,1111);
-                                if(Utils.hasClass(element,'xk-edit-right-label-dirbottom')){
-                                    Utils.removeClass(element,'xk-edit-right-label-dirbottom');
-                                    Utils.addClass(list[1],'xk-edit-right-data-none');
-                                }else{
-                                    Utils.addClass(element,'xk-edit-right-label-dirbottom');
-                                    Utils.removeClass(list[1],'xk-edit-right-data-none');
+                        function moveNode(ele,top) {
+                            // 拖动的节点
+                            var newLi = doc.createElement('li');
+                            var liTop, liLeft, liWidth, liHeight;
+                            var eleChild, ourSrt='';
+                            var copyNodeRect = ele.getBoundingClientRect(), mi, mLen;
+                            eleChild = getChildes(ele);
+                            for(mi=0,mLen=eleChild.length; mi<mLen; mi++){
+                                ourSrt += eleChild[mi].outerHTML;
+                            }
+                            newLi.innerHTML = ourSrt;
+                            liTop = Math.round(copyNodeRect.top - eleScrrollTop) ;
+                            liLeft = Math.round(copyNodeRect.left);
+                            liWidth = Math.round(copyNodeRect.width);
+                            liHeight = Math.round( (copyNodeRect.height >46 ? 46 : copyNodeRect.height ) );
+                            newLi.style.top = Math.round( copyNodeRect.top - top ) +'px';
+                            newLi.style.left = '0px';
+                            newLi.style.width = liWidth +'px';
+                            newLi.style.height = liHeight +'px';
+                            // newLi.style.opacity = 0;
+                            newLi.style.overflow = 'hidden';
+                            newLi.style.zIndex = -1;
+                            newLi.style.position = 'absolute';
+                            return {
+                                ele: newLi,
+                                top: liTop,
+                                left: liLeft,
+                                width: liWidth,
+                                height: liHeight
+                            };
+
+                        }
+
+                        function movePanel(cuUl,cuLi,selectArr) {
+                            // 生成拖动的ul，及其子节点li；
+                            // 子节点li，全部是 通过 moveNode 方法，传回的 复制体（完全遍历复制）
+
+                            var _moveUl = doc.createElement('ul');
+                            var _delEle, nextH=0, getEleObj;
+                            var len = selectArr.length;
+                            if(isPanelMove){
+                                var moveArr = [], childItem, firstIndex = false, firstEleTop;
+
+                                for(i=0; i<len; i++){
+                                    childItem = selectArr[i];
+                                    if(!cuUl.contains(childItem.ele)) continue;
+                                    moveArr[childItem.index] = childItem;
+                                }
+                                for(i=0,len=moveArr.length; i<len; i++){
+                                    childItem = moveArr[i];
+                                    if(childItem){
+                                        if(!firstIndex){
+                                            firstEleTop = childItem.ele.getBoundingClientRect().top;
+                                        }
+                                        getEleObj = moveNode( childItem.ele, firstEleTop );
+                                        if(!firstIndex){
+                                            nextH = getEleObj.top;
+                                            _moveUl.style.top = getEleObj.top + eleScrrollTop + 'px';
+                                            _moveUl.style.left = getEleObj.left + 'px';
+                                            firstIndex = true;
+                                        }
+                                        _moveUl.style.height = getEleObj.top - nextH + getEleObj.height + 'px';
+                                        _moveUl.appendChild(getEleObj.ele);
+                                    }
+
                                 }
 
-                                break;
+                            }else{
+
+                                len = selectArr.length;
+                                while(len--){
+                                    _delEle = selectArr[len];
+                                    selectArr.splice(len,1);
+                                    that.class_list.push(_delEle);
+                                }
+
+                                getEleObj = moveNode(cuLi);
+                                _moveUl.style.top = getEleObj.top + eleScrrollTop + 'px';
+                                _moveUl.style.left = getEleObj.left + 'px';
+                                _moveUl.style.height = getEleObj.height + 'px';
+                                _moveUl.appendChild(getEleObj.ele);
+
+                            }
+                            _moveUl.style.width = getEleObj.width + 'px';
+                            _moveUl.style.position = 'absolute';
+                            _moveUl.style.zIndex = 10000;
+                            _moveUl.style.opacity = 0;
+                            return _moveUl;
                         }
 
+                        function hasNextEle(ele,arr) {
+                            // 获取目标节点，是否在选择数组内
+                            var _isHasEle = false;
+                            var ni, nextArrLen;
+                            var nextChild;
+                            for(ni=0,nextArrLen=arr.length; ni<nextArrLen; ni++){
+                                nextChild = arr[ni];
+                                if(nextChild){
+                                    if(ele == nextChild.ele){
+                                        _isHasEle = true;
+                                        return _isHasEle;
+                                    }
+                                }
+
+                            }
+
+                            return _isHasEle;
+                        }
+
+                        function setLIcss(index,styleValue) {
+                            // 设置css,styleValue 为style的属性值 , borderTopColor,borderBottomColor;
+
+                            styleValue == undefined ? styleValue = moveNextCss : styleValue = styleValue;
+                            UlChild[index].style[styleValue] = 'red';
+
+                            if(!isNaN(currIndex)){
+                                UlChild[currIndex].style[currCss] = '#9d9d9d';
+                            }
+                            currIndex = index;
+                            currCss = styleValue;
+                        }
+
+                        function dropLayer(cuUl,cuLi,selectArr,callback) {
+                            // 图层和效果层 拖动
+
+                            // if(moveUl!=null){
+                            //     that.headDiv.removeChild(moveUl);
+                            //     moveUl=null;
+                            // }
+                            callback();
+
+                            var childItem;
+                            var scrollIndex = NaN;
+                            var liLen = UlChild.length;
+
+                            //拖动存在的四个属性
+                            var isTop = false;
+                            var isBottom = false;
+
+                            // 当前 ul 的rect属性
+                            var cuUlRect = cuUl.getBoundingClientRect();
+
+
+                            moveNextIndex = indexLi;
+                            nextLi =cuLi;
+
+                            len=selectArr.length;
+
+                            for(i = 0; i<len; i++){
+                                if(cuLi == selectArr[i].ele){
+                                    isPanelMove = true;
+                                    break;
+                                }
+                            }
+
+
+                            Utils.addEvent(cuLi,'mouseup',subUpEvent);
+
+                            Utils.addEvent(window,'mousemove',copyMove);
+                            Utils.addEvent(window,'mouseup',copyUp);
+
+                            function copyUp(e) {
+                                //鼠标抬起后，按需插入
+                                Utils.removeEvent(window,'mousemove',copyMove);
+                                if(!isDrop) return;
+                                isDrop = false;
+
+                                if(isMove){
+
+                                    var moveArr = [];                       //按点击目前的位置（index）来排序的数组
+                                    var minArr = [], maxArr = [];           //分离出，比 当前移动的对象moveNextIndex 大 or 小 的二个数组
+                                    var nextItem;
+                                    var excEle;                             //交换节点
+                                    var moveLi;                             //保存一次拖入目标
+                                    var moveLiNext;                         //
+                                    var arrIndex;
+
+                                    var removeEle;                          // 移除的li
+
+                                    var modePage = _Model.page[~~that.page_currentTarget_select.index];       //获取当前选择的page 对应的 mode数据
+                                    var modeLayer = modePage.layerList;                         //获取当前mode数据下的 图层数组
+                                    var excModeData;                                             //临时保存待图层数组变更位置的对象
+
+                                    moveLi = UlChild[moveNextIndex];
+                                    moveLiNext = moveLi.nextElementSibling;
+                                    setLIcss(moveNextIndex);
+
+                                    len=selectArr.length;
+                                    if( isPanelMove && len>1 ){
+
+                                        // 对选择的节点，按索引进行排序
+                                        for(i=0; i<len; i++){
+                                            childItem = selectArr[i];
+                                            if(!cuUl.contains(childItem.ele)) continue;
+                                            moveArr[childItem.index] = childItem;
+                                        }
+
+                                        // 排序完成后，以移入目标索引，进行大小数组分割
+                                        for(i=0,len = moveArr.length; i<len; i++ ){
+                                            childItem = moveArr[i];
+                                            if(childItem){
+                                                childItem.index >= moveNextIndex ? maxArr.push(childItem) : minArr.push(childItem);
+                                            }
+                                        }
+
+                                        len = minArr.length;
+                                        nextItem = len;
+                                        var UlIndex;
+                                        var minLiNum = moveNextIndex;
+                                        var minLi;
+                                        while (len--){
+                                            childItem = minArr[len];
+                                            minLi = UlChild[minLiNum];
+                                            var minNum = moveNextIndex - childItem.index;
+                                            var _minNUm = minNum;
+
+                                            while(minNum--){
+                                                // 根据当前位置 与 移动位置  差值，进行循环，遍历目标是否可以移动
+                                                UlIndex = ~~childItem.index + _minNUm;
+                                                var excNode = UlChild[UlIndex];
+                                                var hasEle = hasNextEle(excNode,moveArr);
+
+                                                if(!hasEle){
+
+                                                    excEle = excNode.nextElementSibling;
+
+                                                    removeEle = cuUl.removeChild(childItem.ele);
+                                                    UlChild.splice(childItem.index,1);                  //更新UlChild数组索引
+
+                                                    excModeData = modeLayer[childItem.index];               //更新mode图层数组
+                                                    modeLayer.splice(childItem.index,1);
+                                                    if(!isBottom){
+                                                        cuUl.insertBefore(removeEle,excEle);
+                                                        arrIndex = Index(cuUl,removeEle);
+                                                        UlChild.splice(UlIndex,0,removeEle);            //更新UlChild数组索引
+
+                                                        modeLayer.splice(UlIndex,0,excModeData);            //更新mode图层数组
+
+                                                    }else{
+
+                                                        excEle = minLi.nextElementSibling;
+                                                        console.log(minLi)
+                                                        if(excEle){
+                                                            cuUl.insertBefore(removeEle,excEle);
+                                                            arrIndex = Index(cuUl,removeEle);
+                                                            UlChild.splice(arrIndex,0,removeEle);                        //更新UlChild数组索引
+                                                            modeLayer.splice(arrIndex,0,excModeData);                        //更新mode图层数组
+                                                        }else{
+                                                            cuUl.appendChild(removeEle);
+                                                            UlChild.push(removeEle);                        //更新UlChild数组索引
+                                                            arrIndex = UlChild.length - 1;
+                                                            modeLayer.push(excModeData);                        //更新mode图层数组
+                                                        }
+                                                        minLiNum--;
+
+                                                    }
+                                                    childItem.index = arrIndex;
+
+                                                    break;
+                                                }
+
+                                                _minNUm--;
+                                            }
+                                            removeEle = null;
+                                        }
+
+
+
+                                        len = maxArr.length;
+                                        nextItem = 0;
+                                        while(nextItem < len){
+                                            childItem = maxArr[nextItem];
+                                            var maxNum = childItem.index - moveNextIndex;
+                                            var _maxNum = maxNum;
+                                            while (maxNum--){
+
+                                                UlIndex = ~~childItem.index - _maxNum;
+
+                                                var excNode = UlChild[UlIndex];
+                                                var hasEle = hasNextEle(excNode,maxArr);
+
+                                                if(!hasEle){
+                                                    excEle = excNode.nextElementSibling;
+                                                    if(childItem.ele == moveLiNext){
+                                                        moveLiNext = moveLiNext.nextElementSibling;
+                                                    }
+
+                                                    removeEle = cuUl.removeChild(childItem.ele);
+
+                                                    UlChild.splice(childItem.index,1);                  //更新UlChild数组索引
+                                                    excModeData = modeLayer[childItem.index];               //更新mode图层数组
+                                                    modeLayer.splice(childItem.index,1);
+                                                    if(!isTop){
+                                                        cuUl.insertBefore(removeEle,moveLiNext);
+                                                        arrIndex = Index(cuUl,removeEle);
+                                                        UlChild.splice(arrIndex,0,removeEle);            //更新UlChild数组索引
+
+                                                        modeLayer.splice(arrIndex,0,excModeData);            //更新mode图层数组
+                                                    }else{
+
+                                                        cuUl.insertBefore(removeEle,excNode);
+                                                        arrIndex = Index(cuUl,removeEle);
+                                                        UlChild.splice(arrIndex,0,removeEle);            //更新UlChild数组索引
+
+                                                        modeLayer.splice(arrIndex,0,excModeData);            //更新mode图层数组
+
+                                                    }
+                                                    childItem.index = arrIndex;
+                                                    break;
+                                                }
+
+                                                _maxNum--;
+                                            }
+
+                                            removeEle = moveLi =null;
+                                            nextItem++;
+                                        }
+                                        // console.log(excModeData,modeLayer,arrIndex);
+                                        // console.log(UlChild,selectArr);
+                                        // console.log(modeLayer,that.page_currentTarget_select);
+
+                                        excNode = moveLiNext = null;
+
+                                    }else{
+
+                                        len = selectArr.length;
+                                        if(len>0){
+                                            while (len--){
+                                                var delEle = selectArr[len];
+                                                selectArr.splice(len,1);
+                                                that.class_list.push(delEle);
+                                            }
+                                        }
+                                        var excNode = UlChild[moveNextIndex];
+
+                                        excEle = excNode.nextElementSibling;
+                                        removeEle = cuUl.removeChild(cuLi);
+
+                                        UlChild.splice(indexLi,1);                  //更新UlChild数组索引
+                                        excModeData = modeLayer[indexLi];           //更新mode图层数组
+                                        modeLayer.splice(indexLi,1);
+
+                                        if(!isTop && excEle!=cuLi){
+                                            cuUl.insertBefore(removeEle,excEle);
+                                        }else{
+                                            cuUl.insertBefore(removeEle,excNode);
+                                        }
+                                        arrIndex = Index(cuUl,removeEle);
+                                        UlChild.splice(arrIndex,0,removeEle);                  //更新UlChild数组索引
+                                        modeLayer.splice(arrIndex,0,excModeData);                //更新mode图层数组
+                                        selectArr.push({
+                                            ele: removeEle,
+                                            index: moveNextIndex
+                                        });
+                                        Utils.addClass(removeEle,'box-bg-blue');
+
+                                        for(i=0,len=that.class_list.length; i<len; i++){
+                                            if(removeEle == that.class_list[i].ele) continue;
+                                            Utils.removeClass(that.class_list[i].ele,'box-bg-blue');
+
+                                        }
+                                        removeEle = null;
+
+
+
+                                        that.class_list = [];
+                                        console.log(UlChild,selectArr,modeLayer);
+
+                                    }
+
+                                    if(!isNaN(currIndex)){
+                                        UlChild[currIndex].style.borderBottomColor = '#9d9d9d';
+                                    }
+
+                                    that.headDiv.removeChild(moveUl);
+                                    moveUl=null;
+
+                                }
+
+                                Utils.removeEvent(window,'mouseup',copyUp);
+                                Utils.removeEvent(window,'mousemove',copyMove);
+                            }
+
+                            function copyMove(e) {
+                                // 拖动move事件
+                                var cuUlTop = cuUl.offsetTop , cuUlHeight = cuUl.offsetHeight;
+                                var nextRect ;          //目标的 rect 属性
+                                isDrop = true;
+
+
+                                if(!isMove){
+                                    if(Utils.getTime() - _downTime <= 150) return;
+
+                                    len = selectArr.length;
+
+                                    moveUl = movePanel(cuUl,cuLi,selectArr);
+
+                                    that.headDiv.appendChild(moveUl);
+                                    Utils.addClass(moveUl,'isDrop');
+                                    moveUl.style.opacity = 0.7;
+
+                                    isMove = true;
+                                }
+
+                                if(scrollIndex!=moveNextIndex){
+                                    // 滚动条  跟随滚动
+                                    // parentEle.scrollTop = 46* (moveNextIndex - scrollIndex) ;
+                                    // parentEle.scrollTop = scrollHeight * (moveNextIndex / liLen / 2) ;
+                                    // scrollIndex=moveNextIndex;
+
+                                }
+
+                                if(_y!= e.pageY){
+
+                                    if(moveUl){
+
+                                        moveUl.style.top = e.pageY - moveUl.offsetHeight/2   +'px';
+
+                                        if(moveUl.offsetTop<cuUlTop + _headHeight){
+                                            moveUl.style.top = cuUlTop + _headHeight +'px';
+                                        }
+                                        if(moveUl.offsetTop >= cuUlTop + _headHeight + cuUlHeight - moveUl.offsetHeight ){
+
+                                            moveUl.style.top = cuUlTop + _headHeight + cuUlHeight - moveUl.offsetHeight +'px';
+                                        }
+
+                                    }
+
+                                    _x = e.pageX , _y= e.pageY;
+
+                                }
+
+                                len = UlChild.length;
+                                if(Math.abs(_my - e.pageY) >= 2){
+
+                                    // 下个兄弟节点,
+                                    var nextEleChild, nextEleChildRect,  childTopAndHeight = 0;
+                                    // if(_my - e.pageY >= 1){
+                                    //     //往上滚动
+                                    //     console.log('上');
+                                    //
+                                    // }else if(_my - e.pageY <= -1){
+                                    //     //往下滚动
+                                    //     console.log('下');
+                                    //
+                                    // }
+
+                                    nextRect = nextLi.getBoundingClientRect();
+                                    nextEleChild = nextLi.nextElementSibling;
+                                    if(nextEleChild){
+                                        nextEleChildRect = nextEleChild.getBoundingClientRect();
+                                        childTopAndHeight = childTopAndHeight + nextEleChildRect.height/2;
+                                    }
+                                    if(e.pageY < nextRect.top + nextRect.height/2){
+                                        moveNextIndex--;
+                                        // moveNextIndex >= UlChild.length-1 ? moveNextIndex = UlChild.length-1 : moveNextIndex;
+                                        if(moveNextIndex < 0){
+                                            moveNextIndex = 0;
+                                            if(!isTop){
+                                                moveNextCss = 'borderTopColor';
+                                                setLIcss(moveNextIndex,moveNextCss);
+                                                isTop = true;
+                                            }
+                                            return;
+                                        }
+                                        moveNextCss = 'borderBottomColor';
+                                        setLIcss(moveNextIndex,moveNextCss);
+
+
+                                    }else if(e.pageY > nextRect.top + nextRect.height + childTopAndHeight){
+
+                                        moveNextIndex++;
+                                        // moveNextIndex < 0 ? moveNextIndex = 0 : moveNextIndex = moveNextIndex;
+
+                                        if(moveNextIndex >= len-1){
+                                            moveNextIndex = len-1;
+                                            if(!isBottom){
+                                                moveNextCss = 'borderBottomColor';
+                                                setLIcss(moveNextIndex,moveNextCss);
+                                                isBottom = true;
+                                            }
+                                            return;
+                                        }
+                                        moveNextCss = 'borderBottomColor';
+                                        setLIcss(moveNextIndex,moveNextCss);
+                                        // console.log(moveNextIndex,currIndex,e.pageY,nextRect.top)
+                                    }else{
+                                        isTop = isBottom = false;
+                                        moveNextCss = 'borderBottomColor';
+                                        currCss = 'borderTopColor';
+                                        setLIcss(moveNextIndex,moveNextCss);
+                                    }
+
+                                    nextLi = UlChild[moveNextIndex];
+
+                                    _my = e.pageY; _mx = e.pageX;
+                                }
+
+
+                            }
+
+                        }
+
+                        function dropItem(cuUl,cuLi,selectArr,callback) {
+                            // 组件拖动
+                            if(moveUl!=null){
+                                that.headDiv.removeChild(moveUl);
+                                moveUl=null;
+                            }
+                            callback();
+
+                            // 画布的rect模型值
+                            var pageRect = that.pagePanel.getBoundingClientRect();
+                            // 画布的滚条值
+                            var pageScrollTop = that.pagePanel.scrollTop;
+
+                            var childItem;
+                            var indexRect = cuUl;
+                            var moveBoxBool = true;
+
+                            //拖动存在的四个属性
+                            var isTop = false;
+                            var isBottom = false;
+
+                            moveNextIndex = indexLi;
+                            nextLi =cuLi;
+
+                            len=selectArr.length;
+
+                            for(i = 0; i<len; i++){
+                                if(cuLi == selectArr[i].ele){
+                                    isPanelMove = true;
+                                    break;
+                                }
+                            }
+
+
+                            Utils.addEvent(cuLi,'mouseup',subUpEvent);
+
+
+                            Utils.addEvent(window,'mousemove',copyMove);
+                            Utils.addEvent(window,'mouseup',copyUp);
+
+                            function copyUp(e) {
+                                Utils.removeEvent(window,'mousemove',copyMove);
+                                if(!isDrop) return;
+                                isDrop = false;
+
+                                if(isMove){
+
+                                    if(moveBoxBool){
+                                        // 在组件容器内部拖动
+
+
+                                        var moveArr = [];                       //按点击目前的位置（index）来排序的数组
+                                        var minArr = [], maxArr = [];           //分离出，比 当前移动的对象moveNextIndex 大 or 小 的二个数组
+                                        var nextItem;
+                                        var excEle;                             //交换节点
+                                        var moveLi;                             //保存一次拖入目标
+                                        var moveLiNext;                         //
+                                        var arrIndex;
+
+                                        var removeEle;                          // 移除的li
+
+                                        var modePage = _Model.page[~~that.page_currentTarget_select.index];       //获取当前选择的page 对应的 mode数据
+                                        var modeLayer = modePage.layerList;                         //获取当前mode数据下的 图层数组
+                                        var excModeData;                                             //临时保存待图层数组变更位置的对象
+
+                                        moveLi = UlChild[moveNextIndex];
+                                        moveLiNext = moveLi.nextElementSibling;
+                                        setLIcss(moveNextIndex);
+
+                                        len=selectArr.length;
+                                        if( isPanelMove && len>1 ){
+
+                                            for(i=0; i<len; i++){
+                                                childItem = selectArr[i];
+                                                if(!cuUl.contains(childItem.ele)) continue;
+                                                moveArr[childItem.index] = childItem;
+                                            }
+
+                                            for(i=0,len = moveArr.length; i<len; i++ ){
+                                                childItem = moveArr[i];
+                                                if(childItem){
+                                                    childItem.index >= moveNextIndex ? maxArr.push(childItem) : minArr.push(childItem);
+                                                }
+                                            }
+
+                                            len = minArr.length;
+                                            nextItem = len;
+                                            var UlIndex;
+                                            var minLiNum = moveNextIndex;
+                                            var minLi;
+                                            while (len--){
+                                                childItem = minArr[len];
+                                                minLi = UlChild[minLiNum];
+                                                var minNum = moveNextIndex - childItem.index;
+                                                var _minNUm = minNum;
+
+                                                while(minNum--){
+                                                    // 根据当前位置 与 移动位置  差值，进行循环，遍历目标是否可以移动
+                                                    UlIndex = ~~childItem.index + _minNUm;
+                                                    var excNode = UlChild[UlIndex];
+                                                    var hasEle = hasNextEle(excNode,moveArr);
+                                                    if(!hasEle){
+
+                                                        excEle = excNode.nextElementSibling;
+
+                                                        removeEle = cuUl.removeChild(childItem.ele);
+                                                        UlChild.splice(childItem.index,1);                  //更新UlChild数组索引
+
+                                                        // excModeData = modeLayer[childItem.index];               //更新mode图层数组
+                                                        // modeLayer.splice(childItem.index,1);
+
+                                                        if(!isBottom){
+                                                            cuUl.insertBefore(removeEle,excEle);
+                                                            arrIndex = Index(cuUl,removeEle);
+                                                            UlChild.splice(UlIndex,0,removeEle);            //更新UlChild数组索引
+                                                            console.log(UlIndex)
+
+                                                        }else{
+                                                            excEle = minLi.nextElementSibling;
+
+                                                            if(excEle){
+                                                                cuUl.insertBefore(removeEle,excEle);
+                                                                arrIndex = Index(cuUl,removeEle);
+                                                                UlChild.splice(arrIndex,0,removeEle);                        //更新UlChild数组索引
+                                                            }else{
+                                                                cuUl.appendChild(removeEle);
+                                                                UlChild.push(removeEle);                        //更新UlChild数组索引
+                                                                arrIndex = UlChild.length - 1;
+                                                            }
+                                                            minLiNum--;
+
+                                                        }
+                                                        childItem.index = arrIndex;
+
+                                                        break;
+                                                    }
+
+                                                    _minNUm--;
+                                                }
+                                                removeEle = excNode = null;
+
+                                            }
+
+
+                                            len = maxArr.length;
+                                            nextItem = 0;
+                                            while(nextItem < len){
+                                                childItem = maxArr[nextItem];
+                                                var maxNum = childItem.index - moveNextIndex;
+                                                var _maxNum = maxNum;
+
+                                                while (maxNum--){
+                                                    UlIndex = ~~childItem.index - _maxNum;
+                                                    var excNode = UlChild[UlIndex];
+                                                    var hasEle = hasNextEle(excNode,maxArr);
+
+                                                    if(!hasEle){
+                                                        excEle = excNode.nextElementSibling;
+                                                        if(childItem.ele == moveLiNext){
+                                                            moveLiNext = moveLiNext.nextElementSibling;
+                                                        }
+
+                                                        removeEle = cuUl.removeChild(childItem.ele);
+                                                        UlChild.splice(childItem.index,1);                  //更新UlChild数组索引
+
+                                                        if(!isTop){
+                                                            if(excEle == childItem.ele) continue;
+                                                            cuUl.insertBefore(removeEle,moveLiNext);
+                                                            arrIndex = Index(cuUl,removeEle);
+                                                            UlChild.splice(arrIndex,0,removeEle);            //更新UlChild数组索引
+
+                                                        }else{
+                                                            cuUl.insertBefore(removeEle,excNode);
+                                                            arrIndex = Index(cuUl,removeEle);
+                                                            UlChild.splice(arrIndex,0,removeEle);            //更新UlChild数组索引
+
+                                                        }
+                                                        childItem.index = Index(cuUl,removeEle);
+
+                                                        break;
+                                                    }
+
+                                                    _maxNum--;
+                                                }
+
+                                                removeEle = excNode = null;
+
+                                                nextItem++;
+                                            }
+
+
+                                        }else{
+                                            len = selectArr.length;
+                                            if(len>0){
+                                                while (len--){
+                                                    var delEle = selectArr[len];
+                                                    selectArr.splice(len,1)
+                                                    that.class_list.push(delEle);
+                                                }
+                                            }
+                                            var excNode = UlChild[moveNextIndex];
+                                            excEle = excNode.nextElementSibling;
+                                            // var hasEle = hasNextEle(excNode);
+                                            removeEle = cuUl.removeChild(cuLi);
+
+                                            UlChild.splice(indexLi,1);                  //更新UlChild数组索引
+
+                                            if(!isTop && excEle != cuLi){
+                                                cuUl.insertBefore(removeEle,excEle);
+                                            }else{
+                                                cuUl.insertBefore(removeEle,excNode);
+                                            }
+                                            arrIndex = Index(cuUl,removeEle);
+                                            UlChild.splice(arrIndex,0,removeEle);                  //更新UlChild数组索引
+
+                                            selectArr.push({
+                                                ele: removeEle,
+                                                index: moveNextIndex
+                                            });
+                                            Utils.addClass(removeEle,'box-bg-blue');
+
+                                            for(i=0,len=that.class_list.length; i<len; i++){
+                                                if(removeEle == that.class_list[i].ele) continue;
+                                                Utils.removeClass(that.class_list[i].ele,'box-bg-blue');
+
+                                            }
+
+                                            removeEle = null;
+                                            that.class_list = [];
+                                        }
+
+
+                                    }else{
+
+                                        // 拖动到画布上
+
+                                        var pageLen = that.page_select.length;
+                                        var page;               //选择的 page 对象
+                                        var pageEle;            //选择的 page 节点 子容器
+                                        var pageEleRect;        //page的 模型数据
+                                        var sctEle;             //选择的节点
+                                        var dataItem;           //获取数据 对象
+                                        var layerLen;           //层级
+                                        var regNum = /^(\d)*/g;
+                                        if(pageLen == 1){
+                                            // 目前不知道，是否具备，一个组件，同时拖入N个选择的page。
+                                            // 如果不可以，那么采用 that.page_currentTarget_select
+                                            // 如果可以，就要遍历这里了。。。。
+
+                                            // console.log(that.page_select,'1234',pageLen);
+
+                                            // 插入组件 的 目标page节点
+                                            page = that.page_select[pageLen-1];
+                                            pageEle = page.ele.firstElementChild.nextElementSibling;
+                                            pageEleRect = pageEle.getBoundingClientRect();
+                                            var _x = e.pageX, _y = e.pageY;
+                                            var imgWidth, imgHeight, imgTop, imgLeft;
+                                            var newImg;
+                                            // 页面单个图层数据对象
+                                            var modeLayerItem;
+                                            var newLi;
+                                            if(isPanelMove){
+
+                                                for(i=0; i<len; i++){
+                                                    sctEle = selectArr[i];
+
+                                                    // 通过选择的 li 包含的 data-subId ，然后在 数据层 遍历，找到这个 数据。
+                                                    // 目前 先随便获取，后面数据对应后，再删除这里
+                                                    dataItem = _Model.subList[ sctEle.index ];
+                                                    if(dataItem.tab != 0) return;
+
+                                                    newLi = doc.createElement('li');
+                                                    layerLen = _Model.page[page.index].layerList.length;
+
+                                                    imgWidth = dataItem.width.match(regNum);
+                                                    imgHeight = dataItem.height.match(regNum);
+
+                                                    imgTop = e.pageY - imgHeight/2 ;
+                                                    imgLeft = e.pageX - imgWidth/2 ;
+                                                    imgTop = Math.round( imgTop - pageEleRect.top );
+                                                    imgLeft = Math.round( imgLeft - pageEleRect.left );
+                                                    newImg = doc.createElement('img');
+                                                    newImg.src = dataItem.src;
+                                                    newImg.style.left = imgLeft +'px';
+                                                    newImg.style.top = imgTop +'px';
+                                                    newImg.style.width = imgWidth +'px';
+                                                    newImg.style.height = imgHeight +'px';
+                                                    newImg.style.zIndex = layerLen;
+                                                    pageEle.appendChild(newImg);
+                                                    dataItem.citeAdd.push({
+                                                        index: page.index,
+                                                        pageEle:  page.ele,
+                                                        ele: newImg
+                                                    });
+
+                                                    //插入页面数据层；
+                                                    _Model.page[page.index].layerList[layerLen] = {
+                                                        subId: dataItem.id,
+                                                        layer: layerLen-1,
+                                                        src: dataItem.src,
+                                                        name: 0,
+                                                        rect: {
+                                                            width: imgWidth,
+                                                            height: imgHeight,
+                                                            left: imgLeft,
+                                                            top: imgTop,
+                                                        },
+                                                        animal: [1],
+                                                    };
+                                                    modeLayerItem = _Model.page[page.index].layerList[layerLen];
+                                                    //page图层增加相应节点
+                                                    newLi.innerHTML = that.v._getLayer(modeLayerItem);
+                                                    that.layerPanelBox.firstElementChild.appendChild(newLi);
+                                                    newLi = newImg = null;
+                                                    console.log(sctEle.index,'123')
+                                                }
+
+                                            }else{
+                                                // 通过选择的 li 包含的 data-subId ，然后在 数据层 遍历，找到这个 数据。
+                                                // 目前 先随便获取，后面数据对应后，再删除这里
+
+                                                dataItem = _Model.subList[ Index(cuUl,cuLi) ];
+
+                                                if(dataItem.tab == 0){
+                                                    // 图片组件
+                                                    newLi = doc.createElement('li');
+                                                    layerLen = _Model.page[page.index].layerList.length;
+
+                                                    imgWidth = dataItem.width.match(regNum);
+                                                    imgHeight = dataItem.height.match(regNum);
+
+                                                    imgTop = e.pageY - imgHeight/2 ;
+                                                    imgLeft = e.pageX - imgWidth/2 ;
+                                                    imgTop = Math.round( imgTop - pageEleRect.top );
+                                                    imgLeft = Math.round( imgLeft - pageEleRect.left );
+                                                    newImg = doc.createElement('img');
+                                                    newImg.src = dataItem.src;
+                                                    newImg.style.left = imgLeft +'px';
+                                                    newImg.style.top = imgTop +'px';
+                                                    newImg.style.width = imgWidth +'px';
+                                                    newImg.style.height = imgHeight +'px';
+                                                    newImg.style.zIndex = layerLen;
+                                                    pageEle.appendChild(newImg);
+                                                    dataItem.citeAdd.push({
+                                                        index: page.index,
+                                                        pageEle:  page.ele,
+                                                        ele: newImg
+                                                    });
+
+                                                    //插入页面数据层；
+                                                    _Model.page[page.index].layerList[layerLen] = {
+                                                        subId: dataItem.id,
+                                                        layer: layerLen-1,
+                                                        src: dataItem.src,
+                                                        name: 0,
+                                                        rect: {
+                                                            width: imgWidth,
+                                                            height: imgHeight,
+                                                            left: imgLeft,
+                                                            top: imgTop,
+                                                        },
+                                                        animal: [1],
+                                                    };
+                                                    modeLayerItem = _Model.page[page.index].layerList[layerLen];
+                                                    //page图层增加相应节点
+                                                    newLi.innerHTML = that.v._getLayer(modeLayerItem);
+
+                                                    that.layerPanelBox.firstElementChild.appendChild(newLi);
+
+
+                                                    // 清楚不是本次选择的节点的样式
+                                                    len = selectArr.length;
+                                                    if(len>0){
+                                                        while (len--){
+                                                            var delEle = selectArr[len];
+                                                            selectArr.splice(len,1)
+                                                            that.class_list.push(delEle);
+                                                        }
+                                                    }
+                                                    selectArr.push({
+                                                        ele: cuLi,
+                                                        index: Index(cuUl,cuLi)
+                                                    });
+                                                    Utils.addClass(cuLi,'box-bg-blue');
+
+                                                    for(i=0,len=that.class_list.length; i<len; i++){
+                                                        if(cuLi == that.class_list[i].ele) continue;
+                                                        Utils.removeClass(that.class_list[i].ele,'box-bg-blue');
+
+                                                    }
+
+                                                    that.class_list = [];
+                                                    newLi = null;
+                                                    newImg = null;
+                                                }
+
+                                            }
+
+
+                                        }
+
+
+                                    }
+
+                                    console.log(that.page_currentTarget_select)
+
+                                    if(!isNaN(currIndex)){
+                                        UlChild[currIndex].style.borderBottomColor = '#9d9d9d';
+                                    }
+
+                                    that.headDiv.removeChild(moveUl);
+                                    moveUl=null;
+
+                                }
+
+                            }
+
+                            function copyMove(e) {
+                                //组件拖动事件
+                                var cuUlTop = cuUl.offsetTop , cuUlHeight = cuUl.offsetHeight;
+                                var nextRect ;          //目标的 rect 属性
+                                isDrop = true;
+                                if(!isMove){
+                                    if(Utils.getTime() - _downTime <= 150) return;
+                                    len = selectArr.length;
+                                    moveUl = movePanel(cuUl,cuLi,selectArr);
+                                    that.headDiv.appendChild(moveUl);
+                                    Utils.addClass(moveUl,'isDrop');
+                                    moveUl.style.opacity = 0.5;
+                                    isMove = true;
+                                }
+
+                                // parentEle.scrollTop += 46* (currIndex - moveNextIndex);
+                                // console.log(parentEle.scrollTop,'11111');
+                                if(moveBoxBool){
+                                    // 在组件盒子内拖动
+                                    if( (e.pageX<pageRect.x+pageRect.width && e.pageX>pageRect.x) && (e.pageY<pageRect.y+pageRect.height && e.pageY>pageRect.y) ){
+                                        moveBoxBool = false;
+                                        indexRect = that.pagePanel;
+                                    }
+                                    if(_y!= e.pageY){
+
+                                        if(moveUl){
+                                            moveUl.style.top = e.pageY - moveUl.offsetHeight/2   +'px';
+                                            moveUl.style.left = indexRect.offsetLeft +'px';
+                                            if(moveUl.offsetTop<cuUlTop + _headHeight){
+                                                moveUl.style.top = cuUlTop + _headHeight +'px';
+                                            }
+                                            if(moveUl.offsetTop >= cuUlTop + _headHeight + cuUlHeight - moveUl.offsetHeight ){
+
+                                                moveUl.style.top = cuUlTop + _headHeight + cuUlHeight - moveUl.offsetHeight +'px';
+                                            }
+                                        }
+
+                                        _x = e.pageX , _y= e.pageY;
+                                    }
+
+                                    len = UlChild.length;
+                                    if(Math.abs(_my - e.pageY) >= 2){
+
+                                        // 下个兄弟节点,
+                                        var nextEleChild, nextEleChildRect,  childTopAndHeight = 0;
+
+                                        nextRect = nextLi.getBoundingClientRect();
+                                        nextEleChild = nextLi.nextElementSibling;
+                                        if(nextEleChild){
+                                            nextEleChildRect = nextEleChild.getBoundingClientRect();
+                                            childTopAndHeight = childTopAndHeight + nextEleChildRect.height/2;
+                                        }
+                                        if(e.pageY < nextRect.top + nextRect.height/2){
+                                            moveNextIndex--;
+                                            // moveNextIndex >= UlChild.length-1 ? moveNextIndex = UlChild.length-1 : moveNextIndex;
+                                            if(moveNextIndex < 0){
+                                                moveNextIndex = 0;
+                                                if(!isTop){
+                                                    moveNextCss = 'borderTopColor';
+                                                    setLIcss(moveNextIndex,moveNextCss);
+                                                    isTop = true;
+                                                }
+                                                return;
+                                            }
+                                            moveNextCss = 'borderBottomColor';
+                                            setLIcss(moveNextIndex,moveNextCss);
+
+
+                                        }else if(e.pageY > nextRect.top + nextRect.height + childTopAndHeight){
+
+                                            moveNextIndex++;
+                                            // moveNextIndex < 0 ? moveNextIndex = 0 : moveNextIndex = moveNextIndex;
+                                            if(moveNextIndex > len-1){
+                                                moveNextIndex = len-1;
+                                                if(!isBottom){
+                                                    moveNextCss = 'borderBottomColor';
+                                                    setLIcss(moveNextIndex,moveNextCss);
+                                                    isBottom = true;
+                                                }
+                                                return;
+                                            }
+                                            moveNextCss = 'borderBottomColor';
+                                            setLIcss(moveNextIndex,moveNextCss);
+                                            // console.log(moveNextIndex,currIndex,e.pageY,nextRect.top)
+                                        }else{
+                                            isTop = isBottom = false;
+                                            moveNextCss = 'borderBottomColor';
+                                            currCss = 'borderTopColor';
+                                            setLIcss(moveNextIndex,moveNextCss);
+                                        }
+
+                                        nextLi = UlChild[moveNextIndex];
+
+                                        _my = e.pageY; _mx = e.pageX;
+                                    }
+
+                                    // if(e.pageY >= cuUlTop + _headHeight - moveUl.offsetHeight/4 && e.pageY <= cuUlTop + _headHeight + cuUlHeight + eleScrrollTop){
+                                    //
+                                    //     if(!nextLi.nextElementSibling) return;
+                                    //     var nextRect = nextLi.nextElementSibling.getBoundingClientRect();
+                                    //
+                                    //
+                                    //     if(e.pageY > nextRect.top+nextRect.height/2){
+                                    //         moveNextIndex = moveNextIndex+1;
+                                    //         moveNextIndex >= UlChild.length-1 ? moveNextIndex = UlChild.length-1 : moveNextIndex;
+                                    //     }else if(e.pageY < nextRect.top-nextRect.height/2){
+                                    //         moveNextIndex = moveNextIndex-1;
+                                    //         moveNextIndex < 0 ? moveNextIndex = 0 : moveNextIndex = moveNextIndex;
+                                    //         // console.log(moveNextIndex,currIndex,e.pageY,nextRect.top)
+                                    //     }
+                                    //
+                                    //     if(currIndex!=moveNextIndex){
+                                    //         // 拖入效果1，，，
+                                    //         if(UlChild[moveNextIndex]){
+                                    //             UlChild[moveNextIndex].style.borderBottomColor = 'red';
+                                    //         }
+                                    //         if(!isNaN(currIndex)){
+                                    //             UlChild[currIndex].style.borderBottomColor = '#9d9d9d';
+                                    //         }
+                                    //
+                                    //         currIndex = moveNextIndex;
+                                    //     }
+                                    //
+                                    //     nextLi = UlChild[moveNextIndex];
+                                    //
+                                    // }
+
+                                }else {
+                                    // 在画布上拖动
+                                    if( (e.pageX<selectUlRect.x+selectUlRect.width && e.pageX>selectUlRect.x) && (e.pageY<selectUlRect.y+selectUlRect.height && e.pageY>selectUlRect.y) ){
+                                        moveBoxBool = true;
+                                        indexRect = cuUl;
+                                    }
+
+                                    if(_y!= e.pageY || _x!= e.pageY){
+
+                                        if(_x > moveUl.offsetLeft || _x < moveUl.offsetLeft || _y > moveUl.offsetTop || _y< moveUl.offsetTop ){
+                                            moveUl.style.top = e.pageY - 23  +'px';
+                                            moveUl.style.left =  e.pageX - 92 +'px';
+                                        }
+                                        moveUl.style.top = moveUl.offsetTop - (_y - e.pageY)   +'px';
+                                        moveUl.style.left = moveUl.offsetLeft - (_x - e.pageX)  +'px';
+
+                                        if(moveUl.offsetTop<indexRect.offsetTop + 55 ){
+                                            // 上
+                                            moveUl.style.top = indexRect.offsetTop + 55 +'px';
+                                        }
+                                        if(moveUl.offsetLeft + moveUl.offsetWidth > indexRect.offsetLeft + indexRect.offsetWidth ){
+                                            // 右
+                                            moveUl.style.left = indexRect.offsetLeft + indexRect.offsetWidth - moveUl.offsetWidth +'px';
+                                        }
+                                        if(moveUl.offsetTop + moveUl.offsetHeight > indexRect.offsetTop + indexRect.offsetHeight + 55  ){
+                                            // 下
+                                            moveUl.style.top = indexRect.offsetTop + indexRect.offsetHeight + 55 - moveUl.offsetHeight +'px';
+                                        }
+                                        if(moveUl.offsetLeft < indexRect.offsetLeft ){
+                                            // 左
+                                            moveUl.style.left = indexRect.offsetLeft +'px';
+                                        }
+
+                                        _x = e.pageX , _y= e.pageY;
+                                    }
+
+                                }
+
+
+                            }
+
+                        }
+
+
+
+
+                        function subUpEvent(e) {
+                            // 组件 mouseup(抬起)
+
+                            var _dataId, eleId, selectUl, selectLi, element, indexUl, indexLi, index;
+                            var getIndex = 0;                               //得到当前选择节点 位于 父节点 的位置(index)；
+                            var _delEle;                                    //递归删除的对象节点
+
+                            element = e.target;
+                            _dataId= ~~element.getAttribute('data-id');
+                            selectLi = e.currentTarget;
+                            selectUl = selectLi.parentNode;
+                            indexUl = selectUl.getAttribute('data-tab');
+                            eleId = selectUl.parentNode.id;
+                            indexLi = that.subBox_layer_effect_sct_index;
+
+                            getIndex = Index(getChildes(selectUl),selectLi);
+
+
+                            switch(eleId){
+                                case 'xk-edit-effect-panel':
+                                    // 效果层
+                                    // console.log(e.currentTarget.id,element);
+                                    // that.eff_select
+                                    clickItem(that.eff_select);
+                                    typeItem();
+                                    break;
+                                case 'xk-edit-sub-panel':
+                                    // 组件层
+                                    // console.log(e.currentTarget.id,element,indexUl);
+                                    if(!that.sub_select[indexUl]) that.sub_select[indexUl] =[];
+                                    // that.sub_select
+                                    clickItem(that.sub_select[indexUl]);
+                                    typeItem();
+
+                                    break;
+                                case 'xk-edit-layer-panel':
+                                    // 图层层
+                                    index = that.page_currentTarget_select.index;
+                                    // that.layer_select
+                                    clickItem(that.layer_select);
+                                    if(index && !isNaN(indexLi)){
+                                        that.v.initEffect(that.effectPanelBox,_Model.page[index].layerList[indexLi].animal);
+                                        typeItem();
+                                    }
+                                    break;
+                            }
+
+                            function clickItem(selectArr) {
+                                // 点击单个 li 相应的显示与数据处理
+                                if(!selectLi) return;
+
+                                var _currItem, _isCurr = false;
+                                len = selectArr.length;
+
+                                for(i=0; i<len; i++){
+                                    _currItem = selectArr[i];
+                                    if(selectLi == _currItem.ele){
+                                        _isCurr = true;
+                                        break;
+                                    }
+                                }
+
+                                if(isPanelMove){
+                                    // 是在已选 的 目标上 点击
+                                    if(isMove){
+                                        selectLi.style.borderBottomColor = '#9d9d9d';
+                                        if(!isNaN(currIndex)){
+                                            UlChild[currIndex].style.borderBottomColor = '#9d9d9d';
+                                        }
+                                        return;
+                                    }
+                                    if( !(that.ctrl || that.shift || that.ctrl_shift) ){
+                                        while(len--){
+                                            if(selectLi == selectArr[len].ele) continue;
+                                            _delEle = selectArr[len];
+                                            selectArr.splice(len,1);
+                                            that.class_list.push(_delEle);
+                                        }
+
+
+                                    }else{
+                                        that.class_list = [];
+                                    }
+                                }else{
+                                    // 不在已选 的 目标上 点击
+                                    if(isMove){
+                                        selectLi.style.borderBottomColor = '#9d9d9d';
+                                        if(!isNaN(currIndex)){
+                                            UlChild[currIndex].style.borderBottomColor = '#9d9d9d';
+                                        }
+                                    }
+                                    if( that.ctrl || that.shift || that.ctrl_shift ){
+                                        selectArr[len]={
+                                            ele: selectLi,
+                                            index: getIndex
+                                        };
+                                    }else{
+                                        while(len--){
+                                            _delEle = selectArr[len];
+                                            selectArr.splice(len,1);
+                                            that.class_list.push(_delEle);
+                                        }
+                                        selectArr[0]={
+                                            ele: selectLi,
+                                            index: getIndex
+                                        };
+                                    }
+                                }
+                                // console.log(getIndex,'返回当前节点位置',selectArr);
+
+                                Utils.addClass(selectLi,'box-bg-blue');
+                                if(that.ctrl || that.shift || that.ctrl_shift){
+                                    // Utils.addClass(selectLi,'box-bg-blue');
+                                }else{
+                                    len=that.class_list.length;
+                                    while(len--){
+                                        Utils.removeClass(that.class_list[len].ele,'box-bg-blue');
+                                        that.class_list.splice(len,1);
+                                    }
+
+
+                                }
+
+
+                            }
+
+                            function typeItem() {
+                                // 处理单个按钮
+
+                                switch(_dataId){
+                                    case 421:
+                                        console.log(_dataId,_Model.config[_dataId]);
+
+                                        break;
+                                    case 422:
+                                        console.log(_dataId,_Model.config[_dataId]);
+
+                                        break;
+                                    case 423:
+                                        console.log(_dataId,_Model.config[_dataId]);
+
+                                        break;
+                                    case 424:
+                                        console.log(_dataId,_Model.config[_dataId]);
+
+                                        break;
+                                    case 425:
+                                        // console.log(id,_Model.config[id]);
+                                        var list = getChildes(that.subBox_layer_curr_select_li);
+                                        console.log(that.subBox_layer_curr_select_li,1111);
+                                        if(Utils.hasClass(element,'xk-edit-right-label-dirbottom')){
+                                            Utils.removeClass(element,'xk-edit-right-label-dirbottom');
+                                            Utils.addClass(list[1],'xk-edit-right-data-none');
+                                        }else{
+                                            Utils.addClass(element,'xk-edit-right-label-dirbottom');
+                                            Utils.removeClass(list[1],'xk-edit-right-data-none');
+                                        }
+
+                                        break;
+                                }
+
+                            }
+
+                            Utils.removeEvent(e.currentTarget,'mouseup',subUpEvent);
+                        };
+
+
                     }
 
-                };
-                Utils.addEvent(that.subPanelBox,'mouseup',subEvent);
-                Utils.addEvent(that.layerPanelBox,'mouseup',subEvent);
-                Utils.addEvent(that.effectPanelBox,'mouseup',subEvent);
 
+                    Utils.addEvent(that.subPanelBox,'mousedown',subDownEvent);
+                    Utils.addEvent(that.layerPanelBox,'mousedown',subDownEvent);
+                    Utils.addEvent(that.effectPanelBox,'mousedown',subDownEvent);
 
-                // 键盘事件
-                Utils.addEvent(doc,'keydown',keydownEvents);
-                Utils.addEvent(doc,'keyup',keyupEvents);
-                function keydownEvents(e) {
-                    e.preventDefault();
-                    if (e.ctrlKey || e.keyCode == 17) {
-                        //按下ctrl
-                        console.log(e.keyCode,'ctrl'  );
-                        that.ctrl = true;
-                        that.shift = that.alt = that.ctrl_shift = false;
-                    }
-                    if(e.shiftKey || e.keyCode == 16){
-                        console.log(e.keyCode,'shift'  );
-                        that.shift = true;
-                        that.ctrl = that.alt = that.ctrl_shift = false;
-                    }
-                    if(e.altKey || e.keyCode == 18){
-                        console.log(e.keyCode,'alt'  );
-                        that.alt = true;
-                        that.ctrl = that.shift = that.ctrl_shift = false;
-                    }
-                    if((e.ctrlKey || e.keyCode == 17) && (e.shiftKey || e.keyCode == 16)){
-                        console.log(e.keyCode,'ctrl + shift' );
-                        that.ctrl_shift = true;
-                        that.ctrl = that.shift = that.alt = false;
-                    }
                 }
-                function keyupEvents(e) {
-                    e.preventDefault();
-                    that.ctrl = that.shift = that.alt = that.ctrl_shift = false;
+
+
+                function key_Event() {
+                    //键盘方法
+                    Utils.addEvent(doc,'keydown',keydownEvents);
+                    Utils.addEvent(doc,'keyup',keyupEvents);
+                    function keydownEvents(e) {
+                        e.preventDefault();
+                        if (e.ctrlKey || e.keyCode == 17) {
+                            //按下ctrl
+                            console.log(e.keyCode,'ctrl'  );
+                            that.ctrl = true;
+                            that.shift = that.alt = that.ctrl_shift = false;
+                        }
+                        if(e.shiftKey || e.keyCode == 16){
+                            console.log(e.keyCode,'shift'  );
+                            that.shift = true;
+                            that.ctrl = that.alt = that.ctrl_shift = false;
+                        }
+                        if(e.altKey || e.keyCode == 18){
+                            console.log(e.keyCode,'alt'  );
+                            that.alt = true;
+                            that.ctrl = that.shift = that.ctrl_shift = false;
+                        }
+                        if((e.ctrlKey || e.keyCode == 17) && (e.shiftKey || e.keyCode == 16)){
+                            console.log(e.keyCode,'ctrl + shift' );
+                            that.ctrl_shift = true;
+                            that.ctrl = that.shift = that.alt = false;
+                        }
+                    }
+                    function keyupEvents(e) {
+                        e.preventDefault();
+                        that.ctrl = that.shift = that.alt = that.ctrl_shift = false;
+                    }
+
                 }
 
 
@@ -755,12 +2013,13 @@ require(['config'], function () {
                                 first.removeChild(arr[j]);
                                 for(m=0,len=that.page_select.length; m<len; m++){
                                     slt = that.page_select[m];
-                                    if(slt == arr[j]){
+                                    if(slt.ele == arr[j]){
                                         that.page_select.splice(m,1);
                                         // return;
                                     }
                                 }
-                                that.page_currentTarget_select = NaN;
+                                that.page_currentTarget_select.ele.style.zIndex = 0;
+                                that.page_currentTarget_select = {};
 
 
                                 m = j+1;
@@ -799,17 +2058,18 @@ require(['config'], function () {
                         var data = that.layer_select, len = data.length;
                         if(len<=0) return;
                         var show_panel = that.layerPanelBox.firstElementChild;
-                        var show_list = getChildes(show_panel.firstElementChild), panel_len ,index = 0, i= 0;
+                        var show_list = getChildes(show_panel), panel_len ,index = 0, i= 0;
 
                         while(len--){
                             for(i=0,panel_len = show_list.length; i<panel_len; i++){
+
                                 if(data[len] == show_list[i]){
                                     index = i;
                                     break;
                                 }
                             }
                             _Model.page[that.page_currentTarget_select].layerList.splice(index,1);
-                            show_panel.removeChild(data[len]);
+                            show_panel.removeChild(data[len].ele);
                             data.splice(len,1);
                         }
                         break;
@@ -1524,25 +2784,43 @@ require(['config'], function () {
                 tab: 0,
                 type: 'image',
                 name: '草泥马',
-                src: '',
+                src: 'images/LZS1-18-mama.png',
                 size: '200kb',
                 width: '200px',
                 height: '200px',
+                citeAdd: [],
 
             });
+
+            // 组件的被引用情况数组结构
+            // citeAdd[{
+            //     index: 0,        //page的索引
+            //     ele: node,       //组件承载的节点
+            // }]
+
             _Model.subList.push({
                 id: 11112,
+                tab: 0,
+                type: 'image',
+                name: '草泥马',
+                src: 'images/LZS1-42-nvzhu.png',
+                size: '200kb',
+                width: '200px',
+                height: '200px',
+                citeAdd: [],
+            });
+
+            _Model.subList.push({
+                id: 11113,
                 tab: 1,
                 type: 'mp3',
                 name: '草泥马',
                 src: '',
                 size: '200kb',
                 duration: '3',
-
+                citeAdd: [],
             });
 
-
-            console.log(_Model.subList,'111');
 
             _Model.page[0]={
                 id: 0,
@@ -1557,6 +2835,7 @@ require(['config'], function () {
                 },
                 layerList: [
                     {
+                        subId: 0,
                         layer: 0,
                         src: 'images/warning.jpg',
                         name: 0,
@@ -1572,6 +2851,7 @@ require(['config'], function () {
                         animal: [1],
                     },
                     {
+                        subId: 0,
                         layer: 1,
                         src: 'images/warning.jpg',
                         name: 1,
@@ -1595,22 +2875,23 @@ require(['config'], function () {
                     left:0,
                     right:0,
                     top:0,
-                    width:298.96875,
-                    x:440.515625,
+                    width:298,
+                    x:440,
                     y:116
                 },
                 layerList: [
                     {
+                        subId: 0,
                         layer: 0,
                         src: 'images/xx3-01-bg.jpg',
                         name: 1,
                         rect: {bottom:656,
                             height: 3000,
                             left:0,
-                            right:739.484375,
+                            right:739,
                             top:0,
-                            width:298.96875,
-                            x:440.515625,
+                            width:298,
+                            x:440,
                             y:116
                         },
                         animal: [],
@@ -1625,28 +2906,30 @@ require(['config'], function () {
                     left:0,
                     right:0,
                     top:0,
-                    width:298.96875,
-                    x:440.515625,
+                    width:298,
+                    x:440,
                     y:116
                 },
                 layerList: [
                     {
+                        subId: 0,
                         layer: 0,
                         src: 'images/xx3-12-bg.jpg',
                         name: 2,
                         rect: {bottom:656,
                             height: 1051,
                             left:0,
-                            right:739.484375,
+                            right:739,
                             top:0,
-                            width:298.96875,
-                            x:440.515625,
+                            width:298,
+                            x:440,
                             y:116
                         },
                         animal: [],
                         onelevel: true,
                     },
                     {
+                        subId: 0,
                         layer: 0,
                         src: 'images/xx3-12-biyan.png',
                         name: 2,
@@ -1656,7 +2939,7 @@ require(['config'], function () {
                             right:0,
                             top:0,
                             width:298,
-                            x:440.515625,
+                            x:440,
                             y:116
                         },
                         animal: [],
@@ -1671,12 +2954,13 @@ require(['config'], function () {
                     left:0,
                     right:0,
                     top:0,
-                    width:298.96875,
-                    x:440.515625,
+                    width:298,
+                    x:440,
                     y:116
                 },
                 layerList: [
                     {
+                        subId: 0,
                         layer: 0,
                         src: '',
                         name: 0,
@@ -1693,12 +2977,13 @@ require(['config'], function () {
                     left:0,
                     right:0,
                     top:0,
-                    width:298.96875,
-                    x:440.515625,
+                    width:298,
+                    x:440,
                     y:116
                 },
                 layerList: [
                     {
+                        subId: 0,
                         layer: 0,
                         src: '',
                         name: 0,

@@ -12,7 +12,11 @@
 .display-none{
     display: none;
 }
-
+.isDrop{
+    position: absolute;
+    z-index: 1000;
+    border: 1px solid #9d9d9d
+}
 /*交互css end*/
 
 
@@ -40,7 +44,7 @@ i{
 
 }
 
-.xk-edit-nav ul{
+.xk-edit-nav-list{
     display: -moz-box;
     display: -ms-flexbox;
     display: -webkit-box;
@@ -53,19 +57,19 @@ i{
     padding: 12px 20px;
     cursor: default;
 }
-.xk-edit-nav li {
+.xk-edit-nav-list li {
     position: relative;
     display: inline-block;
     height: 24px;
     padding: 4px 5px;
     color: #525252;
 }
-.xk-edit-nav li span{
+.xk-edit-nav-list li span{
     padding: 6px 12px;
     cursor: pointer;
 }
 
-.xk-edit-nav li:nth-child(5){
+.xk-edit-nav-list li:nth-child(5){
     -webkit-flex: 3;
     -ms-flex: 3;
     flex: 3;
@@ -76,7 +80,7 @@ i{
     float: right;
     margin-right: 20px;
 }
-.xk-edit-nav ul:after{
+.xk-edit-nav-list:after{
     content: "";
     display: block;
     height: 0;
@@ -93,6 +97,7 @@ i{
     display: -webkit-box;
     display: -webkit-flex;
     display: flex;
+    overflow: hidden;
     width: 99.7%;
     min-width: 800px;
     height: 90%;
@@ -176,9 +181,12 @@ i{
 
 .xk-edit-right {
     border-left: 1px solid #9d9d9d;
+    z-index: 10000;
 }
 .xk-edit-right-item{
     height: 50%;
+    overflow: hidden;
+    border-top: 1px solid #9d9d9d;
 }
 .xk-edit-right-nav {
     line-height: 45px;
@@ -219,7 +227,7 @@ i{
 }
 
 
-.xk-edit-right .xk-edit-right-top {
+.xk-edit-right-top {
     position: relative;
     padding: 0 10px;
     height: 45px;
@@ -238,6 +246,7 @@ i{
     position: relative;
     display: inline-block;
     vertical-align: middle;
+    line-height: 44px;
 }
 .xk-edit-right-label-eyes{
     width: 16px;
@@ -289,21 +298,25 @@ i{
 }
 .xk-edit-sub-item {
     height: 85%;
-    height: -moz-calc(100% - 45px );
-    height: -webkit-calc(100% - 45px );
-    height: calc(100% - 45px );
+    height: -moz-calc(100% - 50px );
+    height: -webkit-calc(100% - 50px );
+    height: calc(100% - 50px );
     overflow-y: auto;
-    border-bottom: 1px solid #9d9d9d
+
+    /*border-bottom: 1px solid #9d9d9d;*/
 }
 .xk-edit-sub-item ul{
-    /*width: 100%;*/
-    /*height: 100%;*/
+    width: 100%;
+    height: 100%;
+}
+.xk-edit-right li:first-child{
+    border-top: 1px solid #9d9d9d
 }
 .xk-edit-right li {
     border-bottom: 1px solid #9d9d9d
 }
 
-.xk-edit-right li .xk-edit-right-img {
+.xk-edit-right-img {
     width: 30px;
     height: 30px;
     border: 1px solid #9d9d9d;
@@ -322,7 +335,7 @@ i{
     border-top: 1px solid #9d9d9d;
 }
 .xk-edit-right-data-none{
-    height: 0;
+    display: none;
     border-top: none;
 }
 
@@ -479,6 +492,7 @@ input[type=range]:focus {
 }
 .xk-edit-center-page ul li{
     position: relative;
+    overflow: inherit;
     /*background: rgba(252,252,252,0.3);*/
 }
 .xk-edit-center-page ul li img{
