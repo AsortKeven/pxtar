@@ -1,3 +1,5 @@
+'use strict';
+
 // 使用可能有兼容性的方法,后面需要去兼容或者测试:
 // node.insertadjacenthtml
 //

@@ -1,9 +1,11 @@
+'use strict';
+
 define(function(){
     // 前端模块路径配置。
     require.config({
         baseUrl: 'js/',
         paths: {
-            'Utils': 'script/Utils',
+            'XkTool': 'script/xkTool',
             'Show': 'script/Show'
         }
     });

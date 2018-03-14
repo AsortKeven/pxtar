@@ -1,3 +1,5 @@
+'use strict';
+
 (function (factory) {
     // 前端工具js
     if(typeof define === 'function' && define.amd){
@@ -77,7 +79,7 @@
         tool.hasClass = function (e, c) {
             var re = new RegExp("(^|\\s)" + c + "(\\s|$)");
             return re.test(e.className);
-        }
+        };
         tool.addClass = function (e, c) {
             if ( tool.hasClass(e, c) ) {
                 return;
@@ -85,7 +87,7 @@
             var newclass = e.className.split(' ');
             newclass.push(c);
             e.className = newclass.join(' ');
-        }
+        };
 
         tool.removeClass = function (e, c) {
             if ( !tool.hasClass(e, c) ) {
@@ -93,7 +95,7 @@
             }
             var re = new RegExp("(^|\\s)" + c + "(\\s|$)", 'g');
             e.className = e.className.replace(re, ' ');
-        }
+        };
         tool.addEvent = function(el,type,fn,useCapture){
             useCapture = useCapture || false;
             if(el.addEventListener){
@@ -101,7 +103,7 @@
             }else{
                 el.attachEvent('on'+type,fn);
             }
-        }
+        };
         tool.removeEvent = function(el,type,fn,useCapture){
             useCapture = useCapture || false;
             if(el.removeEventListener){
@@ -109,7 +111,7 @@
             }else{
                 el.detachEvent('on'+type,fn);
             }
-        }
+        };
         tool.getRect = function(el) {
             if (el instanceof SVGElement) {
                 var rect = el.getBoundingClientRect();
@@ -127,7 +129,7 @@
                     height : el.offsetHeight
                 };
             }
-        }
+        };
         tool.getElementTop = function (element){
             var actualTop = element.offsetTop;
             var current = element.offsetParent;
@@ -136,7 +138,7 @@
                 current = current.offsetParent;
             }
             return actualTop;
-        }
+        };
         tool.setStyle = function(el,tf){
             var sty='';
             if(typeof tf==='string'){
@@ -147,11 +149,11 @@
                 }
             }
             el.style.cssText +=';'+sty;
-        }
+        };
 
         tool.error = function(str){
             throw Error(str);
-        }
+        };
 
         tool.getChild = function(ele,index){
             /**
@@ -166,11 +168,11 @@
                 }
             }
             return arr[index];
-        }
+        };
 
         return tool;
     })();
 
 
     return XkTool;
-})
+});
