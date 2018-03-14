@@ -5,7 +5,7 @@
 
 
 require(['config'], function () {
-    require(['Utils', 'Show'], function (Utils, Show) {
+    require(['XkTool', 'Show'], function (XkTool, Show) {
 
         // 获取服务器数据，之前做好的内容
         var serverData = [];
@@ -40,7 +40,7 @@ require(['config'], function () {
             selectIndex: 0,
             init: function () {
                 var that = this;
-                Utils.addEvent(that.tabBox[0].parentNode,'click',function (e) {
+                XkTool.addEvent(that.tabBox[0].parentNode,'click',function (e) {
                     var len = that.tabBox.length;
                     while(len--){
                         if(e.target == that.tabBox[len]){
@@ -53,7 +53,7 @@ require(['config'], function () {
             setShow: function (index) {
                 var that = this;
                 if(that.selectIndex == index) return;
-                Utils.removeClass(that.tabBox[that.selectIndex],'opacity-show');
+                XkTool.removeClass(that.tabBox[that.selectIndex],'opacity-show');
                 that.tabBox[that.selectIndex].style.opacity = 0.7;
                 that.panelBox[that.selectIndex].style.display = 'none';
                 that.selectIndex = index;
@@ -346,11 +346,11 @@ require(['config'], function () {
 
                 // 画布侦听
                 var llli = that.pagePanel.firstElementChild.childNodes;
-                Utils.addEvent(that.pagePanel.firstElementChild,'mousedown',function (e) {
+                XkTool.addEvent(that.pagePanel.firstElementChild,'mousedown',function (e) {
                     e.preventDefault();
 
                 });
-                Utils.addEvent(that.pagePanel.firstElementChild,'mouseup',function (e) {
+                XkTool.addEvent(that.pagePanel.firstElementChild,'mouseup',function (e) {
                     //画布侦听
                     // console.log(e.currentTarget,e.target,lll.contains(e.target),llli);
                     var element , j=0,pageLen=0, selectIndex;
@@ -359,15 +359,15 @@ require(['config'], function () {
                             element = llli[i];
                             selectIndex = i;
                             if(that.ctrl || that.shift || that.ctrl_shift){
-                                if( Utils.hasClass(element,'box-bg-green') ){
-                                    Utils.removeClass(element,'box-bg-green');
+                                if( XkTool.hasClass(element,'box-bg-green') ){
+                                    XkTool.removeClass(element,'box-bg-green');
                                     for(j=0,pageLen=that.page_select.length; j<pageLen; j++){
                                         if(element == that.page_select[j].ele){
                                             that.page_select.splice(j,1);
                                         }
                                     }
                                 }else{
-                                    Utils.addClass(element,'box-bg-green');
+                                    XkTool.addClass(element,'box-bg-green');
                                     that.page_select[that.page_select.length] ={
                                         index: selectIndex,
                                         ele: element
@@ -378,23 +378,23 @@ require(['config'], function () {
                                 j = 0;
                                 pageLen = that.page_select.length;
 
-                                if( Utils.hasClass(element,'box-bg-green') ){
+                                if( XkTool.hasClass(element,'box-bg-green') ){
                                     if(pageLen <= 1){
                                         // that.page_select = [];
-                                        // Utils.removeClass(element,'box-bg-green');
+                                        // XkTool.removeClass(element,'box-bg-green');
                                     }else{
                                         for(j=0; j<pageLen; j++){
                                             if(element == that.page_select[j].ele) continue;
-                                            Utils.removeClass(that.page_select[j].ele,'box-bg-green');
+                                            XkTool.removeClass(that.page_select[j].ele,'box-bg-green');
                                             that.page_select.splice(j,1);
                                             j--,pageLen--;
                                         }
                                     }
                                 }else{
-                                    Utils.addClass(element,'box-bg-green');
+                                    XkTool.addClass(element,'box-bg-green');
                                     if(pageLen <= 1){
                                         if(that.page_select[0]){
-                                            Utils.removeClass(that.page_select[0].ele,'box-bg-green');
+                                            XkTool.removeClass(that.page_select[0].ele,'box-bg-green');
                                         }
                                         that.page_select[0] = {
                                             index: selectIndex,
@@ -403,7 +403,7 @@ require(['config'], function () {
                                     }else{
                                         for(j=0; j<pageLen; j++){
                                             if(element == that.page_select[j].ele) continue;
-                                            Utils.removeClass(that.page_select[j].ele,'box-bg-green');
+                                            XkTool.removeClass(that.page_select[j].ele,'box-bg-green');
                                         }
                                         that.page_select = [];
                                         that.page_select[0] = {
@@ -464,7 +464,7 @@ require(['config'], function () {
 
                         //顶部导航是固定布局，占了55px，因此，如果用的是offsetTop，计算的时候就要考虑
                         var _headHeight = 55;
-                        var _downTime = Utils.getTime();
+                        var _downTime = XkTool.getTime();
 
                         var list, i = 0, len, selectUl={}, indexUl=NaN, indexLi=NaN, selectLi, UlChild={},
                             parentEle = {} , element = {}, eleId;
@@ -718,14 +718,14 @@ require(['config'], function () {
                             }
 
 
-                            Utils.addEvent(cuLi,'mouseup',subUpEvent);
+                            XkTool.addEvent(cuLi,'mouseup',subUpEvent);
 
-                            Utils.addEvent(window,'mousemove',copyMove);
-                            Utils.addEvent(window,'mouseup',copyUp);
+                            XkTool.addEvent(window,'mousemove',copyMove);
+                            XkTool.addEvent(window,'mouseup',copyUp);
 
                             function copyUp(e) {
                                 //鼠标抬起后，按需插入
-                                Utils.removeEvent(window,'mousemove',copyMove);
+                                XkTool.removeEvent(window,'mousemove',copyMove);
                                 if(!isDrop) return;
                                 isDrop = false;
 
@@ -916,11 +916,11 @@ require(['config'], function () {
                                             ele: removeEle,
                                             index: moveNextIndex
                                         });
-                                        Utils.addClass(removeEle,'box-bg-blue');
+                                        XkTool.addClass(removeEle,'box-bg-blue');
 
                                         for(i=0,len=that.class_list.length; i<len; i++){
                                             if(removeEle == that.class_list[i].ele) continue;
-                                            Utils.removeClass(that.class_list[i].ele,'box-bg-blue');
+                                            XkTool.removeClass(that.class_list[i].ele,'box-bg-blue');
 
                                         }
                                         removeEle = null;
@@ -941,8 +941,8 @@ require(['config'], function () {
 
                                 }
 
-                                Utils.removeEvent(window,'mouseup',copyUp);
-                                Utils.removeEvent(window,'mousemove',copyMove);
+                                XkTool.removeEvent(window,'mouseup',copyUp);
+                                XkTool.removeEvent(window,'mousemove',copyMove);
                             }
 
                             function copyMove(e) {
@@ -953,14 +953,14 @@ require(['config'], function () {
 
 
                                 if(!isMove){
-                                    if(Utils.getTime() - _downTime <= 150) return;
+                                    if(XkTool.getTime() - _downTime <= 150) return;
 
                                     len = selectArr.length;
 
                                     moveUl = movePanel(cuUl,cuLi,selectArr);
 
                                     that.headDiv.appendChild(moveUl);
-                                    Utils.addClass(moveUl,'isDrop');
+                                    XkTool.addClass(moveUl,'isDrop');
                                     moveUl.style.opacity = 0.7;
 
                                     isMove = true;
@@ -1099,14 +1099,14 @@ require(['config'], function () {
                             }
 
 
-                            Utils.addEvent(cuLi,'mouseup',subUpEvent);
+                            XkTool.addEvent(cuLi,'mouseup',subUpEvent);
 
 
-                            Utils.addEvent(window,'mousemove',copyMove);
-                            Utils.addEvent(window,'mouseup',copyUp);
+                            XkTool.addEvent(window,'mousemove',copyMove);
+                            XkTool.addEvent(window,'mouseup',copyUp);
 
                             function copyUp(e) {
-                                Utils.removeEvent(window,'mousemove',copyMove);
+                                XkTool.removeEvent(window,'mousemove',copyMove);
                                 if(!isDrop) return;
                                 isDrop = false;
 
@@ -1284,11 +1284,11 @@ require(['config'], function () {
                                                 ele: removeEle,
                                                 index: moveNextIndex
                                             });
-                                            Utils.addClass(removeEle,'box-bg-blue');
+                                            XkTool.addClass(removeEle,'box-bg-blue');
 
                                             for(i=0,len=that.class_list.length; i<len; i++){
                                                 if(removeEle == that.class_list[i].ele) continue;
-                                                Utils.removeClass(that.class_list[i].ele,'box-bg-blue');
+                                                XkTool.removeClass(that.class_list[i].ele,'box-bg-blue');
 
                                             }
 
@@ -1448,11 +1448,11 @@ require(['config'], function () {
                                                         ele: cuLi,
                                                         index: Index(cuUl,cuLi)
                                                     });
-                                                    Utils.addClass(cuLi,'box-bg-blue');
+                                                    XkTool.addClass(cuLi,'box-bg-blue');
 
                                                     for(i=0,len=that.class_list.length; i<len; i++){
                                                         if(cuLi == that.class_list[i].ele) continue;
-                                                        Utils.removeClass(that.class_list[i].ele,'box-bg-blue');
+                                                        XkTool.removeClass(that.class_list[i].ele,'box-bg-blue');
 
                                                     }
 
@@ -1488,11 +1488,11 @@ require(['config'], function () {
                                 var nextRect ;          //目标的 rect 属性
                                 isDrop = true;
                                 if(!isMove){
-                                    if(Utils.getTime() - _downTime <= 150) return;
+                                    if(XkTool.getTime() - _downTime <= 150) return;
                                     len = selectArr.length;
                                     moveUl = movePanel(cuUl,cuLi,selectArr);
                                     that.headDiv.appendChild(moveUl);
-                                    Utils.addClass(moveUl,'isDrop');
+                                    XkTool.addClass(moveUl,'isDrop');
                                     moveUl.style.opacity = 0.5;
                                     isMove = true;
                                 }
@@ -1765,13 +1765,13 @@ require(['config'], function () {
                                 }
                                 // console.log(getIndex,'返回当前节点位置',selectArr);
 
-                                Utils.addClass(selectLi,'box-bg-blue');
+                                XkTool.addClass(selectLi,'box-bg-blue');
                                 if(that.ctrl || that.shift || that.ctrl_shift){
-                                    // Utils.addClass(selectLi,'box-bg-blue');
+                                    // XkTool.addClass(selectLi,'box-bg-blue');
                                 }else{
                                     len=that.class_list.length;
                                     while(len--){
-                                        Utils.removeClass(that.class_list[len].ele,'box-bg-blue');
+                                        XkTool.removeClass(that.class_list[len].ele,'box-bg-blue');
                                         that.class_list.splice(len,1);
                                     }
 
@@ -1805,12 +1805,12 @@ require(['config'], function () {
                                         // console.log(id,_Model.config[id]);
                                         var list = getChildes(that.subBox_layer_curr_select_li);
                                         console.log(that.subBox_layer_curr_select_li,1111);
-                                        if(Utils.hasClass(element,'xk-edit-right-label-dirbottom')){
-                                            Utils.removeClass(element,'xk-edit-right-label-dirbottom');
-                                            Utils.addClass(list[1],'xk-edit-right-data-none');
+                                        if(XkTool.hasClass(element,'xk-edit-right-label-dirbottom')){
+                                            XkTool.removeClass(element,'xk-edit-right-label-dirbottom');
+                                            XkTool.addClass(list[1],'xk-edit-right-data-none');
                                         }else{
-                                            Utils.addClass(element,'xk-edit-right-label-dirbottom');
-                                            Utils.removeClass(list[1],'xk-edit-right-data-none');
+                                            XkTool.addClass(element,'xk-edit-right-label-dirbottom');
+                                            XkTool.removeClass(list[1],'xk-edit-right-data-none');
                                         }
 
                                         break;
@@ -1818,24 +1818,24 @@ require(['config'], function () {
 
                             }
 
-                            Utils.removeEvent(e.currentTarget,'mouseup',subUpEvent);
+                            XkTool.removeEvent(e.currentTarget,'mouseup',subUpEvent);
                         };
 
 
                     }
 
 
-                    Utils.addEvent(that.subPanelBox,'mousedown',subDownEvent);
-                    Utils.addEvent(that.layerPanelBox,'mousedown',subDownEvent);
-                    Utils.addEvent(that.effectPanelBox,'mousedown',subDownEvent);
+                    XkTool.addEvent(that.subPanelBox,'mousedown',subDownEvent);
+                    XkTool.addEvent(that.layerPanelBox,'mousedown',subDownEvent);
+                    XkTool.addEvent(that.effectPanelBox,'mousedown',subDownEvent);
 
                 }
 
 
                 function key_Event() {
                     //键盘方法
-                    Utils.addEvent(doc,'keydown',keydownEvents);
-                    Utils.addEvent(doc,'keyup',keyupEvents);
+                    XkTool.addEvent(doc,'keydown',keydownEvents);
+                    XkTool.addEvent(doc,'keyup',keyupEvents);
                     function keydownEvents(e) {
                         e.preventDefault();
                         if (e.ctrlKey || e.keyCode == 17) {
@@ -2996,11 +2996,11 @@ require(['config'], function () {
             var v = new _View({page:_Model.page, subList: _Model.subList});
             var c = new _Controller({name:'zfc'},v);
 
-            Utils.addEvent(window, 'mousedown', function (e) {
+            XkTool.addEvent(window, 'mousedown', function (e) {
                 // e.preventDefault();
 
             }, true);
-            Utils.addEvent(window, 'mouseup', function (e) {
+            XkTool.addEvent(window, 'mouseup', function (e) {
                 e.preventDefault();
                 var _dataId = e.target.getAttribute('data-id');
                 if(_dataId){
@@ -3014,14 +3014,14 @@ require(['config'], function () {
         }
         init();
 
-        /*Utils.addEvent(document,'readystatechange',initDoc);
+        /*XkTool.addEvent(document,'readystatechange',initDoc);
 
         function initDoc(e) {
             console.log('渲染完成');
         }*/
 
 
-        Utils.addEvent(window, 'resize', function (e) {
+        XkTool.addEvent(window, 'resize', function (e) {
             console.log(document.documentElement.offsetWidth, Show.name);
         })
 
