@@ -1,8 +1,12 @@
+'use strict';
+
 (function (factory) {
     // 前端弹窗
     if(typeof  define ==='function' && define.amd){
-        // define('Show',factory);
-        define(['Utils'],factory);
+
+
+        define('Show',factory);
+        // define(['js/script/xkTool'],factory);
     }
     if(typeof module !=='undefined'){
         module.exports = factory();
@@ -15,7 +19,7 @@
 
 
 })(function(){
-    var Utils = require('Utils');
+    var Utils = require('XkTool');
     var Show = (function () {
 
         var _alert  = {};
