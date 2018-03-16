@@ -16,7 +16,7 @@ $('#nav li').click(function () {
 });
 
 //点击判定
-function checkId(id) {fangfa
+function checkId(id) {
    // console.log(id);
     for (var i = 0; i < contens.length; i++) {
         if (id === '3') {
@@ -119,7 +119,7 @@ $('.xk-per-cartoon-addbtn').click(function () {
         $.ajax({
             type:'post',
             url:'/newComic',
-            datatype:'josn',
+            datatype:'json',
             data:reader,
             contentType:false,
             processData: false,
