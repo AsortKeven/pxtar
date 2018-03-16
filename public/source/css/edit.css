@@ -191,6 +191,9 @@ progress{
     padding-right: 10px;
     font-size: 12px;
 }
+.xk-edit-left-bottom-body  .xk-edit-dis{
+    display: none;
+ }
 
 .xk-edit-left-bottom .xk-edit-left-body-box input[type=txt]{
     width:50px;
