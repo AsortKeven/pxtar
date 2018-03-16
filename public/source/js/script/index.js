@@ -5,35 +5,34 @@
 //
 
 
-
 require(['config'], function () {
     require(['XkTool', 'Show'], function (XkTool, Show) {
 
         // 获取服务器数据，之前做好的内容
         var serverData = [];
 
-
         // tab组件
         // 供控制器调用
-        function Tab_tools(name,list,panelCon) {
+        function Tab_tools(name, list, panelCon) {
             var that = this;
             that.name = name;
-            var i=0,len;
-            var doc =document;
+            var i = 0, len;
+            var doc = document;
             console.log(list[0]);
-            for(i in list){
+            for (i in list) {
                 that.tabBox[i] = list[i];
                 var panel = doc.createElement('ul');
-                panel.setAttribute('data-tab',i);
+                panel.setAttribute('data-tab', i);
                 // panel.innerHTML =~~i + 1;
-                panel.innerHTML ='<li>'+ i +'</li>';
+                panel.innerHTML = '<li>' + i + '</li>';
                 that.panelBox[i] = panel;
                 panel.style.display = 'none';
-                if(i==0)panel.style.display = 'block';
+                if (i == 0) panel.style.display = 'block';
                 panelCon.appendChild(panel);
             }
             that.init();
         }
+
         Tab_tools.prototype = {
             constructor: Tab_tools,
             name: '',
@@ -42,10 +41,10 @@ require(['config'], function () {
             selectIndex: 0,
             init: function () {
                 var that = this;
-                XkTool.addEvent(that.tabBox[0].parentNode,'click',function (e) {
+                XkTool.addEvent(that.tabBox[0].parentNode, 'click', function (e) {
                     var len = that.tabBox.length;
-                    while(len--){
-                        if(e.target == that.tabBox[len]){
+                    while (len--) {
+                        if (e.target == that.tabBox[len]) {
                             that.setShow(len);
                         }
                     }
@@ -54,8 +53,8 @@ require(['config'], function () {
             },
             setShow: function (index) {
                 var that = this;
-                if(that.selectIndex == index) return;
-                XkTool.removeClass(that.tabBox[that.selectIndex],'opacity-show');
+                if (that.selectIndex == index) return;
+                XkTool.removeClass(that.tabBox[that.selectIndex], 'opacity-show');
                 that.tabBox[that.selectIndex].style.opacity = 0.7;
                 that.panelBox[that.selectIndex].style.display = 'none';
                 that.selectIndex = index;
@@ -69,20 +68,20 @@ require(['config'], function () {
             // 返回合法节点
             var list = [];
             var child = parent.childNodes;
-            for(var i in child){
-                if(child[i].nodeType == 1){
+            for (var i in child) {
+                if (child[i].nodeType == 1) {
                     list[list.length] = child[i];
                 }
             }
             return list;
         }
 
-        function Index(parList,child) {
+        function Index(parList, child) {
             // 返回节点处于父级的位置
             var i;
-            if(!parList.length && parList.length == undefined) parList = getChildes(parList);
-            for(i in parList){
-                if(parList[i] == child){
+            if (!parList.length && parList.length == undefined) parList = getChildes(parList);
+            for (i in parList) {
+                if (parList[i] == child) {
                     return i;
                 }
             }
@@ -98,78 +97,78 @@ require(['config'], function () {
         _View.prototype = {
             constructor: _View,
             _isInit: false,
+            preValue: '',
             init: function (o) {
                 var that = this;
                 var page = o.page;
                 var subList = o.subList;
-                if(that._isInit) return;
-                var i=0, j=0, len=0, nodeString='', layerItem={}, id;
+                if (that._isInit) return;
+                var i = 0, j = 0, len = 0, nodeString = '', layerItem = {}, id;
                 var doc = document;
                 var pageEdit = doc.getElementById('xk-edit-center-edit');
                 var subEdit_img = doc.getElementById('xk-edit-sub-edit-img');
-                var subEdit_musci = doc.getElementById('xk-edit-sub-edit-music');
+                var subEdit_music = doc.getElementById('xk-edit-sub-edit-music');
                 var subEdit_panel = doc.getElementById('xk-edit-sub-panel');
-
-
-
+                that.preValue = doc.getElementsByClassName('xk-edit-center-top')[0].lastElementChild.firstElementChild.value;
                 // 组件按钮初始化
                 // subEdit_panel.innerHTML = '';
                 //
-                // subEdit = new Tab_tools('组件1',{0:subEdit_img,1:subEdit_musci},subEdit_panel);
+               // var subEdit = new Tab_tools('组件1',{0:subEdit_img,1:subEdit_music},subEdit_panel);
 
-                if(page && typeof page !== undefined && typeof page ==='object'){
+                if (page && typeof page !== undefined && typeof page === 'object') {
                     // 初始化page
-                    for(i in page){
+                    for (i in page) {
                         id = ~~page[i].id + 1;
 
-                        nodeString += '<li style="z-index: '+ 0 + '"><p class="noselect"><span class="float_left">page-'+ id +
+                        nodeString += '<li style="z-index: ' + 0 + '"><p class="noselect"><span class="float_left">page-' + id +
                             '</span> <span class="float_right"><span class="hand" data-id="311">高度设置</span><span class="hand" data-id="312">设置背景图</span><span class="hand" data-id="313">删除</span></span></p>';
 
-                        var style = '',sty,rect;
+                        var style = '', sty, rect;
                         rect = page[i].rect;
-                        for(sty in rect){
-                            style += sty + ': '+ rect[sty] +'px; ';
+                        for (sty in rect) {
+                            style += sty + ': ' + rect[sty] + 'px; ';
                         }
-                        nodeString += '<div class="xk-edit-center-page-page" style="'+ style +'">';
-                        for(j=0,len=page[i].layerList.length;j<len;j++){
+                        nodeString += '<div class="xk-edit-center-page-page" style="' + style + '">';
+                        for (j = 0, len = page[i].layerList.length; j < len; j++) {
                             layerItem = page[i].layerList[j];
                             style = '';
-                            for(sty in layerItem.rect){
-                                style += sty + ': '+ layerItem.rect[sty] +'px; ';
+                            for (sty in layerItem.rect) {
+                                style += sty + ': ' + layerItem.rect[sty] + 'px; ';
                             }
-                            style +='z-index:' + j;
-                            nodeString += '<img src=" ' + layerItem.src + '"' + 'style="' + style + '"' +' >';
+                            style += 'z-index:' + j;
+                            nodeString += '<img src=" ' + layerItem.src + '"' + 'style="' + style + '"' + ' >';
                         }
 
                         nodeString += '</div></li>';
                     }
                     pageEdit.firstElementChild.innerHTML = nodeString;
-                };
+                }
+                ;
 
 
-                if(subList && typeof subList !== undefined && typeof subList ==='object'){
+                if (subList && typeof subList !== undefined && typeof subList === 'object') {
                     // 初始化组件
-                    i=0;
+                    i = 0;
 
                     // 存储组件的字符串， 组件tab标签列表
-                    var subNameList = {},  subPanelChild ={};
+                    var subNameList = {}, subPanelChild = {};
                     var childLen, tabId, subItem, subItemTab;
                     subPanelChild = getChildes(subEdit_panel);
 
                     // 生成存储字符串的对象列
-                    for(i=0,childLen=subPanelChild.length; i<childLen; i++){
+                    for (i = 0, childLen = subPanelChild.length; i < childLen; i++) {
                         tabId = subPanelChild[i].getAttribute('data-tab');
                         subNameList[tabId] = '';
                     }
 
-                    i=0;
-                    for(i in subList){
+                    i = 0;
+                    for (i in subList) {
 
                         subItem = subList[i];
                         subItemTab = subItem.tab;
 
-                        console.log(subItemTab,subList[i]);
-                        switch(subItemTab){
+                        console.log(subItemTab, subList[i]);
+                        switch (subItemTab) {
                             case 0:
                                 // 图片tab
                                 // 方法 返回拼接 的 li 标签及其内容
@@ -183,75 +182,127 @@ require(['config'], function () {
 
                     }
 
-                    for(i=0,childLen=subPanelChild.length; i<childLen; i++){
+                    for (i = 0, childLen = subPanelChild.length; i < childLen; i++) {
                         // 生成各tab标签内容
                     }
 
-                    function gettabList() {
-                        // 得到单个li标签内容,并返回
+                    /*  function gettabList() {
+                     // 得到单个li标签内容,并返回
 
-                    }
+                     }*/
 
-                };
+                }
+                ;
 
 
                 that._isInit = true;
             },
-            addPage: function (ele,parentEle) {
+            addPage: function (ele, parentEle) {
                 // 新增一个page
-                console.log(ele,ele.id);
-                var i=0, j=0, len=0, nodeString='', layerItem={}, id;
+                console.log(ele, ele.id);
+                var i = 0, j = 0, len = 0, nodeString = '', layerItem = {}, id;
                 var doc = document;
                 var pageEdit = doc.getElementById('xk-edit-center-edit');
                 var li = doc.createElement('li');
                 id = ~~ele.id + 1;
-                li.style.zIndex=ele.id*10;
-                nodeString += '<p class="noselect"><span class="float_left">page-'+ id +
+                li.style.zIndex = ele.id * 10;
+                nodeString += '<p class="noselect"><span class="float_left">page-' + id +
                     '</span> <span class="float_right"><span class="hand" data-id="311">高度设置</span><span class="hand" data-id="312">设置背景图</span><span class="hand" data-id="313">删除</span></span></p>';
-                var style = '',sty,rect;
+                var style = '', sty, rect;
                 rect = ele.rect;
-                for(sty in rect){
-                    style += sty + ': '+ rect[sty] +'px; ';
+                for (sty in rect) {
+                    style += sty + ': ' + rect[sty] + 'px; ';
                 }
-                nodeString += '<div class="xk-edit-center-page-page" style="'+ style +'">';
+                nodeString += '<div class="xk-edit-center-page-page" style="' + style + '">';
                 nodeString += '</div>';
                 li.innerHTML = nodeString;
                 parentEle.firstElementChild.appendChild(li);
             },
-            insertPage: function () {
-                // 插入一个page
+            insertPage: function (parentEle, cb) {
+                var innerDiv = document.createElement('div');
+                var total = parentEle.firstElementChild.childNodes.length;
+                var curPos;//当前要插入的位置
+                var opt = '';
+                for (var i = 1; i <= total; i++) {
+                    opt += '<option id="' + i + '">' + i + '</option>';
+                }
+                innerDiv.innerHTML = '在第<select id="xk-select">' + opt + '</select>页后插入，当前共' + total + '页';
+                var obj = {
+                    type: 'node',
+                    value: innerDiv,
+                    name: '插入page',
+                    fn: function () {
+                        curPos = ~~document.getElementById('xk-select').value;
+                        var i = 0, j = 0, len = 0, nodeString = '', layerItem = {}, id;
+                        var doc = document;
+                        var pageEdit = doc.getElementById('xk-edit-center-edit');
+                        var li = doc.createElement('li');
+                        id = curPos + 1;
+                        li.style.zIndex = id * 10;
+                        nodeString += '<p class="noselect"><span class="float_left">page-' + id +
+                            '</span> <span class="float_right"><span class="hand" data-id="311">高度设置</span><span class="hand" data-id="312">设置背景图</span><span class="hand" data-id="313">删除</span></span></p>';
+                        var style = '', sty, rect;
+                        rect = {
+                            bottom: 656,
+                            height: 540,
+                            left: 0,
+                            right: 0,
+                            top: 0,
+                            width: 298.96875,
+                            x: 440.515625,
+                            y: 116
+                        };
+                        for (sty in rect) {
+                            style += sty + ': ' + rect[sty] + 'px; ';
+                        }
+                        nodeString += '<div class="xk-edit-center-page-page" style="' + style + '">';
+                        nodeString += '</div>';
+                        li.innerHTML = nodeString;
+                        parentEle.firstElementChild.insertBefore(li, parentEle.firstElementChild.childNodes[curPos]);
+                        document.body.removeChild(document.getElementById('alertWindow'));
+                        document.body.removeChild(document.getElementById('opac'));
 
-
+                        //刷新页面ID
+                        var nodes = parentEle.firstElementChild.childNodes;
+                        var len = nodes.length;
+                        for (var i = curPos; i < len; i++) {
+                            nodes[i].firstElementChild.firstElementChild.innerHTML = 'page-' + (i + 1);
+                        }
+                        console.log(nodes, len);
+                        cb(curPos);
+                    }
+                };
+                this.alertWindow(obj);
             },
             insertBgMusic: function () {
                 // 插入一个背景音乐
 
             },
 
-            initLayer:function (ele,dataList) {
+            initLayer: function (ele, dataList) {
                 // 选择page后，初始化该page的图层
                 var that = this;
                 var str = '', i = 0, len, dataIndex;
-                if(dataList && dataList.length>0){
+                if (dataList && dataList.length > 0) {
                     len = dataList.length;
-                    for(i=0; i<len; i++){
+                    for (i = 0; i < len; i++) {
                         dataIndex = dataList[i];
                         str += '<li class="noselect">' + that._getLayer(dataIndex) + '</li>';
                     }
                 }
                 ele.firstElementChild.innerHTML = str;
             },
-            addLayer:function (ele,data) {
+            addLayer: function (ele, data) {
                 // 新增一个图层
                 var that = this;
                 var li = document.createElement('li');
                 li.innerHTML = that._getLayer(data);
                 ele.appendChild(li);
             },
-            _getLayer:function (data) {
+            _getLayer: function (data) {
                 //返回标准化后的单个层级 字符串，供调用
 
-                var str='';
+                var str = '';
                 str = '<div class="xk-edit-right-top">' +
                     '<span data-id="421" class="xk-edit-right-label xk-edit-right-label-eyes"></span> ' +
                     '<span data-id="422" class="xk-edit-right-label xk-edit-right-img"></span> ' +
@@ -259,42 +310,180 @@ require(['config'], function () {
                     '<span data-id="424" class="xk-edit-right-label xk-edit-right-label-abled"></span> ' +
                     '<span data-id="425" class="xk-edit-right-label xk-edit-right-label-dir"></span> </div> ' +
                     '<div class="xk-edit-right-data xk-edit-right-data-none"> ' +
-                    '<p><span>W: <i>'+ data.rect.width +' </i></span> ' +
-                    '<span>H: <i>'+ data.rect.height +' </i></span></p> ' +
-                    '<p><span>X: <i>'+ data.rect.left +' </i></span> ' +
-                    '<span>Y: <i>'+ data.rect.top +' </i></span></p> ' +
+                    '<p><span>W: <i>' + data.rect.width + ' </i></span> ' +
+                    '<span>H: <i>' + data.rect.height + ' </i></span></p> ' +
+                    '<p><span>X: <i>' + data.rect.left + ' </i></span> ' +
+                    '<span>Y: <i>' + data.rect.top + ' </i></span></p> ' +
                     '</div>';
 
 
                 return str;
             },
 
-            initEffect:function (ele,dataList) {
+            initEffect: function (ele, dataList) {
                 // 选择图层后，初始化该图层的效果层
                 // console.log(ele,dataList);
                 var that = this;
-                var i, len, str='', data;
+                var i, len, str = '', data;
                 len = dataList.length;
-                for(i=0; i<len; i++){
+                for (i = 0; i < len; i++) {
                     data = dataList[i];
 
                     that._getEffect(data);
                 }
             },
-            addEffect:function (ele,data) {
+            addEffect: function (ele, data) {
                 // 新增一个效果层
 
             },
-            _getEffect:function (data) {
+            _getEffect: function (data) {
                 // 生成基础的效果层
                 console.log('生成图层');
             },
+            alertWindow: function (obj) {
+                //弹窗样式,传入一个Object
+                var body = document.getElementsByTagName('body')[0];  //页面body
+                var div = document.createElement('div');//弹出框
+                var title = document.createElement('p');//标题
+                var opac = document.createElement('div');//半透明蒙板
+                title.classList.add('title');
+                body.appendChild(div);
+                //图片弹窗
+                if (obj.type === 'image') {
+                    title.innerHTML = obj.name;
+                    div.style.cssText =
+                        'width:' + obj.w + 'px;' +
+                        'height:' + obj.h + 'px;' +
+                        'background-color : blue;' +
+                        'border-radius:5px;' +
+                        'position:absolute;' +
+                        'top:50px;' +
+                        'left:' + (document.documentElement.clientWidth - obj.w) / 2 + 'px;';
 
+                    var close = document.createElement('span');//关闭按钮
+                    var image = document.createElement('img');//图片显示区
+
+                    close.innerHTML = 'ⅹ';
+                    close.classList.add('closeBtn');
+                    close.addEventListener('click', function () {
+                        opac.style.display = 'none';
+                        div.style.display = 'none';
+                    });
+
+                    image.src = obj.value;
+                    image.style.cssText = 'position:absolute;' +
+                        'width:100%;' +
+                        'height:' + (obj.h - 24) + 'px;' +
+                        'top:24px';
+
+                    title.appendChild(close);
+                    div.appendChild(image);
+                }
+                //node弹窗，type必须为node,value必须为节点
+                if (obj.type === 'node') {
+                    title.innerHTML = obj.name;
+                    div.id = 'alertWindow';
+                    div.style.cssText =
+                        'width:500px;' +
+                        'height:300px;' +
+                        'border: 2px solid black;' +
+                        'border-radius:5px;' +
+                        'position:absolute;' +
+                        'top:200px;' +
+                        'left:' + (document.documentElement.clientWidth - 250) / 2 + 'px;';
+
+                    var innerDiv = document.createElement('div');//内容块
+                    var cancle = document.createElement('input');//取消按钮
+                    var ensure = document.createElement('input');//确定按钮
+                    var bottomP = document.createElement('p');//底部确定取消的容器
+
+                    cancle.value = '取消';
+                    ensure.value = '确定';
+                    cancle.setAttribute('type', 'button');
+                    ensure.setAttribute('type', 'button');
+                    cancle.classList.add('btn');
+                    ensure.classList.add('btn');
+                    bottomP.appendChild(cancle);
+                    bottomP.appendChild(ensure);
+                    bottomP.classList.add('bottom');
+
+                    innerDiv.style.cssText = 'position:absolute;' +
+                        'width:90%;' +
+                        'height: 240px;' +
+                        'top:24px;' +
+                        'left:5%;';
+
+                    innerDiv.appendChild(obj.value);
+                    innerDiv.appendChild(bottomP);
+
+                    div.appendChild(innerDiv);
+
+                    ensure.addEventListener('click', obj.fn);
+                    cancle.addEventListener('click', function () {
+                        opac.style.display = 'none';
+                        div.style.display = 'none';
+                    })
+
+                }
+                opac.id = 'opac';
+                opac.style.cssText = 'width:' + document.documentElement.clientWidth + 'px;' +
+                    'height:' + document.documentElement.clientHeight + 'px;' +
+                    'background-color:darkgray;' +
+                    'opacity:0.5;' +
+                    'position:absolute;' +
+                    'left:0;' +
+                    'top:0;';
+
+                div.appendChild(title);
+                body.appendChild(opac);
+                body.appendChild(div);
+
+                opac.addEventListener('click', function () {
+                    this.style.display = 'none';
+                    div.style.display = 'none';
+                });
+
+                title.onmousedown = function (ev) {
+                    var oevent = ev || window.event;
+
+                    var distanceX = oevent.clientX - div.offsetLeft;
+                    var distanceY = oevent.clientY - div.offsetTop;
+
+                    document.onmousemove = function (ev) {
+                        var oevent = ev || window.event;
+                        var clientWidth = document.documentElement.clientWidth - div.offsetWidth;
+                        var clientHeight = document.documentElement.clientHeight - div.offsetHeight;
+                        var disW = oevent.clientX - distanceX;
+                        var disH = oevent.clientY - distanceY;
+                        disW = disW < 0 ? 0 : disW;
+                        disW = disW > clientWidth ? clientWidth : disW;
+                        disH = disH < 0 ? 0 : disH;
+                        disH = disH > clientHeight ? clientHeight : disH;
+
+                        //设置图片的关闭按钮
+                        if (close) {
+                            if (disW >= clientWidth) {
+                                close.style.display = 'none';
+                            } else {
+                                close.style.display = 'block';
+                            }
+                        }
+                        console.log(div.style);
+                        div.style.left = disW + 'px';
+                        div.style.top = disH + 'px';
+                    };
+                    document.onmouseup = function () {
+                        document.onmousemove = null;
+                        document.onmouseup = null;
+                    };
+                }
+
+            }
 
         };
 
 
-        var _Controller = function (o,v) {
+        var _Controller = function (o, v) {
             var that = this;
             that.v = v;
             that.init(o);
@@ -323,7 +512,7 @@ require(['config'], function () {
             alt: false,
             ctrl_shift: false,
 
-            init : function (o) {
+            init: function (o) {
                 // console.log(o);
                 var doc = document, that = this;
 
@@ -348,64 +537,64 @@ require(['config'], function () {
 
                 // 画布侦听
                 var llli = that.pagePanel.firstElementChild.childNodes;
-                XkTool.addEvent(that.pagePanel.firstElementChild,'mousedown',function (e) {
+                XkTool.addEvent(that.pagePanel.firstElementChild, 'mousedown', function (e) {
                     e.preventDefault();
 
                 });
-                XkTool.addEvent(that.pagePanel.firstElementChild,'mouseup',function (e) {
+                XkTool.addEvent(that.pagePanel.firstElementChild, 'mouseup', function (e) {
                     //画布侦听
                     // console.log(e.currentTarget,e.target,lll.contains(e.target),llli);
-                    var element , j=0,pageLen=0, selectIndex;
-                    for(var i in llli){
-                        if(llli[i].nodeType===1 && llli[i].contains(e.target)){
+                    var element, j = 0, pageLen = 0, selectIndex;
+                    for (var i in llli) {
+                        if (llli[i].nodeType === 1 && llli[i].contains(e.target)) {
                             element = llli[i];
                             selectIndex = i;
-                            if(that.ctrl || that.shift || that.ctrl_shift){
-                                if( XkTool.hasClass(element,'box-bg-green') ){
-                                    XkTool.removeClass(element,'box-bg-green');
-                                    for(j=0,pageLen=that.page_select.length; j<pageLen; j++){
-                                        if(element == that.page_select[j].ele){
-                                            that.page_select.splice(j,1);
+                            if (that.ctrl || that.shift || that.ctrl_shift) {
+                                if (XkTool.hasClass(element, 'box-bg-green')) {
+                                    XkTool.removeClass(element, 'box-bg-green');
+                                    for (j = 0, pageLen = that.page_select.length; j < pageLen; j++) {
+                                        if (element == that.page_select[j].ele) {
+                                            that.page_select.splice(j, 1);
                                         }
                                     }
-                                }else{
-                                    XkTool.addClass(element,'box-bg-green');
-                                    that.page_select[that.page_select.length] ={
+                                } else {
+                                    XkTool.addClass(element, 'box-bg-green');
+                                    that.page_select[that.page_select.length] = {
                                         index: selectIndex,
                                         ele: element
                                     };
                                 }
 
-                            }else{
+                            } else {
                                 j = 0;
                                 pageLen = that.page_select.length;
 
-                                if( XkTool.hasClass(element,'box-bg-green') ){
-                                    if(pageLen <= 1){
+                                if (XkTool.hasClass(element, 'box-bg-green')) {
+                                    if (pageLen <= 1) {
                                         // that.page_select = [];
                                         // XkTool.removeClass(element,'box-bg-green');
-                                    }else{
-                                        for(j=0; j<pageLen; j++){
-                                            if(element == that.page_select[j].ele) continue;
-                                            XkTool.removeClass(that.page_select[j].ele,'box-bg-green');
-                                            that.page_select.splice(j,1);
-                                            j--,pageLen--;
+                                    } else {
+                                        for (j = 0; j < pageLen; j++) {
+                                            if (element == that.page_select[j].ele) continue;
+                                            XkTool.removeClass(that.page_select[j].ele, 'box-bg-green');
+                                            that.page_select.splice(j, 1);
+                                            j--, pageLen--;
                                         }
                                     }
-                                }else{
-                                    XkTool.addClass(element,'box-bg-green');
-                                    if(pageLen <= 1){
-                                        if(that.page_select[0]){
-                                            XkTool.removeClass(that.page_select[0].ele,'box-bg-green');
+                                } else {
+                                    XkTool.addClass(element, 'box-bg-green');
+                                    if (pageLen <= 1) {
+                                        if (that.page_select[0]) {
+                                            XkTool.removeClass(that.page_select[0].ele, 'box-bg-green');
                                         }
                                         that.page_select[0] = {
                                             index: selectIndex,
                                             ele: element
                                         };
-                                    }else{
-                                        for(j=0; j<pageLen; j++){
-                                            if(element == that.page_select[j].ele) continue;
-                                            XkTool.removeClass(that.page_select[j].ele,'box-bg-green');
+                                    } else {
+                                        for (j = 0; j < pageLen; j++) {
+                                            if (element == that.page_select[j].ele) continue;
+                                            XkTool.removeClass(that.page_select[j].ele, 'box-bg-green');
                                         }
                                         that.page_select = [];
                                         that.page_select[0] = {
@@ -421,18 +610,18 @@ require(['config'], function () {
                         }
                     }
 
-                    if(that.page_currentTarget_select.index != selectIndex && element){
+                    if (that.page_currentTarget_select.index != selectIndex && element) {
 
                         // 之前选择的page 层级下降
-                        if(that.page_currentTarget_select.ele)  that.page_currentTarget_select.ele.style.zIndex = 0;
+                        if (that.page_currentTarget_select.ele) that.page_currentTarget_select.ele.style.zIndex = 0;
 
                         // 新选择的page 及 其子节点，层级提示
                         element.style.zIndex = 1;
                         var page = element.firstElementChild.nextElementSibling;
                         var pageChild = page.childNodes;
                         var pageChildLen = pageChild.length;
-                        while (pageChildLen--){
-                            pageChild[pageChildLen].style.zIndex = pageChildLen ;
+                        while (pageChildLen--) {
+                            pageChild[pageChildLen].style.zIndex = pageChildLen;
                         }
 
                         that.page_currentTarget_select = {
@@ -440,10 +629,10 @@ require(['config'], function () {
                             ele: element
                         };
 
-                        if(that.layerPanelBox && that.page_currentTarget_select.index){
+                        if (that.layerPanelBox && that.page_currentTarget_select.index) {
                             var id = ~~_Model.page[that.page_currentTarget_select.index].id + 1;
-                            getChildes(that.layerPanel.firstElementChild)[1].innerHTML = 'page-' + id  ;
-                            that.v.initLayer(that.layerPanelBox,_Model.page[that.page_currentTarget_select.index].layerList);
+                            getChildes(that.layerPanel.firstElementChild)[1].innerHTML = 'page-' + id;
+                            that.v.initLayer(that.layerPanelBox, _Model.page[that.page_currentTarget_select.index].layerList);
                         }
                     }
                 });
@@ -468,16 +657,16 @@ require(['config'], function () {
                         var _headHeight = 55;
                         var _downTime = XkTool.getTime();
 
-                        var list, i = 0, len, selectUl={}, indexUl=NaN, indexLi=NaN, selectLi, UlChild={},
-                            parentEle = {} , element = {}, eleId;
+                        var list, i = 0, len, selectUl = {}, indexUl = NaN, indexLi = NaN, selectLi, UlChild = {},
+                            parentEle = {}, element = {}, eleId;
                         // 拷贝的节点，供拖动;
                         var isDrop = true, isMove = false, eleName, _x, _y, _mx, _my;
                         // 拖动的 ul 容器
                         var moveUl = null;
                         // 当前容器的的scrolltop
-                        var eleScrrollTop = 0, scrollHeight =  0;
+                        var eleScrrollTop = 0, scrollHeight = 0;
                         // 拖动对象 当前num，当前节点
-                        var moveNextIndex , nextLi;
+                        var moveNextIndex, nextLi;
 
                         var isPanelMove = false;    //多个li拖动
                         var currIndex = NaN;        //滚条上一个滚动位置
@@ -500,8 +689,8 @@ require(['config'], function () {
                         eleScrrollTop = parentEle.scrollTop;
                         scrollHeight = parentEle.scrollHeight;
 
-                        for(i=0; i<len; i++){
-                            if(list[i].contains(element)){
+                        for (i = 0; i < len; i++) {
+                            if (list[i].contains(element)) {
                                 selectUl = list[i];
                                 indexUl = selectUl.getAttribute('data-tab');
                                 break;
@@ -512,8 +701,8 @@ require(['config'], function () {
                         UlChild = getChildes(selectUl);
 
 
-                        for(i=0,len=UlChild.length; i<len; i++){
-                            if(UlChild[i].contains(element)){
+                        for (i = 0, len = UlChild.length; i < len; i++) {
+                            if (UlChild[i].contains(element)) {
                                 selectLi = UlChild[i];
                                 eleName = selectLi.nodeName;
                                 indexLi = i;
@@ -522,12 +711,12 @@ require(['config'], function () {
                             }
                         }
 
-                        if(!selectLi) return;
+                        if (!selectLi) return;
 
-                        if(that.subBox_layer_curr_select_ul != selectUl){
+                        if (that.subBox_layer_curr_select_ul != selectUl) {
                             that.subBox_layer_curr_select_ul = selectUl;
                         }
-                        if(that.subBox_layer_curr_select_li != selectLi){
+                        if (that.subBox_layer_curr_select_li != selectLi) {
                             that.subBox_layer_curr_select_li = selectLi;
                         }
 
@@ -538,7 +727,7 @@ require(['config'], function () {
                         var copyNodeRect = selectLi.getBoundingClientRect();
 
 
-                        switch(eleId){
+                        switch (eleId) {
                             case 'xk-edit-effect-panel':
                                 // 效果层
                                 // console.log(e.currentTarget.id,element);
@@ -550,39 +739,39 @@ require(['config'], function () {
                                 // 组件层
                                 // console.log(e.currentTarget.id,element,indexUl);
                                 //组件当前显示的id
-                                if(!that.sub_select[indexUl]) that.sub_select[indexUl] =[];
+                                if (!that.sub_select[indexUl]) that.sub_select[indexUl] = [];
                                 that.sub_show_id = indexUl;
-                                dropItem(selectUl,selectLi,that.sub_select[indexUl],function () {
+                                dropItem(selectUl, selectLi, that.sub_select[indexUl], function () {
                                     console.log('xk-edit-sub-panel');
                                 });
                                 break;
                             case 'xk-edit-layer-panel':
                                 // 图层层
-                                dropLayer(selectUl,selectLi,that.layer_select,function () {
+                                dropLayer(selectUl, selectLi, that.layer_select, function () {
                                     console.log('xk-edit-layer-panel');
                                 });
                                 break;
                         }
 
-                        function moveNode(ele,top) {
+                        function moveNode(ele, top) {
                             // 拖动的节点
                             var newLi = doc.createElement('li');
                             var liTop, liLeft, liWidth, liHeight;
-                            var eleChild, ourSrt='';
+                            var eleChild, ourSrt = '';
                             var copyNodeRect = ele.getBoundingClientRect(), mi, mLen;
                             eleChild = getChildes(ele);
-                            for(mi=0,mLen=eleChild.length; mi<mLen; mi++){
+                            for (mi = 0, mLen = eleChild.length; mi < mLen; mi++) {
                                 ourSrt += eleChild[mi].outerHTML;
                             }
                             newLi.innerHTML = ourSrt;
-                            liTop = Math.round(copyNodeRect.top - eleScrrollTop) ;
+                            liTop = Math.round(copyNodeRect.top - eleScrrollTop);
                             liLeft = Math.round(copyNodeRect.left);
                             liWidth = Math.round(copyNodeRect.width);
-                            liHeight = Math.round( (copyNodeRect.height >46 ? 46 : copyNodeRect.height ) );
-                            newLi.style.top = Math.round( copyNodeRect.top - top ) +'px';
+                            liHeight = Math.round((copyNodeRect.height > 46 ? 46 : copyNodeRect.height ));
+                            newLi.style.top = Math.round(copyNodeRect.top - top) + 'px';
                             newLi.style.left = '0px';
-                            newLi.style.width = liWidth +'px';
-                            newLi.style.height = liHeight +'px';
+                            newLi.style.width = liWidth + 'px';
+                            newLi.style.height = liHeight + 'px';
                             // newLi.style.opacity = 0;
                             newLi.style.overflow = 'hidden';
                             newLi.style.zIndex = -1;
@@ -597,29 +786,29 @@ require(['config'], function () {
 
                         }
 
-                        function movePanel(cuUl,cuLi,selectArr) {
+                        function movePanel(cuUl, cuLi, selectArr) {
                             // 生成拖动的ul，及其子节点li；
                             // 子节点li，全部是 通过 moveNode 方法，传回的 复制体（完全遍历复制）
 
                             var _moveUl = doc.createElement('ul');
-                            var _delEle, nextH=0, getEleObj;
+                            var _delEle, nextH = 0, getEleObj;
                             var len = selectArr.length;
-                            if(isPanelMove){
+                            if (isPanelMove) {
                                 var moveArr = [], childItem, firstIndex = false, firstEleTop;
 
-                                for(i=0; i<len; i++){
+                                for (i = 0; i < len; i++) {
                                     childItem = selectArr[i];
-                                    if(!cuUl.contains(childItem.ele)) continue;
+                                    if (!cuUl.contains(childItem.ele)) continue;
                                     moveArr[childItem.index] = childItem;
                                 }
-                                for(i=0,len=moveArr.length; i<len; i++){
+                                for (i = 0, len = moveArr.length; i < len; i++) {
                                     childItem = moveArr[i];
-                                    if(childItem){
-                                        if(!firstIndex){
+                                    if (childItem) {
+                                        if (!firstIndex) {
                                             firstEleTop = childItem.ele.getBoundingClientRect().top;
                                         }
-                                        getEleObj = moveNode( childItem.ele, firstEleTop );
-                                        if(!firstIndex){
+                                        getEleObj = moveNode(childItem.ele, firstEleTop);
+                                        if (!firstIndex) {
                                             nextH = getEleObj.top;
                                             _moveUl.style.top = getEleObj.top + eleScrrollTop + 'px';
                                             _moveUl.style.left = getEleObj.left + 'px';
@@ -631,12 +820,12 @@ require(['config'], function () {
 
                                 }
 
-                            }else{
+                            } else {
 
                                 len = selectArr.length;
-                                while(len--){
+                                while (len--) {
                                     _delEle = selectArr[len];
-                                    selectArr.splice(len,1);
+                                    selectArr.splice(len, 1);
                                     that.class_list.push(_delEle);
                                 }
 
@@ -654,15 +843,15 @@ require(['config'], function () {
                             return _moveUl;
                         }
 
-                        function hasNextEle(ele,arr) {
+                        function hasNextEle(ele, arr) {
                             // 获取目标节点，是否在选择数组内
                             var _isHasEle = false;
                             var ni, nextArrLen;
                             var nextChild;
-                            for(ni=0,nextArrLen=arr.length; ni<nextArrLen; ni++){
+                            for (ni = 0, nextArrLen = arr.length; ni < nextArrLen; ni++) {
                                 nextChild = arr[ni];
-                                if(nextChild){
-                                    if(ele == nextChild.ele){
+                                if (nextChild) {
+                                    if (ele == nextChild.ele) {
                                         _isHasEle = true;
                                         return _isHasEle;
                                     }
@@ -673,20 +862,20 @@ require(['config'], function () {
                             return _isHasEle;
                         }
 
-                        function setLIcss(index,styleValue) {
+                        function setLIcss(index, styleValue) {
                             // 设置css,styleValue 为style的属性值 , borderTopColor,borderBottomColor;
 
                             styleValue == undefined ? styleValue = moveNextCss : styleValue = styleValue;
                             UlChild[index].style[styleValue] = 'red';
 
-                            if(!isNaN(currIndex)){
+                            if (!isNaN(currIndex)) {
                                 UlChild[currIndex].style[currCss] = '#9d9d9d';
                             }
                             currIndex = index;
                             currCss = styleValue;
                         }
 
-                        function dropLayer(cuUl,cuLi,selectArr,callback) {
+                        function dropLayer(cuUl, cuLi, selectArr, callback) {
                             // 图层和效果层 拖动
 
                             // if(moveUl!=null){
@@ -708,30 +897,30 @@ require(['config'], function () {
 
 
                             moveNextIndex = indexLi;
-                            nextLi =cuLi;
+                            nextLi = cuLi;
 
-                            len=selectArr.length;
+                            len = selectArr.length;
 
-                            for(i = 0; i<len; i++){
-                                if(cuLi == selectArr[i].ele){
+                            for (i = 0; i < len; i++) {
+                                if (cuLi == selectArr[i].ele) {
                                     isPanelMove = true;
                                     break;
                                 }
                             }
 
 
-                            XkTool.addEvent(cuLi,'mouseup',subUpEvent);
+                            XkTool.addEvent(cuLi, 'mouseup', subUpEvent);
 
-                            XkTool.addEvent(window,'mousemove',copyMove);
-                            XkTool.addEvent(window,'mouseup',copyUp);
+                            XkTool.addEvent(window, 'mousemove', copyMove);
+                            XkTool.addEvent(window, 'mouseup', copyUp);
 
                             function copyUp(e) {
                                 //鼠标抬起后，按需插入
-                                XkTool.removeEvent(window,'mousemove',copyMove);
-                                if(!isDrop) return;
+                                XkTool.removeEvent(window, 'mousemove', copyMove);
+                                if (!isDrop) return;
                                 isDrop = false;
 
-                                if(isMove){
+                                if (isMove) {
 
                                     var moveArr = [];                       //按点击目前的位置（index）来排序的数组
                                     var minArr = [], maxArr = [];           //分离出，比 当前移动的对象moveNextIndex 大 or 小 的二个数组
@@ -751,20 +940,20 @@ require(['config'], function () {
                                     moveLiNext = moveLi.nextElementSibling;
                                     setLIcss(moveNextIndex);
 
-                                    len=selectArr.length;
-                                    if( isPanelMove && len>1 ){
+                                    len = selectArr.length;
+                                    if (isPanelMove && len > 1) {
 
                                         // 对选择的节点，按索引进行排序
-                                        for(i=0; i<len; i++){
+                                        for (i = 0; i < len; i++) {
                                             childItem = selectArr[i];
-                                            if(!cuUl.contains(childItem.ele)) continue;
+                                            if (!cuUl.contains(childItem.ele)) continue;
                                             moveArr[childItem.index] = childItem;
                                         }
 
                                         // 排序完成后，以移入目标索引，进行大小数组分割
-                                        for(i=0,len = moveArr.length; i<len; i++ ){
+                                        for (i = 0, len = moveArr.length; i < len; i++) {
                                             childItem = moveArr[i];
-                                            if(childItem){
+                                            if (childItem) {
                                                 childItem.index >= moveNextIndex ? maxArr.push(childItem) : minArr.push(childItem);
                                             }
                                         }
@@ -774,44 +963,44 @@ require(['config'], function () {
                                         var UlIndex;
                                         var minLiNum = moveNextIndex;
                                         var minLi;
-                                        while (len--){
+                                        while (len--) {
                                             childItem = minArr[len];
                                             minLi = UlChild[minLiNum];
                                             var minNum = moveNextIndex - childItem.index;
                                             var _minNUm = minNum;
 
-                                            while(minNum--){
+                                            while (minNum--) {
                                                 // 根据当前位置 与 移动位置  差值，进行循环，遍历目标是否可以移动
                                                 UlIndex = ~~childItem.index + _minNUm;
                                                 var excNode = UlChild[UlIndex];
-                                                var hasEle = hasNextEle(excNode,moveArr);
+                                                var hasEle = hasNextEle(excNode, moveArr);
 
-                                                if(!hasEle){
+                                                if (!hasEle) {
 
                                                     excEle = excNode.nextElementSibling;
 
                                                     removeEle = cuUl.removeChild(childItem.ele);
-                                                    UlChild.splice(childItem.index,1);                  //更新UlChild数组索引
+                                                    UlChild.splice(childItem.index, 1);                  //更新UlChild数组索引
 
                                                     excModeData = modeLayer[childItem.index];               //更新mode图层数组
-                                                    modeLayer.splice(childItem.index,1);
-                                                    if(!isBottom){
-                                                        cuUl.insertBefore(removeEle,excEle);
-                                                        arrIndex = Index(cuUl,removeEle);
-                                                        UlChild.splice(UlIndex,0,removeEle);            //更新UlChild数组索引
+                                                    modeLayer.splice(childItem.index, 1);
+                                                    if (!isBottom) {
+                                                        cuUl.insertBefore(removeEle, excEle);
+                                                        arrIndex = Index(cuUl, removeEle);
+                                                        UlChild.splice(UlIndex, 0, removeEle);            //更新UlChild数组索引
 
-                                                        modeLayer.splice(UlIndex,0,excModeData);            //更新mode图层数组
+                                                        modeLayer.splice(UlIndex, 0, excModeData);            //更新mode图层数组
 
-                                                    }else{
+                                                    } else {
 
                                                         excEle = minLi.nextElementSibling;
                                                         console.log(minLi)
-                                                        if(excEle){
-                                                            cuUl.insertBefore(removeEle,excEle);
-                                                            arrIndex = Index(cuUl,removeEle);
-                                                            UlChild.splice(arrIndex,0,removeEle);                        //更新UlChild数组索引
-                                                            modeLayer.splice(arrIndex,0,excModeData);                        //更新mode图层数组
-                                                        }else{
+                                                        if (excEle) {
+                                                            cuUl.insertBefore(removeEle, excEle);
+                                                            arrIndex = Index(cuUl, removeEle);
+                                                            UlChild.splice(arrIndex, 0, removeEle);                        //更新UlChild数组索引
+                                                            modeLayer.splice(arrIndex, 0, excModeData);                        //更新mode图层数组
+                                                        } else {
                                                             cuUl.appendChild(removeEle);
                                                             UlChild.push(removeEle);                        //更新UlChild数组索引
                                                             arrIndex = UlChild.length - 1;
@@ -831,44 +1020,43 @@ require(['config'], function () {
                                         }
 
 
-
                                         len = maxArr.length;
                                         nextItem = 0;
-                                        while(nextItem < len){
+                                        while (nextItem < len) {
                                             childItem = maxArr[nextItem];
                                             var maxNum = childItem.index - moveNextIndex;
                                             var _maxNum = maxNum;
-                                            while (maxNum--){
+                                            while (maxNum--) {
 
                                                 UlIndex = ~~childItem.index - _maxNum;
 
                                                 var excNode = UlChild[UlIndex];
-                                                var hasEle = hasNextEle(excNode,maxArr);
+                                                var hasEle = hasNextEle(excNode, maxArr);
 
-                                                if(!hasEle){
+                                                if (!hasEle) {
                                                     excEle = excNode.nextElementSibling;
-                                                    if(childItem.ele == moveLiNext){
+                                                    if (childItem.ele == moveLiNext) {
                                                         moveLiNext = moveLiNext.nextElementSibling;
                                                     }
 
                                                     removeEle = cuUl.removeChild(childItem.ele);
 
-                                                    UlChild.splice(childItem.index,1);                  //更新UlChild数组索引
+                                                    UlChild.splice(childItem.index, 1);                  //更新UlChild数组索引
                                                     excModeData = modeLayer[childItem.index];               //更新mode图层数组
-                                                    modeLayer.splice(childItem.index,1);
-                                                    if(!isTop){
-                                                        cuUl.insertBefore(removeEle,moveLiNext);
-                                                        arrIndex = Index(cuUl,removeEle);
-                                                        UlChild.splice(arrIndex,0,removeEle);            //更新UlChild数组索引
+                                                    modeLayer.splice(childItem.index, 1);
+                                                    if (!isTop) {
+                                                        cuUl.insertBefore(removeEle, moveLiNext);
+                                                        arrIndex = Index(cuUl, removeEle);
+                                                        UlChild.splice(arrIndex, 0, removeEle);            //更新UlChild数组索引
 
-                                                        modeLayer.splice(arrIndex,0,excModeData);            //更新mode图层数组
-                                                    }else{
+                                                        modeLayer.splice(arrIndex, 0, excModeData);            //更新mode图层数组
+                                                    } else {
 
-                                                        cuUl.insertBefore(removeEle,excNode);
-                                                        arrIndex = Index(cuUl,removeEle);
-                                                        UlChild.splice(arrIndex,0,removeEle);            //更新UlChild数组索引
+                                                        cuUl.insertBefore(removeEle, excNode);
+                                                        arrIndex = Index(cuUl, removeEle);
+                                                        UlChild.splice(arrIndex, 0, removeEle);            //更新UlChild数组索引
 
-                                                        modeLayer.splice(arrIndex,0,excModeData);            //更新mode图层数组
+                                                        modeLayer.splice(arrIndex, 0, excModeData);            //更新mode图层数组
 
                                                     }
                                                     childItem.index = arrIndex;
@@ -878,7 +1066,7 @@ require(['config'], function () {
                                                 _maxNum--;
                                             }
 
-                                            removeEle = moveLi =null;
+                                            removeEle = moveLi = null;
                                             nextItem++;
                                         }
                                         // console.log(excModeData,modeLayer,arrIndex);
@@ -887,13 +1075,13 @@ require(['config'], function () {
 
                                         excNode = moveLiNext = null;
 
-                                    }else{
+                                    } else {
 
                                         len = selectArr.length;
-                                        if(len>0){
-                                            while (len--){
+                                        if (len > 0) {
+                                            while (len--) {
                                                 var delEle = selectArr[len];
-                                                selectArr.splice(len,1);
+                                                selectArr.splice(len, 1);
                                                 that.class_list.push(delEle);
                                             }
                                         }
@@ -902,73 +1090,72 @@ require(['config'], function () {
                                         excEle = excNode.nextElementSibling;
                                         removeEle = cuUl.removeChild(cuLi);
 
-                                        UlChild.splice(indexLi,1);                  //更新UlChild数组索引
+                                        UlChild.splice(indexLi, 1);                  //更新UlChild数组索引
                                         excModeData = modeLayer[indexLi];           //更新mode图层数组
-                                        modeLayer.splice(indexLi,1);
+                                        modeLayer.splice(indexLi, 1);
 
-                                        if(!isTop && excEle!=cuLi){
-                                            cuUl.insertBefore(removeEle,excEle);
-                                        }else{
-                                            cuUl.insertBefore(removeEle,excNode);
+                                        if (!isTop && excEle != cuLi) {
+                                            cuUl.insertBefore(removeEle, excEle);
+                                        } else {
+                                            cuUl.insertBefore(removeEle, excNode);
                                         }
-                                        arrIndex = Index(cuUl,removeEle);
-                                        UlChild.splice(arrIndex,0,removeEle);                  //更新UlChild数组索引
-                                        modeLayer.splice(arrIndex,0,excModeData);                //更新mode图层数组
+                                        arrIndex = Index(cuUl, removeEle);
+                                        UlChild.splice(arrIndex, 0, removeEle);                  //更新UlChild数组索引
+                                        modeLayer.splice(arrIndex, 0, excModeData);                //更新mode图层数组
                                         selectArr.push({
                                             ele: removeEle,
                                             index: moveNextIndex
                                         });
-                                        XkTool.addClass(removeEle,'box-bg-blue');
+                                        XkTool.addClass(removeEle, 'box-bg-blue');
 
-                                        for(i=0,len=that.class_list.length; i<len; i++){
-                                            if(removeEle == that.class_list[i].ele) continue;
-                                            XkTool.removeClass(that.class_list[i].ele,'box-bg-blue');
+                                        for (i = 0, len = that.class_list.length; i < len; i++) {
+                                            if (removeEle == that.class_list[i].ele) continue;
+                                            XkTool.removeClass(that.class_list[i].ele, 'box-bg-blue');
 
                                         }
                                         removeEle = null;
 
 
-
                                         that.class_list = [];
-                                        console.log(UlChild,selectArr,modeLayer);
+                                        console.log(UlChild, selectArr, modeLayer);
 
                                     }
 
-                                    if(!isNaN(currIndex)){
+                                    if (!isNaN(currIndex)) {
                                         UlChild[currIndex].style.borderBottomColor = '#9d9d9d';
                                     }
 
                                     that.headDiv.removeChild(moveUl);
-                                    moveUl=null;
+                                    moveUl = null;
 
                                 }
 
-                                XkTool.removeEvent(window,'mouseup',copyUp);
-                                XkTool.removeEvent(window,'mousemove',copyMove);
+                                XkTool.removeEvent(window, 'mouseup', copyUp);
+                                XkTool.removeEvent(window, 'mousemove', copyMove);
                             }
 
                             function copyMove(e) {
                                 // 拖动move事件
-                                var cuUlTop = cuUl.offsetTop , cuUlHeight = cuUl.offsetHeight;
-                                var nextRect ;          //目标的 rect 属性
+                                var cuUlTop = cuUl.offsetTop, cuUlHeight = cuUl.offsetHeight;
+                                var nextRect;          //目标的 rect 属性
                                 isDrop = true;
 
 
-                                if(!isMove){
-                                    if(XkTool.getTime() - _downTime <= 150) return;
+                                if (!isMove) {
+                                    if (XkTool.getTime() - _downTime <= 150) return;
 
                                     len = selectArr.length;
 
-                                    moveUl = movePanel(cuUl,cuLi,selectArr);
+                                    moveUl = movePanel(cuUl, cuLi, selectArr);
 
                                     that.headDiv.appendChild(moveUl);
-                                    XkTool.addClass(moveUl,'isDrop');
+                                    XkTool.addClass(moveUl, 'isDrop');
                                     moveUl.style.opacity = 0.7;
 
                                     isMove = true;
                                 }
 
-                                if(scrollIndex!=moveNextIndex){
+                                if (scrollIndex != moveNextIndex) {
                                     // 滚动条  跟随滚动
                                     // parentEle.scrollTop = 46* (moveNextIndex - scrollIndex) ;
                                     // parentEle.scrollTop = scrollHeight * (moveNextIndex / liLen / 2) ;
@@ -976,31 +1163,31 @@ require(['config'], function () {
 
                                 }
 
-                                if(_y!= e.pageY){
+                                if (_y != e.pageY) {
 
-                                    if(moveUl){
+                                    if (moveUl) {
 
-                                        moveUl.style.top = e.pageY - moveUl.offsetHeight/2   +'px';
+                                        moveUl.style.top = e.pageY - moveUl.offsetHeight / 2 + 'px';
 
-                                        if(moveUl.offsetTop<cuUlTop + _headHeight){
-                                            moveUl.style.top = cuUlTop + _headHeight +'px';
+                                        if (moveUl.offsetTop < cuUlTop + _headHeight) {
+                                            moveUl.style.top = cuUlTop + _headHeight + 'px';
                                         }
-                                        if(moveUl.offsetTop >= cuUlTop + _headHeight + cuUlHeight - moveUl.offsetHeight ){
+                                        if (moveUl.offsetTop >= cuUlTop + _headHeight + cuUlHeight - moveUl.offsetHeight) {
 
-                                            moveUl.style.top = cuUlTop + _headHeight + cuUlHeight - moveUl.offsetHeight +'px';
+                                            moveUl.style.top = cuUlTop + _headHeight + cuUlHeight - moveUl.offsetHeight + 'px';
                                         }
 
                                     }
 
-                                    _x = e.pageX , _y= e.pageY;
+                                    _x = e.pageX , _y = e.pageY;
 
                                 }
 
                                 len = UlChild.length;
-                                if(Math.abs(_my - e.pageY) >= 2){
+                                if (Math.abs(_my - e.pageY) >= 2) {
 
                                     // 下个兄弟节点,
-                                    var nextEleChild, nextEleChildRect,  childTopAndHeight = 0;
+                                    var nextEleChild, nextEleChildRect, childTopAndHeight = 0;
                                     // if(_my - e.pageY >= 1){
                                     //     //往上滚动
                                     //     console.log('上');
@@ -1013,53 +1200,54 @@ require(['config'], function () {
 
                                     nextRect = nextLi.getBoundingClientRect();
                                     nextEleChild = nextLi.nextElementSibling;
-                                    if(nextEleChild){
+                                    if (nextEleChild) {
                                         nextEleChildRect = nextEleChild.getBoundingClientRect();
-                                        childTopAndHeight = childTopAndHeight + nextEleChildRect.height/2;
+                                        childTopAndHeight = childTopAndHeight + nextEleChildRect.height / 2;
                                     }
-                                    if(e.pageY < nextRect.top + nextRect.height/2){
+                                    if (e.pageY < nextRect.top + nextRect.height / 2) {
                                         moveNextIndex--;
                                         // moveNextIndex >= UlChild.length-1 ? moveNextIndex = UlChild.length-1 : moveNextIndex;
-                                        if(moveNextIndex < 0){
+                                        if (moveNextIndex < 0) {
                                             moveNextIndex = 0;
-                                            if(!isTop){
+                                            if (!isTop) {
                                                 moveNextCss = 'borderTopColor';
-                                                setLIcss(moveNextIndex,moveNextCss);
+                                                setLIcss(moveNextIndex, moveNextCss);
                                                 isTop = true;
                                             }
                                             return;
                                         }
                                         moveNextCss = 'borderBottomColor';
-                                        setLIcss(moveNextIndex,moveNextCss);
+                                        setLIcss(moveNextIndex, moveNextCss);
 
 
-                                    }else if(e.pageY > nextRect.top + nextRect.height + childTopAndHeight){
+                                    } else if (e.pageY > nextRect.top + nextRect.height + childTopAndHeight) {
 
                                         moveNextIndex++;
                                         // moveNextIndex < 0 ? moveNextIndex = 0 : moveNextIndex = moveNextIndex;
 
-                                        if(moveNextIndex >= len-1){
-                                            moveNextIndex = len-1;
-                                            if(!isBottom){
+                                        if (moveNextIndex >= len - 1) {
+                                            moveNextIndex = len - 1;
+                                            if (!isBottom) {
                                                 moveNextCss = 'borderBottomColor';
-                                                setLIcss(moveNextIndex,moveNextCss);
+                                                setLIcss(moveNextIndex, moveNextCss);
                                                 isBottom = true;
                                             }
                                             return;
                                         }
                                         moveNextCss = 'borderBottomColor';
-                                        setLIcss(moveNextIndex,moveNextCss);
+                                        setLIcss(moveNextIndex, moveNextCss);
                                         // console.log(moveNextIndex,currIndex,e.pageY,nextRect.top)
-                                    }else{
+                                    } else {
                                         isTop = isBottom = false;
                                         moveNextCss = 'borderBottomColor';
                                         currCss = 'borderTopColor';
-                                        setLIcss(moveNextIndex,moveNextCss);
+                                        setLIcss(moveNextIndex, moveNextCss);
                                     }
 
                                     nextLi = UlChild[moveNextIndex];
 
-                                    _my = e.pageY; _mx = e.pageX;
+                                    _my = e.pageY;
+                                    _mx = e.pageX;
                                 }
 
 
@@ -1067,11 +1255,11 @@ require(['config'], function () {
 
                         }
 
-                        function dropItem(cuUl,cuLi,selectArr,callback) {
+                        function dropItem(cuUl, cuLi, selectArr, callback) {
                             // 组件拖动
-                            if(moveUl!=null){
+                            if (moveUl != null) {
                                 that.headDiv.removeChild(moveUl);
-                                moveUl=null;
+                                moveUl = null;
                             }
                             callback();
 
@@ -1089,32 +1277,32 @@ require(['config'], function () {
                             var isBottom = false;
 
                             moveNextIndex = indexLi;
-                            nextLi =cuLi;
+                            nextLi = cuLi;
 
-                            len=selectArr.length;
+                            len = selectArr.length;
 
-                            for(i = 0; i<len; i++){
-                                if(cuLi == selectArr[i].ele){
+                            for (i = 0; i < len; i++) {
+                                if (cuLi == selectArr[i].ele) {
                                     isPanelMove = true;
                                     break;
                                 }
                             }
 
 
-                            XkTool.addEvent(cuLi,'mouseup',subUpEvent);
+                            XkTool.addEvent(cuLi, 'mouseup', subUpEvent);
 
 
-                            XkTool.addEvent(window,'mousemove',copyMove);
-                            XkTool.addEvent(window,'mouseup',copyUp);
+                            XkTool.addEvent(window, 'mousemove', copyMove);
+                            XkTool.addEvent(window, 'mouseup', copyUp);
 
                             function copyUp(e) {
-                                XkTool.removeEvent(window,'mousemove',copyMove);
-                                if(!isDrop) return;
+                                XkTool.removeEvent(window, 'mousemove', copyMove);
+                                if (!isDrop) return;
                                 isDrop = false;
 
-                                if(isMove){
+                                if (isMove) {
 
-                                    if(moveBoxBool){
+                                    if (moveBoxBool) {
                                         // 在组件容器内部拖动
 
 
@@ -1136,18 +1324,18 @@ require(['config'], function () {
                                         moveLiNext = moveLi.nextElementSibling;
                                         setLIcss(moveNextIndex);
 
-                                        len=selectArr.length;
-                                        if( isPanelMove && len>1 ){
+                                        len = selectArr.length;
+                                        if (isPanelMove && len > 1) {
 
-                                            for(i=0; i<len; i++){
+                                            for (i = 0; i < len; i++) {
                                                 childItem = selectArr[i];
-                                                if(!cuUl.contains(childItem.ele)) continue;
+                                                if (!cuUl.contains(childItem.ele)) continue;
                                                 moveArr[childItem.index] = childItem;
                                             }
 
-                                            for(i=0,len = moveArr.length; i<len; i++ ){
+                                            for (i = 0, len = moveArr.length; i < len; i++) {
                                                 childItem = moveArr[i];
-                                                if(childItem){
+                                                if (childItem) {
                                                     childItem.index >= moveNextIndex ? maxArr.push(childItem) : minArr.push(childItem);
                                                 }
                                             }
@@ -1157,41 +1345,41 @@ require(['config'], function () {
                                             var UlIndex;
                                             var minLiNum = moveNextIndex;
                                             var minLi;
-                                            while (len--){
+                                            while (len--) {
                                                 childItem = minArr[len];
                                                 minLi = UlChild[minLiNum];
                                                 var minNum = moveNextIndex - childItem.index;
                                                 var _minNUm = minNum;
 
-                                                while(minNum--){
+                                                while (minNum--) {
                                                     // 根据当前位置 与 移动位置  差值，进行循环，遍历目标是否可以移动
                                                     UlIndex = ~~childItem.index + _minNUm;
                                                     var excNode = UlChild[UlIndex];
-                                                    var hasEle = hasNextEle(excNode,moveArr);
-                                                    if(!hasEle){
+                                                    var hasEle = hasNextEle(excNode, moveArr);
+                                                    if (!hasEle) {
 
                                                         excEle = excNode.nextElementSibling;
 
                                                         removeEle = cuUl.removeChild(childItem.ele);
-                                                        UlChild.splice(childItem.index,1);                  //更新UlChild数组索引
+                                                        UlChild.splice(childItem.index, 1);                  //更新UlChild数组索引
 
                                                         // excModeData = modeLayer[childItem.index];               //更新mode图层数组
                                                         // modeLayer.splice(childItem.index,1);
 
-                                                        if(!isBottom){
-                                                            cuUl.insertBefore(removeEle,excEle);
-                                                            arrIndex = Index(cuUl,removeEle);
-                                                            UlChild.splice(UlIndex,0,removeEle);            //更新UlChild数组索引
+                                                        if (!isBottom) {
+                                                            cuUl.insertBefore(removeEle, excEle);
+                                                            arrIndex = Index(cuUl, removeEle);
+                                                            UlChild.splice(UlIndex, 0, removeEle);            //更新UlChild数组索引
                                                             console.log(UlIndex)
 
-                                                        }else{
+                                                        } else {
                                                             excEle = minLi.nextElementSibling;
 
-                                                            if(excEle){
-                                                                cuUl.insertBefore(removeEle,excEle);
-                                                                arrIndex = Index(cuUl,removeEle);
-                                                                UlChild.splice(arrIndex,0,removeEle);                        //更新UlChild数组索引
-                                                            }else{
+                                                            if (excEle) {
+                                                                cuUl.insertBefore(removeEle, excEle);
+                                                                arrIndex = Index(cuUl, removeEle);
+                                                                UlChild.splice(arrIndex, 0, removeEle);                        //更新UlChild数组索引
+                                                            } else {
                                                                 cuUl.appendChild(removeEle);
                                                                 UlChild.push(removeEle);                        //更新UlChild数组索引
                                                                 arrIndex = UlChild.length - 1;
@@ -1213,38 +1401,38 @@ require(['config'], function () {
 
                                             len = maxArr.length;
                                             nextItem = 0;
-                                            while(nextItem < len){
+                                            while (nextItem < len) {
                                                 childItem = maxArr[nextItem];
                                                 var maxNum = childItem.index - moveNextIndex;
                                                 var _maxNum = maxNum;
 
-                                                while (maxNum--){
+                                                while (maxNum--) {
                                                     UlIndex = ~~childItem.index - _maxNum;
                                                     var excNode = UlChild[UlIndex];
-                                                    var hasEle = hasNextEle(excNode,maxArr);
+                                                    var hasEle = hasNextEle(excNode, maxArr);
 
-                                                    if(!hasEle){
+                                                    if (!hasEle) {
                                                         excEle = excNode.nextElementSibling;
-                                                        if(childItem.ele == moveLiNext){
+                                                        if (childItem.ele == moveLiNext) {
                                                             moveLiNext = moveLiNext.nextElementSibling;
                                                         }
 
                                                         removeEle = cuUl.removeChild(childItem.ele);
-                                                        UlChild.splice(childItem.index,1);                  //更新UlChild数组索引
+                                                        UlChild.splice(childItem.index, 1);                  //更新UlChild数组索引
 
-                                                        if(!isTop){
-                                                            if(excEle == childItem.ele) continue;
-                                                            cuUl.insertBefore(removeEle,moveLiNext);
-                                                            arrIndex = Index(cuUl,removeEle);
-                                                            UlChild.splice(arrIndex,0,removeEle);            //更新UlChild数组索引
+                                                        if (!isTop) {
+                                                            if (excEle == childItem.ele) continue;
+                                                            cuUl.insertBefore(removeEle, moveLiNext);
+                                                            arrIndex = Index(cuUl, removeEle);
+                                                            UlChild.splice(arrIndex, 0, removeEle);            //更新UlChild数组索引
 
-                                                        }else{
-                                                            cuUl.insertBefore(removeEle,excNode);
-                                                            arrIndex = Index(cuUl,removeEle);
-                                                            UlChild.splice(arrIndex,0,removeEle);            //更新UlChild数组索引
+                                                        } else {
+                                                            cuUl.insertBefore(removeEle, excNode);
+                                                            arrIndex = Index(cuUl, removeEle);
+                                                            UlChild.splice(arrIndex, 0, removeEle);            //更新UlChild数组索引
 
                                                         }
-                                                        childItem.index = Index(cuUl,removeEle);
+                                                        childItem.index = Index(cuUl, removeEle);
 
                                                         break;
                                                     }
@@ -1258,12 +1446,12 @@ require(['config'], function () {
                                             }
 
 
-                                        }else{
+                                        } else {
                                             len = selectArr.length;
-                                            if(len>0){
-                                                while (len--){
+                                            if (len > 0) {
+                                                while (len--) {
                                                     var delEle = selectArr[len];
-                                                    selectArr.splice(len,1)
+                                                    selectArr.splice(len, 1)
                                                     that.class_list.push(delEle);
                                                 }
                                             }
@@ -1272,25 +1460,25 @@ require(['config'], function () {
                                             // var hasEle = hasNextEle(excNode);
                                             removeEle = cuUl.removeChild(cuLi);
 
-                                            UlChild.splice(indexLi,1);                  //更新UlChild数组索引
+                                            UlChild.splice(indexLi, 1);                  //更新UlChild数组索引
 
-                                            if(!isTop && excEle != cuLi){
-                                                cuUl.insertBefore(removeEle,excEle);
-                                            }else{
-                                                cuUl.insertBefore(removeEle,excNode);
+                                            if (!isTop && excEle != cuLi) {
+                                                cuUl.insertBefore(removeEle, excEle);
+                                            } else {
+                                                cuUl.insertBefore(removeEle, excNode);
                                             }
-                                            arrIndex = Index(cuUl,removeEle);
-                                            UlChild.splice(arrIndex,0,removeEle);                  //更新UlChild数组索引
+                                            arrIndex = Index(cuUl, removeEle);
+                                            UlChild.splice(arrIndex, 0, removeEle);                  //更新UlChild数组索引
 
                                             selectArr.push({
                                                 ele: removeEle,
                                                 index: moveNextIndex
                                             });
-                                            XkTool.addClass(removeEle,'box-bg-blue');
+                                            XkTool.addClass(removeEle, 'box-bg-blue');
 
-                                            for(i=0,len=that.class_list.length; i<len; i++){
-                                                if(removeEle == that.class_list[i].ele) continue;
-                                                XkTool.removeClass(that.class_list[i].ele,'box-bg-blue');
+                                            for (i = 0, len = that.class_list.length; i < len; i++) {
+                                                if (removeEle == that.class_list[i].ele) continue;
+                                                XkTool.removeClass(that.class_list[i].ele, 'box-bg-blue');
 
                                             }
 
@@ -1299,7 +1487,7 @@ require(['config'], function () {
                                         }
 
 
-                                    }else{
+                                    } else {
 
                                         // 拖动到画布上
 
@@ -1311,7 +1499,7 @@ require(['config'], function () {
                                         var dataItem;           //获取数据 对象
                                         var layerLen;           //层级
                                         var regNum = /^(\d)*/g;
-                                        if(pageLen == 1){
+                                        if (pageLen == 1) {
                                             // 目前不知道，是否具备，一个组件，同时拖入N个选择的page。
                                             // 如果不可以，那么采用 that.page_currentTarget_select
                                             // 如果可以，就要遍历这里了。。。。
@@ -1319,7 +1507,7 @@ require(['config'], function () {
                                             // console.log(that.page_select,'1234',pageLen);
 
                                             // 插入组件 的 目标page节点
-                                            page = that.page_select[pageLen-1];
+                                            page = that.page_select[pageLen - 1];
                                             pageEle = page.ele.firstElementChild.nextElementSibling;
                                             pageEleRect = pageEle.getBoundingClientRect();
                                             var _x = e.pageX, _y = e.pageY;
@@ -1328,15 +1516,15 @@ require(['config'], function () {
                                             // 页面单个图层数据对象
                                             var modeLayerItem;
                                             var newLi;
-                                            if(isPanelMove){
+                                            if (isPanelMove) {
 
-                                                for(i=0; i<len; i++){
+                                                for (i = 0; i < len; i++) {
                                                     sctEle = selectArr[i];
 
                                                     // 通过选择的 li 包含的 data-subId ，然后在 数据层 遍历，找到这个 数据。
                                                     // 目前 先随便获取，后面数据对应后，再删除这里
-                                                    dataItem = _Model.subList[ sctEle.index ];
-                                                    if(dataItem.tab != 0) return;
+                                                    dataItem = _Model.subList[sctEle.index];
+                                                    if (dataItem.tab != 0) return;
 
                                                     newLi = doc.createElement('li');
                                                     layerLen = _Model.page[page.index].layerList.length;
@@ -1344,28 +1532,28 @@ require(['config'], function () {
                                                     imgWidth = dataItem.width.match(regNum);
                                                     imgHeight = dataItem.height.match(regNum);
 
-                                                    imgTop = e.pageY - imgHeight/2 ;
-                                                    imgLeft = e.pageX - imgWidth/2 ;
-                                                    imgTop = Math.round( imgTop - pageEleRect.top );
-                                                    imgLeft = Math.round( imgLeft - pageEleRect.left );
+                                                    imgTop = e.pageY - imgHeight / 2;
+                                                    imgLeft = e.pageX - imgWidth / 2;
+                                                    imgTop = Math.round(imgTop - pageEleRect.top);
+                                                    imgLeft = Math.round(imgLeft - pageEleRect.left);
                                                     newImg = doc.createElement('img');
                                                     newImg.src = dataItem.src;
-                                                    newImg.style.left = imgLeft +'px';
-                                                    newImg.style.top = imgTop +'px';
-                                                    newImg.style.width = imgWidth +'px';
-                                                    newImg.style.height = imgHeight +'px';
+                                                    newImg.style.left = imgLeft + 'px';
+                                                    newImg.style.top = imgTop + 'px';
+                                                    newImg.style.width = imgWidth + 'px';
+                                                    newImg.style.height = imgHeight + 'px';
                                                     newImg.style.zIndex = layerLen;
                                                     pageEle.appendChild(newImg);
                                                     dataItem.citeAdd.push({
                                                         index: page.index,
-                                                        pageEle:  page.ele,
+                                                        pageEle: page.ele,
                                                         ele: newImg
                                                     });
 
                                                     //插入页面数据层；
                                                     _Model.page[page.index].layerList[layerLen] = {
                                                         subId: dataItem.id,
-                                                        layer: layerLen-1,
+                                                        layer: layerLen - 1,
                                                         src: dataItem.src,
                                                         name: 0,
                                                         rect: {
@@ -1381,16 +1569,16 @@ require(['config'], function () {
                                                     newLi.innerHTML = that.v._getLayer(modeLayerItem);
                                                     that.layerPanelBox.firstElementChild.appendChild(newLi);
                                                     newLi = newImg = null;
-                                                    console.log(sctEle.index,'123')
+                                                    console.log(sctEle.index, '123')
                                                 }
 
-                                            }else{
+                                            } else {
                                                 // 通过选择的 li 包含的 data-subId ，然后在 数据层 遍历，找到这个 数据。
                                                 // 目前 先随便获取，后面数据对应后，再删除这里
 
-                                                dataItem = _Model.subList[ Index(cuUl,cuLi) ];
+                                                dataItem = _Model.subList[Index(cuUl, cuLi)];
 
-                                                if(dataItem.tab == 0){
+                                                if (dataItem.tab == 0) {
                                                     // 图片组件
                                                     newLi = doc.createElement('li');
                                                     layerLen = _Model.page[page.index].layerList.length;
@@ -1398,28 +1586,28 @@ require(['config'], function () {
                                                     imgWidth = dataItem.width.match(regNum);
                                                     imgHeight = dataItem.height.match(regNum);
 
-                                                    imgTop = e.pageY - imgHeight/2 ;
-                                                    imgLeft = e.pageX - imgWidth/2 ;
-                                                    imgTop = Math.round( imgTop - pageEleRect.top );
-                                                    imgLeft = Math.round( imgLeft - pageEleRect.left );
+                                                    imgTop = e.pageY - imgHeight / 2;
+                                                    imgLeft = e.pageX - imgWidth / 2;
+                                                    imgTop = Math.round(imgTop - pageEleRect.top);
+                                                    imgLeft = Math.round(imgLeft - pageEleRect.left);
                                                     newImg = doc.createElement('img');
                                                     newImg.src = dataItem.src;
-                                                    newImg.style.left = imgLeft +'px';
-                                                    newImg.style.top = imgTop +'px';
-                                                    newImg.style.width = imgWidth +'px';
-                                                    newImg.style.height = imgHeight +'px';
+                                                    newImg.style.left = imgLeft + 'px';
+                                                    newImg.style.top = imgTop + 'px';
+                                                    newImg.style.width = imgWidth + 'px';
+                                                    newImg.style.height = imgHeight + 'px';
                                                     newImg.style.zIndex = layerLen;
                                                     pageEle.appendChild(newImg);
                                                     dataItem.citeAdd.push({
                                                         index: page.index,
-                                                        pageEle:  page.ele,
+                                                        pageEle: page.ele,
                                                         ele: newImg
                                                     });
 
                                                     //插入页面数据层；
                                                     _Model.page[page.index].layerList[layerLen] = {
                                                         subId: dataItem.id,
-                                                        layer: layerLen-1,
+                                                        layer: layerLen - 1,
                                                         src: dataItem.src,
                                                         name: 0,
                                                         rect: {
@@ -1439,22 +1627,22 @@ require(['config'], function () {
 
                                                     // 清楚不是本次选择的节点的样式
                                                     len = selectArr.length;
-                                                    if(len>0){
-                                                        while (len--){
+                                                    if (len > 0) {
+                                                        while (len--) {
                                                             var delEle = selectArr[len];
-                                                            selectArr.splice(len,1)
+                                                            selectArr.splice(len, 1)
                                                             that.class_list.push(delEle);
                                                         }
                                                     }
                                                     selectArr.push({
                                                         ele: cuLi,
-                                                        index: Index(cuUl,cuLi)
+                                                        index: Index(cuUl, cuLi)
                                                     });
-                                                    XkTool.addClass(cuLi,'box-bg-blue');
+                                                    XkTool.addClass(cuLi, 'box-bg-blue');
 
-                                                    for(i=0,len=that.class_list.length; i<len; i++){
-                                                        if(cuLi == that.class_list[i].ele) continue;
-                                                        XkTool.removeClass(that.class_list[i].ele,'box-bg-blue');
+                                                    for (i = 0, len = that.class_list.length; i < len; i++) {
+                                                        if (cuLi == that.class_list[i].ele) continue;
+                                                        XkTool.removeClass(that.class_list[i].ele, 'box-bg-blue');
 
                                                     }
 
@@ -1473,12 +1661,12 @@ require(['config'], function () {
 
                                     console.log(that.page_currentTarget_select)
 
-                                    if(!isNaN(currIndex)){
+                                    if (!isNaN(currIndex)) {
                                         UlChild[currIndex].style.borderBottomColor = '#9d9d9d';
                                     }
 
                                     that.headDiv.removeChild(moveUl);
-                                    moveUl=null;
+                                    moveUl = null;
 
                                 }
 
@@ -1486,98 +1674,99 @@ require(['config'], function () {
 
                             function copyMove(e) {
                                 //组件拖动事件
-                                var cuUlTop = cuUl.offsetTop , cuUlHeight = cuUl.offsetHeight;
-                                var nextRect ;          //目标的 rect 属性
+                                var cuUlTop = cuUl.offsetTop, cuUlHeight = cuUl.offsetHeight;
+                                var nextRect;          //目标的 rect 属性
                                 isDrop = true;
-                                if(!isMove){
-                                    if(XkTool.getTime() - _downTime <= 150) return;
+                                if (!isMove) {
+                                    if (XkTool.getTime() - _downTime <= 150) return;
                                     len = selectArr.length;
-                                    moveUl = movePanel(cuUl,cuLi,selectArr);
+                                    moveUl = movePanel(cuUl, cuLi, selectArr);
                                     that.headDiv.appendChild(moveUl);
-                                    XkTool.addClass(moveUl,'isDrop');
+                                    XkTool.addClass(moveUl, 'isDrop');
                                     moveUl.style.opacity = 0.5;
                                     isMove = true;
                                 }
 
                                 // parentEle.scrollTop += 46* (currIndex - moveNextIndex);
                                 // console.log(parentEle.scrollTop,'11111');
-                                if(moveBoxBool){
+                                if (moveBoxBool) {
                                     // 在组件盒子内拖动
-                                    if( (e.pageX<pageRect.x+pageRect.width && e.pageX>pageRect.x) && (e.pageY<pageRect.y+pageRect.height && e.pageY>pageRect.y) ){
+                                    if ((e.pageX < pageRect.x + pageRect.width && e.pageX > pageRect.x) && (e.pageY < pageRect.y + pageRect.height && e.pageY > pageRect.y)) {
                                         moveBoxBool = false;
                                         indexRect = that.pagePanel;
                                     }
-                                    if(_y!= e.pageY){
+                                    if (_y != e.pageY) {
 
-                                        if(moveUl){
-                                            moveUl.style.top = e.pageY - moveUl.offsetHeight/2   +'px';
-                                            moveUl.style.left = indexRect.offsetLeft +'px';
-                                            if(moveUl.offsetTop<cuUlTop + _headHeight){
-                                                moveUl.style.top = cuUlTop + _headHeight +'px';
+                                        if (moveUl) {
+                                            moveUl.style.top = e.pageY - moveUl.offsetHeight / 2 + 'px';
+                                            moveUl.style.left = indexRect.offsetLeft + 'px';
+                                            if (moveUl.offsetTop < cuUlTop + _headHeight) {
+                                                moveUl.style.top = cuUlTop + _headHeight + 'px';
                                             }
-                                            if(moveUl.offsetTop >= cuUlTop + _headHeight + cuUlHeight - moveUl.offsetHeight ){
+                                            if (moveUl.offsetTop >= cuUlTop + _headHeight + cuUlHeight - moveUl.offsetHeight) {
 
-                                                moveUl.style.top = cuUlTop + _headHeight + cuUlHeight - moveUl.offsetHeight +'px';
+                                                moveUl.style.top = cuUlTop + _headHeight + cuUlHeight - moveUl.offsetHeight + 'px';
                                             }
                                         }
 
-                                        _x = e.pageX , _y= e.pageY;
+                                        _x = e.pageX , _y = e.pageY;
                                     }
 
                                     len = UlChild.length;
-                                    if(Math.abs(_my - e.pageY) >= 2){
+                                    if (Math.abs(_my - e.pageY) >= 2) {
 
                                         // 下个兄弟节点,
-                                        var nextEleChild, nextEleChildRect,  childTopAndHeight = 0;
+                                        var nextEleChild, nextEleChildRect, childTopAndHeight = 0;
 
                                         nextRect = nextLi.getBoundingClientRect();
                                         nextEleChild = nextLi.nextElementSibling;
-                                        if(nextEleChild){
+                                        if (nextEleChild) {
                                             nextEleChildRect = nextEleChild.getBoundingClientRect();
-                                            childTopAndHeight = childTopAndHeight + nextEleChildRect.height/2;
+                                            childTopAndHeight = childTopAndHeight + nextEleChildRect.height / 2;
                                         }
-                                        if(e.pageY < nextRect.top + nextRect.height/2){
+                                        if (e.pageY < nextRect.top + nextRect.height / 2) {
                                             moveNextIndex--;
                                             // moveNextIndex >= UlChild.length-1 ? moveNextIndex = UlChild.length-1 : moveNextIndex;
-                                            if(moveNextIndex < 0){
+                                            if (moveNextIndex < 0) {
                                                 moveNextIndex = 0;
-                                                if(!isTop){
+                                                if (!isTop) {
                                                     moveNextCss = 'borderTopColor';
-                                                    setLIcss(moveNextIndex,moveNextCss);
+                                                    setLIcss(moveNextIndex, moveNextCss);
                                                     isTop = true;
                                                 }
                                                 return;
                                             }
                                             moveNextCss = 'borderBottomColor';
-                                            setLIcss(moveNextIndex,moveNextCss);
+                                            setLIcss(moveNextIndex, moveNextCss);
 
 
-                                        }else if(e.pageY > nextRect.top + nextRect.height + childTopAndHeight){
+                                        } else if (e.pageY > nextRect.top + nextRect.height + childTopAndHeight) {
 
                                             moveNextIndex++;
                                             // moveNextIndex < 0 ? moveNextIndex = 0 : moveNextIndex = moveNextIndex;
-                                            if(moveNextIndex > len-1){
-                                                moveNextIndex = len-1;
-                                                if(!isBottom){
+                                            if (moveNextIndex > len - 1) {
+                                                moveNextIndex = len - 1;
+                                                if (!isBottom) {
                                                     moveNextCss = 'borderBottomColor';
-                                                    setLIcss(moveNextIndex,moveNextCss);
+                                                    setLIcss(moveNextIndex, moveNextCss);
                                                     isBottom = true;
                                                 }
                                                 return;
                                             }
                                             moveNextCss = 'borderBottomColor';
-                                            setLIcss(moveNextIndex,moveNextCss);
+                                            setLIcss(moveNextIndex, moveNextCss);
                                             // console.log(moveNextIndex,currIndex,e.pageY,nextRect.top)
-                                        }else{
+                                        } else {
                                             isTop = isBottom = false;
                                             moveNextCss = 'borderBottomColor';
                                             currCss = 'borderTopColor';
-                                            setLIcss(moveNextIndex,moveNextCss);
+                                            setLIcss(moveNextIndex, moveNextCss);
                                         }
 
                                         nextLi = UlChild[moveNextIndex];
 
-                                        _my = e.pageY; _mx = e.pageX;
+                                        _my = e.pageY;
+                                        _mx = e.pageX;
                                     }
 
                                     // if(e.pageY >= cuUlTop + _headHeight - moveUl.offsetHeight/4 && e.pageY <= cuUlTop + _headHeight + cuUlHeight + eleScrrollTop){
@@ -1611,40 +1800,40 @@ require(['config'], function () {
                                     //
                                     // }
 
-                                }else {
+                                } else {
                                     // 在画布上拖动
-                                    if( (e.pageX<selectUlRect.x+selectUlRect.width && e.pageX>selectUlRect.x) && (e.pageY<selectUlRect.y+selectUlRect.height && e.pageY>selectUlRect.y) ){
+                                    if ((e.pageX < selectUlRect.x + selectUlRect.width && e.pageX > selectUlRect.x) && (e.pageY < selectUlRect.y + selectUlRect.height && e.pageY > selectUlRect.y)) {
                                         moveBoxBool = true;
                                         indexRect = cuUl;
                                     }
 
-                                    if(_y!= e.pageY || _x!= e.pageY){
+                                    if (_y != e.pageY || _x != e.pageY) {
 
-                                        if(_x > moveUl.offsetLeft || _x < moveUl.offsetLeft || _y > moveUl.offsetTop || _y< moveUl.offsetTop ){
-                                            moveUl.style.top = e.pageY - 23  +'px';
-                                            moveUl.style.left =  e.pageX - 92 +'px';
+                                        if (_x > moveUl.offsetLeft || _x < moveUl.offsetLeft || _y > moveUl.offsetTop || _y < moveUl.offsetTop) {
+                                            moveUl.style.top = e.pageY - 23 + 'px';
+                                            moveUl.style.left = e.pageX - 92 + 'px';
                                         }
-                                        moveUl.style.top = moveUl.offsetTop - (_y - e.pageY)   +'px';
-                                        moveUl.style.left = moveUl.offsetLeft - (_x - e.pageX)  +'px';
+                                        moveUl.style.top = moveUl.offsetTop - (_y - e.pageY) + 'px';
+                                        moveUl.style.left = moveUl.offsetLeft - (_x - e.pageX) + 'px';
 
-                                        if(moveUl.offsetTop<indexRect.offsetTop + 55 ){
+                                        if (moveUl.offsetTop < indexRect.offsetTop + 55) {
                                             // 上
-                                            moveUl.style.top = indexRect.offsetTop + 55 +'px';
+                                            moveUl.style.top = indexRect.offsetTop + 55 + 'px';
                                         }
-                                        if(moveUl.offsetLeft + moveUl.offsetWidth > indexRect.offsetLeft + indexRect.offsetWidth ){
+                                        if (moveUl.offsetLeft + moveUl.offsetWidth > indexRect.offsetLeft + indexRect.offsetWidth) {
                                             // 右
-                                            moveUl.style.left = indexRect.offsetLeft + indexRect.offsetWidth - moveUl.offsetWidth +'px';
+                                            moveUl.style.left = indexRect.offsetLeft + indexRect.offsetWidth - moveUl.offsetWidth + 'px';
                                         }
-                                        if(moveUl.offsetTop + moveUl.offsetHeight > indexRect.offsetTop + indexRect.offsetHeight + 55  ){
+                                        if (moveUl.offsetTop + moveUl.offsetHeight > indexRect.offsetTop + indexRect.offsetHeight + 55) {
                                             // 下
-                                            moveUl.style.top = indexRect.offsetTop + indexRect.offsetHeight + 55 - moveUl.offsetHeight +'px';
+                                            moveUl.style.top = indexRect.offsetTop + indexRect.offsetHeight + 55 - moveUl.offsetHeight + 'px';
                                         }
-                                        if(moveUl.offsetLeft < indexRect.offsetLeft ){
+                                        if (moveUl.offsetLeft < indexRect.offsetLeft) {
                                             // 左
-                                            moveUl.style.left = indexRect.offsetLeft +'px';
+                                            moveUl.style.left = indexRect.offsetLeft + 'px';
                                         }
 
-                                        _x = e.pageX , _y= e.pageY;
+                                        _x = e.pageX , _y = e.pageY;
                                     }
 
                                 }
@@ -1655,8 +1844,6 @@ require(['config'], function () {
                         }
 
 
-
-
                         function subUpEvent(e) {
                             // 组件 mouseup(抬起)
 
@@ -1665,17 +1852,17 @@ require(['config'], function () {
                             var _delEle;                                    //递归删除的对象节点
 
                             element = e.target;
-                            _dataId= ~~element.getAttribute('data-id');
+                            _dataId = ~~element.getAttribute('data-id');
                             selectLi = e.currentTarget;
                             selectUl = selectLi.parentNode;
                             indexUl = selectUl.getAttribute('data-tab');
                             eleId = selectUl.parentNode.id;
                             indexLi = that.subBox_layer_effect_sct_index;
 
-                            getIndex = Index(getChildes(selectUl),selectLi);
+                            getIndex = Index(getChildes(selectUl), selectLi);
 
 
-                            switch(eleId){
+                            switch (eleId) {
                                 case 'xk-edit-effect-panel':
                                     // 效果层
                                     // console.log(e.currentTarget.id,element);
@@ -1686,7 +1873,7 @@ require(['config'], function () {
                                 case 'xk-edit-sub-panel':
                                     // 组件层
                                     // console.log(e.currentTarget.id,element,indexUl);
-                                    if(!that.sub_select[indexUl]) that.sub_select[indexUl] =[];
+                                    if (!that.sub_select[indexUl]) that.sub_select[indexUl] = [];
                                     // that.sub_select
                                     clickItem(that.sub_select[indexUl]);
                                     typeItem();
@@ -1697,8 +1884,8 @@ require(['config'], function () {
                                     index = that.page_currentTarget_select.index;
                                     // that.layer_select
                                     clickItem(that.layer_select);
-                                    if(index && !isNaN(indexLi)){
-                                        that.v.initEffect(that.effectPanelBox,_Model.page[index].layerList[indexLi].animal);
+                                    if (index && !isNaN(indexLi)) {
+                                        that.v.initEffect(that.effectPanelBox, _Model.page[index].layerList[indexLi].animal);
                                         typeItem();
                                     }
                                     break;
@@ -1706,60 +1893,60 @@ require(['config'], function () {
 
                             function clickItem(selectArr) {
                                 // 点击单个 li 相应的显示与数据处理
-                                if(!selectLi) return;
+                                if (!selectLi) return;
 
                                 var _currItem, _isCurr = false;
                                 len = selectArr.length;
 
-                                for(i=0; i<len; i++){
+                                for (i = 0; i < len; i++) {
                                     _currItem = selectArr[i];
-                                    if(selectLi == _currItem.ele){
+                                    if (selectLi == _currItem.ele) {
                                         _isCurr = true;
                                         break;
                                     }
                                 }
 
-                                if(isPanelMove){
+                                if (isPanelMove) {
                                     // 是在已选 的 目标上 点击
-                                    if(isMove){
+                                    if (isMove) {
                                         selectLi.style.borderBottomColor = '#9d9d9d';
-                                        if(!isNaN(currIndex)){
+                                        if (!isNaN(currIndex)) {
                                             UlChild[currIndex].style.borderBottomColor = '#9d9d9d';
                                         }
                                         return;
                                     }
-                                    if( !(that.ctrl || that.shift || that.ctrl_shift) ){
-                                        while(len--){
-                                            if(selectLi == selectArr[len].ele) continue;
+                                    if (!(that.ctrl || that.shift || that.ctrl_shift)) {
+                                        while (len--) {
+                                            if (selectLi == selectArr[len].ele) continue;
                                             _delEle = selectArr[len];
-                                            selectArr.splice(len,1);
+                                            selectArr.splice(len, 1);
                                             that.class_list.push(_delEle);
                                         }
 
 
-                                    }else{
+                                    } else {
                                         that.class_list = [];
                                     }
-                                }else{
+                                } else {
                                     // 不在已选 的 目标上 点击
-                                    if(isMove){
+                                    if (isMove) {
                                         selectLi.style.borderBottomColor = '#9d9d9d';
-                                        if(!isNaN(currIndex)){
+                                        if (!isNaN(currIndex)) {
                                             UlChild[currIndex].style.borderBottomColor = '#9d9d9d';
                                         }
                                     }
-                                    if( that.ctrl || that.shift || that.ctrl_shift ){
-                                        selectArr[len]={
+                                    if (that.ctrl || that.shift || that.ctrl_shift) {
+                                        selectArr[len] = {
                                             ele: selectLi,
                                             index: getIndex
                                         };
-                                    }else{
-                                        while(len--){
+                                    } else {
+                                        while (len--) {
                                             _delEle = selectArr[len];
-                                            selectArr.splice(len,1);
+                                            selectArr.splice(len, 1);
                                             that.class_list.push(_delEle);
                                         }
-                                        selectArr[0]={
+                                        selectArr[0] = {
                                             ele: selectLi,
                                             index: getIndex
                                         };
@@ -1767,14 +1954,14 @@ require(['config'], function () {
                                 }
                                 // console.log(getIndex,'返回当前节点位置',selectArr);
 
-                                XkTool.addClass(selectLi,'box-bg-blue');
-                                if(that.ctrl || that.shift || that.ctrl_shift){
+                                XkTool.addClass(selectLi, 'box-bg-blue');
+                                if (that.ctrl || that.shift || that.ctrl_shift) {
                                     // XkTool.addClass(selectLi,'box-bg-blue');
-                                }else{
-                                    len=that.class_list.length;
-                                    while(len--){
-                                        XkTool.removeClass(that.class_list[len].ele,'box-bg-blue');
-                                        that.class_list.splice(len,1);
+                                } else {
+                                    len = that.class_list.length;
+                                    while (len--) {
+                                        XkTool.removeClass(that.class_list[len].ele, 'box-bg-blue');
+                                        that.class_list.splice(len, 1);
                                     }
 
 
@@ -1786,33 +1973,36 @@ require(['config'], function () {
                             function typeItem() {
                                 // 处理单个按钮
 
-                                switch(_dataId){
+                                switch (_dataId) {
+                                    // case 302:
+                                    //     console.log(_dataId,_Model.config[_dataId]);
+                                    //     break;
                                     case 421:
-                                        console.log(_dataId,_Model.config[_dataId]);
+                                        console.log(_dataId, _Model.config[_dataId]);
 
                                         break;
                                     case 422:
-                                        console.log(_dataId,_Model.config[_dataId]);
+                                        console.log(_dataId, _Model.config[_dataId]);
 
                                         break;
                                     case 423:
-                                        console.log(_dataId,_Model.config[_dataId]);
+                                        console.log(_dataId, _Model.config[_dataId]);
 
                                         break;
                                     case 424:
-                                        console.log(_dataId,_Model.config[_dataId]);
+                                        console.log(_dataId, _Model.config[_dataId]);
 
                                         break;
                                     case 425:
                                         // console.log(id,_Model.config[id]);
                                         var list = getChildes(that.subBox_layer_curr_select_li);
-                                        console.log(that.subBox_layer_curr_select_li,1111);
-                                        if(XkTool.hasClass(element,'xk-edit-right-label-dirbottom')){
-                                            XkTool.removeClass(element,'xk-edit-right-label-dirbottom');
-                                            XkTool.addClass(list[1],'xk-edit-right-data-none');
-                                        }else{
-                                            XkTool.addClass(element,'xk-edit-right-label-dirbottom');
-                                            XkTool.removeClass(list[1],'xk-edit-right-data-none');
+                                        console.log(that.subBox_layer_curr_select_li, 1111);
+                                        if (XkTool.hasClass(element, 'xk-edit-right-label-dirbottom')) {
+                                            XkTool.removeClass(element, 'xk-edit-right-label-dirbottom');
+                                            XkTool.addClass(list[1], 'xk-edit-right-data-none');
+                                        } else {
+                                            XkTool.addClass(element, 'xk-edit-right-label-dirbottom');
+                                            XkTool.removeClass(list[1], 'xk-edit-right-data-none');
                                         }
 
                                         break;
@@ -1820,48 +2010,49 @@ require(['config'], function () {
 
                             }
 
-                            XkTool.removeEvent(e.currentTarget,'mouseup',subUpEvent);
+                            XkTool.removeEvent(e.currentTarget, 'mouseup', subUpEvent);
                         };
 
 
                     }
 
 
-                    XkTool.addEvent(that.subPanelBox,'mousedown',subDownEvent);
-                    XkTool.addEvent(that.layerPanelBox,'mousedown',subDownEvent);
-                    XkTool.addEvent(that.effectPanelBox,'mousedown',subDownEvent);
+                    XkTool.addEvent(that.subPanelBox, 'mousedown', subDownEvent);
+                    XkTool.addEvent(that.layerPanelBox, 'mousedown', subDownEvent);
+                    XkTool.addEvent(that.effectPanelBox, 'mousedown', subDownEvent);
 
                 }
 
 
                 function key_Event() {
                     //键盘方法
-                    XkTool.addEvent(doc,'keydown',keydownEvents);
-                    XkTool.addEvent(doc,'keyup',keyupEvents);
+                    XkTool.addEvent(doc, 'keydown', keydownEvents);
+                    XkTool.addEvent(doc, 'keyup', keyupEvents);
                     function keydownEvents(e) {
                         e.preventDefault();
                         if (e.ctrlKey || e.keyCode == 17) {
                             //按下ctrl
-                            console.log(e.keyCode,'ctrl'  );
+                            console.log(e.keyCode, 'ctrl');
                             that.ctrl = true;
                             that.shift = that.alt = that.ctrl_shift = false;
                         }
-                        if(e.shiftKey || e.keyCode == 16){
-                            console.log(e.keyCode,'shift'  );
+                        if (e.shiftKey || e.keyCode == 16) {
+                            console.log(e.keyCode, 'shift');
                             that.shift = true;
                             that.ctrl = that.alt = that.ctrl_shift = false;
                         }
-                        if(e.altKey || e.keyCode == 18){
-                            console.log(e.keyCode,'alt'  );
+                        if (e.altKey || e.keyCode == 18) {
+                            console.log(e.keyCode, 'alt');
                             that.alt = true;
                             that.ctrl = that.shift = that.ctrl_shift = false;
                         }
-                        if((e.ctrlKey || e.keyCode == 17) && (e.shiftKey || e.keyCode == 16)){
-                            console.log(e.keyCode,'ctrl + shift' );
+                        if ((e.ctrlKey || e.keyCode == 17) && (e.shiftKey || e.keyCode == 16)) {
+                            console.log(e.keyCode, 'ctrl + shift');
                             that.ctrl_shift = true;
                             that.ctrl = that.shift = that.alt = false;
                         }
                     }
+
                     function keyupEvents(e) {
                         e.preventDefault();
                         that.ctrl = that.shift = that.alt = that.ctrl_shift = false;
@@ -1871,90 +2062,93 @@ require(['config'], function () {
 
 
             },
-            setEffect : function () {
+            setEffect: function () {
 
             },
-            setType : function (id,ele) {
+            setType: function (id, ele) {
                 var that = this;
-                switch(id){
+                switch (id) {
                     case 101:
-                        console.log(id,_Model.config[id]);
+                        console.log(id, _Model.config[id]);
                         console.log(Date.now());
                         break;
                     case 102:
-                        console.log(id,_Model.config[id]);
+                        console.log(id, _Model.config[id]);
 
                         break;
                     case 103:
-                        console.log(id,_Model.config[id]);
+                        console.log(id, _Model.config[id]);
 
                         break;
                     case 104:
-                        console.log(id,_Model.config[id]);
+                        console.log(id, _Model.config[id]);
 
                         break;
                     case 105:
-                        console.log(id,_Model.config[id]);
+                        console.log(id, _Model.config[id]);
 
                         break;
                     case 106:
-                        console.log(id,_Model.config[id]);
+                        console.log(id, _Model.config[id]);
 
                         break;
                     case 201:
-                        console.log(id,_Model.config[id]);
+                        console.log(id, _Model.config[id]);
 
                         break;
                     case 202:
-                        console.log(id,_Model.config[id]);
+                        console.log(id, _Model.config[id]);
 
                         break;
                     case 203:
-                        console.log(id,_Model.config[id]);
+                        console.log(id, _Model.config[id]);
 
                         break;
                     case 204:
-                        console.log(id,_Model.config[id]);
+                        console.log(id, _Model.config[id]);
 
                         break;
                     case 205:
-                        console.log(id,_Model.config[id]);
+                        console.log(id, _Model.config[id]);
 
                         break;
                     case 206:
-                        console.log(id,_Model.config[id]);
+                        console.log(id, _Model.config[id]);
 
                         break;
                     case 207:
-                        console.log(id,_Model.config[id]);
+                        console.log(id, _Model.config[id]);
 
                         break;
                     case 208:
-                        console.log(id,_Model.config[id]);
+                        console.log(id, _Model.config[id]);
 
                         break;
                     case 209:
-                        console.log(id,_Model.config[id]);
+                        console.log(id, _Model.config[id]);
 
                         break;
                     case 221:
-                        console.log(id,_Model.config[id]);
+                        console.log(id, _Model.config[id]);
                         break;
 
                     case 301:
-                        console.log(id,_Model.config[id]);
+                        console.log(id, _Model.config[id]);
                         // console.log(that.pagePanel,'page 对象');
+                        // _Model.page
                         var len = _Model.page.length;
+                        console.log(id);
                         _Model.page[len] = {
                             id: len,
-                            rect: {bottom:656,
+                            rect: {
+                                bottom: 656,
                                 height: 540,
-                                left:0,
-                                right:0,
-                                top:0,
-                                width:298.96875,
-                                x:440.515625,
-                                y:116
+                                left: 0,
+                                right: 0,
+                                top: 0,
+                                width: 298.96875,
+                                x: 440.515625,
+                                y: 116
                             },
                             layerList: [
                                 {
@@ -1965,58 +2159,78 @@ require(['config'], function () {
                                     animal: [],
                                 },
                             ],
-                        }
-                        // _Model.page
-
-                        that.v.addPage(_Model.page[len],that.pagePanel);
-
+                        };
+                        that.v.addPage(_Model.page[len], that.pagePanel);
                         break;
                     case 302:
-                        console.log(id,_Model.config[id]);
-
+                        console.log(id, _Model.config[id]);
+                        var len = _Model.page.length;
+                        that.v.insertPage(that.pagePanel, function (id) {
+                            _Model.page.splice(id, 0, {
+                                id: id,
+                                rect: {
+                                    bottom: 656,
+                                    height: 540,
+                                    left: 0,
+                                    right: 0,
+                                    top: 0,
+                                    width: 298.96875,
+                                    x: 440.515625,
+                                    y: 116
+                                },
+                                layerList: [
+                                    {
+                                        layer: 0,
+                                        src: '',
+                                        name: 0,
+                                        rect: {},
+                                        animal: [],
+                                    },
+                                ],
+                            });
+                            for (var i = id + 1; i <= len; i++) {
+                                _Model.page[i].id++;
+                            }
+                        });
                         break;
                     case 303:
-                        console.log(id,_Model.config[id]);
-
-                        break;
-                    case 304:
-                        console.log(id,_Model.config[id]);
+                        console.log(id, _Model.config[id]);
 
                         break;
                     case 305:
-                        console.log(id,_Model.config[id]);
+                        console.log(id, _Model.config[id]);
 
                         break;
                     case 311:
-                        console.log(id,_Model.config[id]);
+                        console.log(id, _Model.config[id]);
 
                         break;
                     case 312:
-                        console.log(id,_Model.config[id]);
+                        console.log(id, _Model.config[id]);
 
                         break;
                     case 313:
-                        var arr=[];
+                        var arr = [];
                         // console.log(_Model.page);
                         var first = that.pagePanel.firstElementChild;
                         var list = first.childNodes;
                         // var list = ele.parentNode.parentNode.parentNode.parentNode.childNodes;
-                        for(var i in list){
-                            if(list[i].nodeType === 1){
+                        for (var i in list) {
+                            if (list[i].nodeType === 1) {
                                 arr[arr.length] = list[i];
                             }
                         }
 
                         var slt = {};
-                        for(var j=0;j<arr.length;j++){
-                            if(ele.parentNode.parentNode.parentNode == arr[j]){
+                        for (var j = 0; j < arr.length; j++) {
+                            if (ele.parentNode.parentNode.parentNode == arr[j]) {
                                 var m = 0, len, id;
                                 //后面完善
                                 first.removeChild(arr[j]);
-                                for(m=0,len=that.page_select.length; m<len; m++){
+                                for (m = 0, len = that.page_select.length; m < len; m++) {
                                     slt = that.page_select[m];
-                                    if(slt.ele == arr[j]){
-                                        that.page_select.splice(m,1);
+                                    if (slt.ele == arr[j]) {
+                                        that.page_select.splice(m, 1);
                                         // return;
                                     }
                                 }
@@ -2024,14 +2238,14 @@ require(['config'], function () {
                                 that.page_currentTarget_select = {};
 
 
-                                m = j+1;
-                                for(m,len = _Model.page.length;m<len;m++){
-                                    id = ~~_Model.page[m].id -1;
+                                m = j + 1;
+                                for (m, len = _Model.page.length; m < len; m++) {
+                                    id = ~~_Model.page[m].id - 1;
                                     _Model.page[m].id = id;
-                                    arr[m].firstElementChild.firstElementChild.innerHTML = 'page-'+ (id+1);
-                                    console.log(len,arr[m].firstElementChild.firstElementChild,_Model.page[m].id);
+                                    arr[m].firstElementChild.firstElementChild.innerHTML = 'page-' + (id + 1);
+                                    console.log(len, arr[m].firstElementChild.firstElementChild, _Model.page[m].id);
                                 }
-                                _Model.page.splice(j,1);
+                                _Model.page.splice(j, 1);
                                 return;
                             }
                         }
@@ -2049,36 +2263,79 @@ require(['config'], function () {
                     case 404:
                         var show_panel = getChildes(that.subPanelBox)[that.sub_show_id];
                         var data = that.sub_select[that.sub_show_id], len = data.length;
-                        while(len--){
+                        while (len--) {
                             show_panel.removeChild(data[len]);
-                            data.splice(len,1);
+                            data.splice(len, 1);
                         }
 
                         break;
                     case 406:
-                        if(!that.page_currentTarget_select) return;
+                        if (!that.page_currentTarget_select) return;
                         var data = that.layer_select, len = data.length;
-                        if(len<=0) return;
+                        if (len <= 0) return;
                         var show_panel = that.layerPanelBox.firstElementChild;
-                        var show_list = getChildes(show_panel), panel_len ,index = 0, i= 0;
+                        var show_list = getChildes(show_panel), panel_len, index = 0, i = 0;
 
-                        while(len--){
-                            for(i=0,panel_len = show_list.length; i<panel_len; i++){
+                        while (len--) {
+                            for (i = 0, panel_len = show_list.length; i < panel_len; i++) {
 
-                                if(data[len] == show_list[i]){
+                                if (data[len] == show_list[i]) {
                                     index = i;
                                     break;
                                 }
                             }
-                            _Model.page[that.page_currentTarget_select].layerList.splice(index,1);
+                            _Model.page[that.page_currentTarget_select].layerList.splice(index, 1);
                             show_panel.removeChild(data[len].ele);
-                            data.splice(len,1);
+                            data.splice(len, 1);
                         }
                         break;
 
                 }
+            },
+            //进度条的拖动事件
+            setProg: function (id, ele, proVal) {
+                switch (id) {
+                    case 304:
+                        var nodeUl = document.getElementById('xk-edit-center-edit').firstElementChild;
+                        var lis = nodeUl.children;
+                        var sty = getComputedStyle(nodeUl);
+                        //   var
+                        var percent = (~~ele.value * 0.4 + 30) / (this.v.preValue * 0.4 + 30);
+                       // console.log(percent);
+                        var setHeight = sty.height.split('p')[0] * percent;
+                        var setWidth = sty.width.split('p')[0] * percent;
+                        var padLR =(1 - (~~ele.value / 100 * 0.4 + 0.3)) * 50;
+                        XkTool.setStyle(nodeUl, {
+                            width: setWidth + 'px',
+                            height: setHeight + 'px',
+                            "padding-left": padLR + '%',
+                            "padding-right": padLR + '%'
+                        });
+                        this.setChildrenStyle(nodeUl, percent);
+                        this.v.preValue = ~~ele.value;
+                        break;
+                }
+            },
+            //遍历设置子节点属性
+            setChildrenStyle: function (node, p) {
+                if (node.children.length !== 0) {
+                    var len = node.children.length;
+                    for (var i = 0; i < len; i++) {
+                        var curNode = node.children[i];
+                        if (curNode.tagName !== 'P') {
+                            var curStyle = getComputedStyle(curNode);
+                            var finalSty = {
+                                width: curStyle.width.split('p')[0] * p + 'px',
+                                height: curStyle.height.split('p')[0] * p + 'px'
+                            };
+                            // console.log(curNode.tagName,curStyle.width, curStyle.height);
+                            // console.log(curNode.tagName,finalSty);
+                            XkTool.setStyle(curNode, finalSty);
+                            this.setChildrenStyle(curNode, p);
+                        }
+                    }
+                }
             }
-
         };
 
 
@@ -2780,7 +3037,6 @@ require(['config'], function () {
             //         duration: '3',
             //     }
             // };
-
             _Model.subList.push({
                 id: 11111,
                 tab: 0,
@@ -2800,6 +3056,8 @@ require(['config'], function () {
             //     ele: node,       //组件承载的节点
             // }]
 
+            //_Model.imgList
+            //_Model.musicList
             _Model.subList.push({
                 id: 11112,
                 tab: 0,
@@ -2824,16 +3082,17 @@ require(['config'], function () {
             });
 
 
-            _Model.page[0]={
+            _Model.page[0] = {
                 id: 0,
-                rect: {bottom:656,
+                rect: {
+                    bottom: 656,
                     height: 540,
-                    left:0,
-                    right:0,
-                    top:0,
-                    width:298,
-                    x:440,
-                    y:116
+                    left: 0,
+                    right: 0,
+                    top: 0,
+                    width: 298,
+                    x: 440,
+                    y: 116
                 },
                 layerList: [
                     {
@@ -2841,14 +3100,15 @@ require(['config'], function () {
                         layer: 0,
                         src: 'images/warning.jpg',
                         name: 0,
-                        rect: {bottom:656,
+                        rect: {
+                            bottom: 656,
                             height: 540,
-                            left:0,
-                            right:739,
-                            top:0,
-                            width:298,
-                            x:440,
-                            y:116
+                            left: 0,
+                            right: 739,
+                            top: 0,
+                            width: 298,
+                            x: 440,
+                            y: 116
                         },
                         animal: [1],
                     },
@@ -2857,29 +3117,31 @@ require(['config'], function () {
                         layer: 1,
                         src: 'images/warning.jpg',
                         name: 1,
-                        rect: {bottom:656,
+                        rect: {
+                            bottom: 656,
                             height: 540,
-                            left:0,
-                            right:739,
-                            top:0,
-                            width:298,
-                            x:440,
-                            y:116
+                            left: 0,
+                            right: 739,
+                            top: 0,
+                            width: 298,
+                            x: 440,
+                            y: 116
                         },
                         animal: [2],
                     },
                 ],
             };
-            _Model.page[1]={
+            _Model.page[1] = {
                 id: 1,
-                rect: {bottom:656,
+                rect: {
+                    bottom: 656,
                     height: 3000,
-                    left:0,
-                    right:0,
-                    top:0,
-                    width:298,
-                    x:440,
-                    y:116
+                    left: 0,
+                    right: 0,
+                    top: 0,
+                    width: 298,
+                    x: 440,
+                    y: 116
                 },
                 layerList: [
                     {
@@ -2887,30 +3149,32 @@ require(['config'], function () {
                         layer: 0,
                         src: 'images/xx3-01-bg.jpg',
                         name: 1,
-                        rect: {bottom:656,
+                        rect: {
+                            bottom: 656,
                             height: 3000,
-                            left:0,
-                            right:739,
-                            top:0,
-                            width:298,
-                            x:440,
-                            y:116
+                            left: 0,
+                            right: 739,
+                            top: 0,
+                            width: 298,
+                            x: 440,
+                            y: 116
                         },
                         animal: [],
                         onelevel: true,
                     },
                 ],
             };
-            _Model.page[2]={
+            _Model.page[2] = {
                 id: 2,
-                rect: {bottom:656,
+                rect: {
+                    bottom: 656,
                     height: 1051,
-                    left:0,
-                    right:0,
-                    top:0,
-                    width:298,
-                    x:440,
-                    y:116
+                    left: 0,
+                    right: 0,
+                    top: 0,
+                    width: 298,
+                    x: 440,
+                    y: 116
                 },
                 layerList: [
                     {
@@ -2918,14 +3182,15 @@ require(['config'], function () {
                         layer: 0,
                         src: 'images/xx3-12-bg.jpg',
                         name: 2,
-                        rect: {bottom:656,
+                        rect: {
+                            bottom: 656,
                             height: 1051,
-                            left:0,
-                            right:739,
-                            top:0,
-                            width:298,
-                            x:440,
-                            y:116
+                            left: 0,
+                            right: 739,
+                            top: 0,
+                            width: 298,
+                            x: 440,
+                            y: 116
                         },
                         animal: [],
                         onelevel: true,
@@ -2935,30 +3200,32 @@ require(['config'], function () {
                         layer: 0,
                         src: 'images/xx3-12-biyan.png',
                         name: 2,
-                        rect: {bottom:656,
+                        rect: {
+                            bottom: 656,
                             height: 1051,
-                            left:0,
-                            right:0,
-                            top:0,
-                            width:298,
-                            x:440,
-                            y:116
+                            left: 0,
+                            right: 0,
+                            top: 0,
+                            width: 298,
+                            x: 440,
+                            y: 116
                         },
                         animal: [],
                         onelevel: true,
                     },
                 ],
             };
-            _Model.page[3]={
+            _Model.page[3] = {
                 id: 3,
-                rect: {bottom:656,
+                rect: {
+                    bottom: 656,
                     height: 540,
-                    left:0,
-                    right:0,
-                    top:0,
-                    width:298,
-                    x:440,
-                    y:116
+                    left: 0,
+                    right: 0,
+                    top: 0,
+                    width: 298,
+                    x: 440,
+                    y: 116
                 },
                 layerList: [
                     {
@@ -2972,16 +3239,17 @@ require(['config'], function () {
                     },
                 ],
             };
-            _Model.page[4]={
+            _Model.page[4] = {
                 id: 4,
-                rect: {bottom:656,
+                rect: {
+                    bottom: 656,
                     height: 540,
-                    left:0,
-                    right:0,
-                    top:0,
-                    width:298,
-                    x:440,
-                    y:116
+                    left: 0,
+                    right: 0,
+                    top: 0,
+                    width: 298,
+                    x: 440,
+                    y: 116
                 },
                 layerList: [
                     {
@@ -2995,9 +3263,8 @@ require(['config'], function () {
                     },
                 ],
             };
-            var v = new _View({page:_Model.page, subList: _Model.subList});
-            var c = new _Controller({name:'zfc'},v);
-
+            var v = new _View({page: _Model.page, subList: _Model.subList});
+            var c = new _Controller({name: 'zfc'}, v);
             XkTool.addEvent(window, 'mousedown', function (e) {
                 // e.preventDefault();
 
@@ -3005,22 +3272,35 @@ require(['config'], function () {
             XkTool.addEvent(window, 'mouseup', function (e) {
                 e.preventDefault();
                 var _dataId = e.target.getAttribute('data-id');
-                if(_dataId){
-                    c.setType(~~_dataId,e.target);
-                }else{
+                if (_dataId) {
+                    c.setType(~~_dataId, e.target);
+                } else {
 
                 }
             }, true);
 
+            XkTool.addEvent(window, 'input', function (e) {
+                e.preventDefault();
+                var _dataId = e.target.getAttribute('data-id');
+                //进度条滚动的id需要加到数组中
+                var progressGroup = [304, 666, 999];
+                var len = progressGroup.length;
+                while (len--) {
+                    if (~~_dataId === progressGroup[len]) {
+                        c.setProg(~~_dataId, e.target, v.preValue);
+                    }
+                }
+            }, true);
 
         }
+
         init();
 
         /*XkTool.addEvent(document,'readystatechange',initDoc);
 
-        function initDoc(e) {
-            console.log('渲染完成');
-        }*/
+         function initDoc(e) {
+         console.log('渲染完成');
+         }*/
 
 
         XkTool.addEvent(window, 'resize', function (e) {

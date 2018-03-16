@@ -360,7 +360,7 @@ i{
     width: -moz-calc(100% - (290px + 290px) );
     width: -webkit-calc(100% - (290px + 290px) );
     width: calc(100% - (290px + 290px) );
-    min-width: 500px;
+    min-width: 600px;
     padding: 0 1px;
     left: 290px;
     font-size: 12px;
@@ -482,7 +482,7 @@ input[type=range]:focus {
     height: -moz-calc(100% - 45px );
     height: -webkit-calc(100% - 45px );
     height: calc(100% - 45px );
-    overflow-y: auto;
+    overflow: auto;
     background: #dbdbdb;
     font-size: 0.5rem;
 }
@@ -532,22 +532,16 @@ input[type=range]:focus {
     box-shadow:0px 10px 10px #333333;
     bottom: 0;
 }
-
-@media screen and (min-width: 1160px) {
-
-    .xk-edit-center-menu{
-        display: none;
-    }
-    .xk-edit-center-top-nav{
-        float: left;
-        top: 0px;
-        background: none;
-        border: none;
-    }
-    .xk-edit-center-top-nav span{
-        display: inline;
-        height: 45px;
-        line-height: 45px;
-        border-bottom: none;
-    }
+.xk-edit-center-top-nav{
+    float: left;
+    top: 0px;
+    background: none;
+    border: none;
 }
+.xk-edit-center-top-nav span{
+    display: inline;
+    height: 45px;
+    line-height: 45px;
+    border-bottom: none;
+}
+
