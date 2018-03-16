@@ -171,12 +171,29 @@ i{
 }
 
 .xk-edit-left-bottom-body p {
-    line-height: 46px
+    line-height: 46px;
+    white-space: normal;
 }
 
 .xk-edit-left-bottom .xk-edit-left-body-box {
-    height: 280px;
-    border: 1px solid #9d9d9d
+    /*height: 310px;*/
+    border: 1px solid #9d9d9d;
+    padding: 5px;
+    margin-top: 10px;
+}
+
+progress{
+    width: 230px;
+    height: 8px;
+}
+
+.xk-edit-left-bottom .xk-edit-left-body-box li p span{
+    padding-right: 10px;
+    font-size: 12px;
+}
+
+.xk-edit-left-bottom .xk-edit-left-body-box input[type=txt]{
+    width:50px;
 }
 
 .xk-edit-right {
