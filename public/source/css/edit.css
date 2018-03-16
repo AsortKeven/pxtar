@@ -436,6 +436,7 @@ progress{
     background: #A4D3EE;
     content: '';
 }
+
 .xk-edit-center-menu span:before{
     -webkit-transform: translateY(-7px);
     transform: translateY(-7px);
