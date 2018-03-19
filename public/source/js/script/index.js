@@ -18,16 +18,22 @@ require(['config'], function () {
             that.name = name;
             var i = 0, len;
             var doc = document;
-            console.log(list[0]);
+            console.log(list);
             for (i in list) {
                 that.tabBox[i] = list[i];
                 var panel = doc.createElement('ul');
                 panel.setAttribute('data-tab', i);
                 // panel.innerHTML =~~i + 1;
-                panel.innerHTML = '<li>' + i + '</li>';
+                // panel.innerHTML = '<li>' + i + '</li>';
                 that.panelBox[i] = panel;
                 panel.style.display = 'none';
-                if (i == 0) panel.style.display = 'block';
+                if (i == 0){
+                    XkTool.addClass(panel,'xk-edit-sub-img');
+                    panel.style.display = 'block';
+                }
+                if(i == 1){
+                    XkTool.addClass(panel,'xk-edit-sub-music');
+                }
                 panelCon.appendChild(panel);
             }
             that.init();
@@ -101,7 +107,8 @@ require(['config'], function () {
             init: function (o) {
                 var that = this;
                 var page = o.page;
-                var subList = o.subList;
+                var imgList = o.imgList;
+                var musicList = o.musicList;
                 if (that._isInit) return;
                 var i = 0, j = 0, len = 0, nodeString = '', layerItem = {}, id;
                 var doc = document;
@@ -111,9 +118,9 @@ require(['config'], function () {
                 var subEdit_panel = doc.getElementById('xk-edit-sub-panel');
                 that.preValue = doc.getElementsByClassName('xk-edit-center-top')[0].lastElementChild.firstElementChild.value;
                 // 组件按钮初始化
-                // subEdit_panel.innerHTML = '';
-                //
-               // var subEdit = new Tab_tools('组件1',{0:subEdit_img,1:subEdit_music},subEdit_panel);
+                subEdit_panel.innerHTML = '';
+                //音乐、图片组件
+                var subEdit = new Tab_tools('组件1', {0: subEdit_img, 1: subEdit_music}, subEdit_panel);
 
                 if (page && typeof page !== undefined && typeof page === 'object') {
                     // 初始化page
@@ -146,44 +153,61 @@ require(['config'], function () {
                 ;
 
 
-                if (subList && typeof subList !== undefined && typeof subList === 'object') {
+                if ((imgList && typeof imgList !== undefined && typeof imgList === 'object') || (musicList && typeof musicList !== undefined && typeof musicList === 'object')) {
                     // 初始化组件
-                    i = 0;
-
                     // 存储组件的字符串， 组件tab标签列表
-                    var subNameList = {}, subPanelChild = {};
-                    var childLen, tabId, subItem, subItemTab;
+                    // 将imgList和musicList整合到subList中，后面根据tab值显示
+                    var subNameList = {}, subPanelChild = {}, subList = {length: 0};
+                    var tabId, subItem, subItemTab;
                     subPanelChild = getChildes(subEdit_panel);
-
+                    for (var i = 0; i < imgList.length; i++) {
+                        subList[i] = imgList[i];
+                        subList.length++;
+                    }
+                    var sLen = subList.length, mLen = musicList.length;
+                    for (var j = subList.length, temp = 0; j < sLen + mLen; j++, temp++) {
+                        subList[j] = musicList[temp];
+                        subList.length++;
+                    }
                     // 生成存储字符串的对象列
-                    for (i = 0, childLen = subPanelChild.length; i < childLen; i++) {
+                    for (var i = 0, childLen = subPanelChild.length; i < childLen; i++) {
                         tabId = subPanelChild[i].getAttribute('data-tab');
                         subNameList[tabId] = '';
                     }
+                    for (var i in subList) {
+                        if (subList[i].hasOwnProperty('id')) {
+                            subItem = subList[i];
+                            subItemTab = subItem.tab;
 
-                    i = 0;
-                    for (i in subList) {
-
-                        subItem = subList[i];
-                        subItemTab = subItem.tab;
-
-                        console.log(subItemTab, subList[i]);
-                        switch (subItemTab) {
-                            case 0:
-                                // 图片tab
-                                // 方法 返回拼接 的 li 标签及其内容
-                                // subNameList[subItemTab] +=
-                                break;
-                            case 1:
-                                // 音乐tab
-                                // subNameList[subItemTab] +=
-                                break;
+                            console.log(subItemTab, subList[i]);
+                            switch (subItemTab) {
+                                case 0:
+                                    // 图片tab
+                                    subNameList[subItemTab] += '<li><div class="xk-edit-right-top">' +
+                                        '<span data-id="422" class="xk-edit-right-label xk-edit-right-img"> </span>' +
+                                        '<span data-id="423" class="xk-edit-right-label ">'+ subList[i].name +'</span>' +
+                                        '<span data-id="425" class="xk-edit-right-label xk-edit-right-label-dir"></span></div>' +
+                                        ' <div class="xk-edit-right-data xk-edit-right-data-none">' +
+                                        '<p><span>W:<i>'+subList[i].width+'</i></span><span class="">H:<i>'+subList[i].height+'</i></span></p>' +
+                                        '<p><span>类型：<i>'+subList[i].src.split('.')[1]+'</i></span><span class="">大小:<i>'+subList[i].size+'</i></span></p>' +
+                                        '</div></li>';
+                                    break;
+                                case 1:
+                                    subNameList[subItemTab] += '<li><div class="xk-edit-right-top">' +
+                                        '<span data-id="422" class="xk-edit-right-label xk-edit-right-img"></span>' +
+                                        '<span data-id="423" class="xk-edit-right-label">'+ subList[i].name +'</span>' +
+                                        '<span data-id="425" class="xk-edit-right-label xk-edit-right-label-dir xk-edit-right-label-dir"></span></div>' +
+                                        '<div class="xk-edit-right-data xk-edit-right-data-none">' +
+                                        '<p><span>类型：<i>'+subList[i].src.split('.')[1]+'</i></span><span class="">大小:<i>'+ subList[i].size +'</i></span></p>' +
+                                        '</div></li>';
+                                    break;
+                            }
                         }
-
                     }
 
                     for (i = 0, childLen = subPanelChild.length; i < childLen; i++) {
                         // 生成各tab标签内容
+                        subPanelChild[i].innerHTML = subNameList[i];
                     }
 
                     /*  function gettabList() {
@@ -347,7 +371,6 @@ require(['config'], function () {
                 var title = document.createElement('p');//标题
                 var opac = document.createElement('div');//半透明蒙板
                 title.classList.add('title');
-                body.appendChild(div);
                 //图片弹窗
                 if (obj.type === 'image') {
                     title.innerHTML = obj.name;
@@ -2301,10 +2324,10 @@ require(['config'], function () {
                         var sty = getComputedStyle(nodeUl);
                         //   var
                         var percent = (~~ele.value * 0.4 + 30) / (this.v.preValue * 0.4 + 30);
-                       // console.log(percent);
+                        // console.log(percent);
                         var setHeight = sty.height.split('p')[0] * percent;
                         var setWidth = sty.width.split('p')[0] * percent;
-                        var padLR =(1 - (~~ele.value / 100 * 0.4 + 0.3)) * 50;
+                        var padLR = (1 - (~~ele.value / 100 * 0.4 + 0.3)) * 50;
                         XkTool.setStyle(nodeUl, {
                             width: setWidth + 'px',
                             height: setHeight + 'px',
@@ -2341,7 +2364,8 @@ require(['config'], function () {
 
         var _Model = {
             page: [],
-            subList: [],
+            musicList: [],
+            imgList: [],
             history: [],
             chufaBody: [
                 {
@@ -3037,7 +3061,7 @@ require(['config'], function () {
             //         duration: '3',
             //     }
             // };
-            _Model.subList.push({
+            _Model.imgList.push({
                 id: 11111,
                 tab: 0,
                 type: 'image',
@@ -3058,7 +3082,7 @@ require(['config'], function () {
 
             //_Model.imgList
             //_Model.musicList
-            _Model.subList.push({
+            _Model.imgList.push({
                 id: 11112,
                 tab: 0,
                 type: 'image',
@@ -3070,17 +3094,27 @@ require(['config'], function () {
                 citeAdd: [],
             });
 
-            _Model.subList.push({
+            _Model.musicList.push({
                 id: 11113,
                 tab: 1,
-                type: 'mp3',
+                type: 'music',
                 name: '草泥马',
-                src: '',
+                src: '草泥马.mp3',
                 size: '200kb',
                 duration: '3',
                 citeAdd: [],
             });
 
+            _Model.musicList.push({
+                id: 11114,
+                tab: 1,
+                type: 'music',
+                name: '测试mp3',
+                src: '测试mp3.m4a',
+                size: '200kb',
+                duration: '3',
+                citeAdd: [],
+            });
 
             _Model.page[0] = {
                 id: 0,
@@ -3263,7 +3297,7 @@ require(['config'], function () {
                     },
                 ],
             };
-            var v = new _View({page: _Model.page, subList: _Model.subList});
+            var v = new _View({page: _Model.page, musicList: _Model.musicList, imgList: _Model.imgList});
             var c = new _Controller({name: 'zfc'}, v);
             XkTool.addEvent(window, 'mousedown', function (e) {
                 // e.preventDefault();
