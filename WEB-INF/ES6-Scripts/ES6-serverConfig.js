@@ -366,6 +366,7 @@ const serverConfig = (app, express) => {
 
     });
 
+
 //修改密码
     app.post('/modifyPass', upload.array(), (req, res) => {
         let password = req.body.password;
@@ -561,7 +562,10 @@ const serverConfig = (app, express) => {
         })
     });
 
-
+    app.post('/modify',imgUploader.single('file', 400), (req,res) =>{
+        console.log(req.body);
+        res.send({data:1111})
+    })
 //用户主动触发保存 或者每隔五分钟保存
 //当前路径为桌面，部署到服务器再进行配置
     /*
