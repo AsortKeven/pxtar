@@ -3305,9 +3305,39 @@ require(['config'], function () {
 
         XkTool.addEvent(window, 'resize', function (e) {
             console.log(document.documentElement.offsetWidth, Show.name);
-        })
+        });
 
 
+        //动效Tab
+        var anitab=document.getElementById('xk-edit-effect-edit').getElementsByClassName('xk-edit-left-bottom-body')[0].children;
+        var aniTab=document.getElementById('xk-edit-anitab').getElementsByTagName('span');
+        var aniclick={
+            siblings:function (elm) {//获取兄弟元素
+                var a = [];
+                var p = elm.parentNode.children;
+                for(var i =0,pl= p.length;i<pl;i++) {
+                    if(p[i] !== elm) a.push(p[i]);
+                }
+                return a;
+            },
+            on_click:function (elm) {
+                var anisiblings=aniclick.siblings(elm)
+                for (var i=0;i<anisiblings.length;i++){
+                    anisiblings[i].style.display="none";
+                }
+                elm.style.display="block"
+            },
+            onfor:function (elm,elm2) {
+                for (var i=0;i<elm.length;i++){
+                    (function (i) {
+                        elm[i].onclick=function () {
+                           aniclick.on_click(elm2[i])
+                        }
+                    })(i)
+                }
+            }
+        }
+        aniclick.onfor(aniTab,anitab)
         /*end*/
     });
 });

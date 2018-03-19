@@ -37,34 +37,68 @@ function checkId(id) {
 }
 
 //修改信息
-$('#xk-per-modify').click(function () {
+$('#xk-per-modify').unbind('click').click(function () {
     console.log('modify user infos');
     var lists='';
     var nodeInfos = '';
-    var xkInpur =$('.xk-per-input');
+    var xkInpur =$('.xk-per-input'),
+        xkimg = $('.img-circle'),
+        xkform = $('.xk-per-infos')[0],
+        xkfile = $('.xk-per-infos input[type="file"]');
     xkInpur.children().each(function () {
             var value = $(this).find('span').html();
+            $(this).find('span').removeAttr('value');
+            var name = $(this).find('span').attr('id')
             var temp = this.innerHTML;
+            console.log($(this))
             var str1 = /<span/g;
             var str2 = /<\/span>/g;
             nodeInfos += '<p>'+temp+'</p>';
             temp = temp.replace(str1,'<input')
                     .replace(str2,'')
-                    .split('>')[0]+' value="'+value+'"/>'+'<br/>';
+                    .split('>')[0]+'name="'+name+'" value="'+value+'"/>';
             this.parentNode.removeChild(this);
-            lists += temp;
-           /* console.log(this.innerHTML);
-            var name = this.innerHTML.split('<')[0];
-            console.log(name);
-            console.log($(this).find('span').attr('id'));
-            console.log($(this).find('span').html());*/
+            lists += '<p>'+temp+'</p>';
         });
     xkInpur.html(lists);
     $('#xk-per-save').css('display', 'block');
-    $('.xk-per-saveGroup').click(function () {
-        if(this.getAttribute('type') === 'button'){
+    $('.xk-per-saveGroup').unbind('click').click(function () {
+        var html='';
+        if(this.getAttribute('name') === 'no'){//取消修改
             xkInpur.empty();
             xkInpur.html(nodeInfos);
+            nodeInfos='';
+            lists='';
+        };
+        if (this.getAttribute('name')=='yes'){//确定修改
+           xkInpur.children().each(function () {
+               var _this=$(this);
+               var vaLue=_this.children().val();
+               var temp = this.innerHTML;
+               temp = temp.replace(/<input/,'<span')
+                       .replace(/>/,'></span>')
+                       .split('>')[0]+'>'+vaLue;
+               html+='<p>'+temp+'</p>'
+           });
+            xkInpur.html(html);
+            nodeInfos='';
+            lists='';
+            var formdata=upFile.objFile(xkform,xkfile)
+            xkimg.attr('src',formdata.objfile)
+            console.log(formdata)
+            $.ajax({//上传修改数据
+                type:'post',
+                url:'/modify',
+                datatype:'json',
+                data:formdata.formdata,
+                async: false,
+                cache: false,
+                contentType:false,
+                processData:false,
+                success:function (req) {
+                    console.log(req)
+                }
+            })
         }
         $('#xk-per-save').css('display', 'none');
     });
@@ -116,7 +150,7 @@ $('.xk-per-cartoon-addbtn').click(function () {
             time:date.toLocaleString()
         };
         reader.append('time',nav.time)
-        $.ajax({
+        $.ajax({//新建单话数据
             type:'post',
             url:'/newComic',
             datatype:'json',
@@ -228,14 +262,31 @@ $('.xk-per-cinter-nav').on('click','.xk-cartoon-box-top .xk-cartoon-box-top-top 
     alert('这是编辑')
 })
 
-function getObjectURL(file) {
-    var url = null ;
-    if (window.createObjectURL!=undefined) { // basic
-        url = window.createObjectURL(file) ;
-    } else if (window.URL!=undefined) { // mozilla(firefox)
-        url = window.URL.createObjectURL(file) ;
-    } else if (window.webkitURL!=undefined) { // webkit or chrome
-        url = window.webkitURL.createObjectURL(file) ;
+var upFile = {//上传图片模块
+    getObjectURL:function (file) {
+        var url = null ;
+        if (window.createObjectURL!=undefined) { // basic
+            url = window.createObjectURL(file) ;
+        } else if (window.URL!=undefined) { // mozilla(firefox)
+            url = window.URL.createObjectURL(file) ;
+        } else if (window.webkitURL!=undefined) { // webkit or chrome
+            url = window.webkitURL.createObjectURL(file) ;
+        }
+        return url ;
+    },
+    objFile:function (obj,file) {//obj为表单对象，file为上传图片的对象
+        var formdata,objfile;
+        if (file.get(0).files[0]){
+            var _thisf=file.get(0).files[0];
+            objfile=upFile.getObjectURL(_thisf);
+        }
+        if (obj){
+            formdata = new FormData(obj);
+        }else{
+            formdata = new FormData();
+            formdata.append('files',_thisf)
+        }
+        return {formdata,objfile};
     }
-    return url ;
-}
+};
+

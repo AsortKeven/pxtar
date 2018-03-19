@@ -12,31 +12,26 @@
 <section class="xk-per-body">
     <button id="menu-toggle" class="menu-toggle"><span>Menu</span></button>
     <div class="xk-per-nav xk-per-nav-style">
+        <div class="xk-per-nav-item xk-per-item-img">
+            <img src="images/1.jpg" class="img-circle xk-per-item-imgstyle xk-per-item-head-pc">
+            <p class="xk-per-item-typeText">
+                <span><%=datas.uuid%></span>
+                <span>合作作者</span>
+            </p>
+        </div>
         <ul class="xk-per-nav-box" id="nav">
-            <li class="xk-per-nav-item xk-per-item-img" data-id="0">
-                <img src="images/1.jpg" class="img-circle xk-per-item-imgstyle xk-per-item-head-pc">
-                <p class="xk-per-item-typeText">
-                    <span><%=datas.uuid%></span>
-                    <span>合作作者</span>
-                </p>
-
-            </li>
-            <li class="xk-per-nav-item xk-per-nav-active" data-id="1">
+            <li class="xk-per-nav-item xk-per-nav-active" data-id="0">
                 我的动态漫画
             </li>
-            <li class="xk-per-nav-item" data-id="2">
+            <li class="xk-per-nav-item" data-id="1">
                 账号管理
             </li>
-            <li class="xk-per-nav-item" data-id="3">
+            <li class="xk-per-nav-item" data-id="2">
                 退出登录
             </li>
         </ul>
     </div>
 
-    <!--点击头像后展示-->
-    <div class="xk-per-content xk-per-content-style" style="display: none">
-        <button>修改头像</button>
-    </div>
 
     <!--点击我的动态漫画后显示-->
     <div class="xk-per-content xk-per-content-style">
@@ -208,8 +203,8 @@
         <header class="xk-per-cartoon-title" style="text-align: center">
             个人信息
         </header>
-        <form class="xk-per-infos" action="modify" method="post">
-            <img class="img-circle" src="images/1.jpg"><br>
+        <form class="xk-per-infos" method="post" enctype = “multipart/form-data”>
+            <img class="img-circle" src="images/1.jpg"><input type="file" name="file"><br>
             <div class="xk-per-input">
                 <p>昵称:<span id="xk-per-nickname">XXX</span></p>
                 <p>用户名:<span id="xk-per-username">pxtar123456</span></p>
@@ -220,8 +215,8 @@
             <input type="button" value="修改信息" id="xk-per-modify">
             <input type="button" value="成为会员" id="xk-per-beVip">
             <div id="xk-per-save" style="display: none">
-                <input type="submit" value="保存" class="xk-per-saveGroup">
-                <input type="button" value="取消" class="xk-per-saveGroup">
+                <input type="button" name="yes" value="保存" class="xk-per-saveGroup">
+                <input type="button" name="no" value="取消" class="xk-per-saveGroup">
             </div>
         </form>
     </div>
