@@ -514,21 +514,21 @@ require(['config'], function () {
 
         _Controller.prototype = {
             constructor: _Controller,
-            effectBox: {},
-            effect_currentTarget_select: {},
-            eff_select: [],
-            pageBox: {},
-            page_currentTarget_select: {},
-            page_select: [],
-            subBox: {},
-            sub_show_id: NaN,
-            sub_select: [],
-            layerBox: {},
-            layer_select: [],
-            class_list: [],                 // 组件待清除选中样式的数组
-            subBox_layer_curr_select_ul: {},
-            subBox_layer_curr_select_li: null,
-            subBox_layer_effect_sct_index: NaN,
+            effectBox: {},                                      // 效果 栏 容器
+            effect_currentTarget_select: {},                    // 效果 栏 当前选择目标
+            eff_select: [],                                     // 效果 栏 选中列表
+            pageBox: {},                                        // page 栏 容器
+            page_currentTarget_select: {},                      // page 栏 当前选择目标
+            page_select: [],                                    // page 栏 选中列表
+            subBox: {},                                         // 组件 栏
+            sub_show_id: NaN,                                   // 组件 栏 切换id
+            sub_select: [],                                     // 组件 栏 选中列表
+            layerBox: {},                                       // 图层 栏 选中列表
+            layer_select: [],                                   // 图层 栏 选中列表
+            class_list: [],                                     // 组件待清除选中样式的数组
+            subBox_layer_curr_select_ul: {},                    // 选择的ul
+            subBox_layer_curr_select_li: null,                  // 选择的li
+            subBox_layer_effect_sct_index: NaN,                 // 选择的li的 索引
 
             ctrl: false,
             shift: false,
@@ -1682,7 +1682,6 @@ require(['config'], function () {
 
                                     }
 
-                                    console.log(that.page_currentTarget_select)
 
                                     if (!isNaN(currIndex)) {
                                         UlChild[currIndex].style.borderBottomColor = '#9d9d9d';
@@ -1792,36 +1791,6 @@ require(['config'], function () {
                                         _mx = e.pageX;
                                     }
 
-                                    // if(e.pageY >= cuUlTop + _headHeight - moveUl.offsetHeight/4 && e.pageY <= cuUlTop + _headHeight + cuUlHeight + eleScrrollTop){
-                                    //
-                                    //     if(!nextLi.nextElementSibling) return;
-                                    //     var nextRect = nextLi.nextElementSibling.getBoundingClientRect();
-                                    //
-                                    //
-                                    //     if(e.pageY > nextRect.top+nextRect.height/2){
-                                    //         moveNextIndex = moveNextIndex+1;
-                                    //         moveNextIndex >= UlChild.length-1 ? moveNextIndex = UlChild.length-1 : moveNextIndex;
-                                    //     }else if(e.pageY < nextRect.top-nextRect.height/2){
-                                    //         moveNextIndex = moveNextIndex-1;
-                                    //         moveNextIndex < 0 ? moveNextIndex = 0 : moveNextIndex = moveNextIndex;
-                                    //         // console.log(moveNextIndex,currIndex,e.pageY,nextRect.top)
-                                    //     }
-                                    //
-                                    //     if(currIndex!=moveNextIndex){
-                                    //         // 拖入效果1，，，
-                                    //         if(UlChild[moveNextIndex]){
-                                    //             UlChild[moveNextIndex].style.borderBottomColor = 'red';
-                                    //         }
-                                    //         if(!isNaN(currIndex)){
-                                    //             UlChild[currIndex].style.borderBottomColor = '#9d9d9d';
-                                    //         }
-                                    //
-                                    //         currIndex = moveNextIndex;
-                                    //     }
-                                    //
-                                    //     nextLi = UlChild[moveNextIndex];
-                                    //
-                                    // }
 
                                 } else {
                                     // 在画布上拖动
@@ -3128,7 +3097,7 @@ require(['config'], function () {
                     x: 440,
                     y: 116
                 },
-                layerList: [
+                layerList: [            //图层列表
                     {
                         subId: 0,
                         layer: 0,
