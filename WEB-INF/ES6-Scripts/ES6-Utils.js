@@ -11,7 +11,7 @@ const utils = {
     con:{
         host:'localhost',
         user:'root',
-        password:'rung',
+        password:'123456',
         database:'pxtar'
     },
 
