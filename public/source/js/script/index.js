@@ -2375,6 +2375,7 @@ require(['config'], function () {
                         break;
                 }
             },
+
             changeName: function (e, cb) {
                 e.innerHTML = '<input type="text" id="tempInput" value="' + e.innerHTML + '" style="border: none;width: 100px">';
                 e.onkeydown = function (ev) {
