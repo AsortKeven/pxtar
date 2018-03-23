@@ -190,7 +190,7 @@ progress{
     padding-right: 10px;
     font-size: 12px;
 }
-.xk-edit-left-bottom-body  .xk-edit-dis{
+.xk-edit-left-bottom-body  .xk-edit-dis,.xk-edit-left-body-box li p{
     display: none;
  }
 

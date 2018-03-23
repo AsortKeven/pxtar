@@ -3472,7 +3472,7 @@ require(['config'], function () {
             if (target.className=='xk-edit-left-tab hand'){
                 target.onclick=function () {
                     var ani=aniclick.siblings(target)[0];
-                    aniclick.double_click(ani)
+                    aniclick.double_click(ani);
                 }
             }
 
