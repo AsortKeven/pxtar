@@ -3415,35 +3415,171 @@ require(['config'], function () {
 
 
         //动效Tab
-        var anitab = document.getElementById('xk-edit-effect-edit').getElementsByClassName('xk-edit-left-bottom-body')[0].children;
-        var aniTab = document.getElementById('xk-edit-anitab').getElementsByTagName('span');
-        var aniclick = {
-            siblings: function (elm) {//获取兄弟元素
+        var aniclick={
+            siblings:function (elm) {//获取兄弟元素
                 var a = [];
                 var p = elm.parentNode.children;
-                for (var i = 0, pl = p.length; i < pl; i++) {
-                    if (p[i] !== elm) a.push(p[i]);
+                for(var i =0,pl= p.length;i<pl;i++) {
+                    if(p[i] !== elm) a.push(p[i]);
                 }
                 return a;
             },
-            on_click: function (elm) {
-                var anisiblings = aniclick.siblings(elm)
-                for (var i = 0; i < anisiblings.length; i++) {
-                    anisiblings[i].style.display = "none";
-                }
-                elm.style.display = "block"
-            },
-            onfor: function (elm, elm2) {
-                for (var i = 0; i < elm.length; i++) {
+            onfor:function (elm,elm2) {
+                for (var i=0;i<elm.length-1;i++){
                     (function (i) {
-                        elm[i].onclick = function () {
-                            aniclick.on_click(elm2[i])
+                        var elm_attr=elm[i].innerText;
+                        elm[i].onclick=function () {
+                            var str=aniclick.addTab(elm_attr);
+                            var li = document.createElement('li');
+                            li.innerHTML =str;
+                            elm2.appendChild(li);
                         }
                     })(i)
                 }
+            },
+            double_click:function (obj) {
+                var a=aniclick.getstyle(obj,'display');
+                if (a=='none'){
+                    obj.style.display='block'
+                }else if (obj.style.display == "block"){
+                    obj.style.display='none'
+                }
+            },
+            getstyle:function (obj, cssproperty, csspropertyNS){//提取外联css属性兼容
+                if(obj.style[cssproperty]){
+                    return obj.style[cssproperty];
+                }
+                if (obj.currentStyle) {// IE5+
+                    return obj.currentStyle[cssproperty];
+                }else if (document.defaultView.getComputedStyle(obj, null)) {// FF/Mozilla
+                    var currentStyle = document.defaultView.getComputedStyle(obj, null);
+                    var value = currentStyle.getPropertyValue(csspropertyNS);
+                    if(!value){//try this method
+                        value = currentStyle[cssproperty];
+                    }
+                    return value;
+                }else if (window.getComputedStyle) {// NS6+
+                    var currentStyle = window.getComputedStyle(obj, "");
+                    return currentStyle.getPropertyValue(csspropertyNS);
+                }
+            },
+            addTab:function (data) {
+                var str_201='<li>'+
+                    '<div class="xk-edit-left-tab hand">位置</div>'+
+                    '<p>X: <input type="txt">'+
+                    'Y: <input type="txt"></p>'+
+                    '</li>';
+
+                var str_203='<li>'+
+                    '<div class="xk-edit-left-tab hand">缩放</div>'+
+                    '<p><span>缩放: <input type="txt"></span></p>'+
+                    '</li>';
+
+                var str_204='<li>'+
+                    '<div class="xk-edit-left-tab hand">透明度</div>'+
+                    '<p><span>透明度: <input type="txt"></span></p>'+
+                    '</li>';
+
+                var str_209='<li>'+
+                    '<div class="xk-edit-left-tab hand">次数</div>'+
+                    '<p><span class="hand">2</span><span class="hand">3</span><span class="hand">4</span><span class="hand">5</span><span class="hand">无限</span></p>'+
+                    '</li>';
+
+                var str_202='<li>'+
+                    '<div class="xk-edit-left-tab hand">旋转</div>'+
+                    '<p><span>顺时针: <input type="txt"></span>'+
+                    '<span>逆时针: <input type="txt"></span></p>'+
+                    '</li>';
+
+                var str_208='<li>'+
+                    '<div class="xk-edit-left-tab hand">强度</div>'+
+                    '<p><span class="hand">很弱</span><span class="hand">弱</span><span class="hand">普通</span><span class="hand">强</span><span class="hand">很强</span></p>'+
+                    '</li>'+
+                    '<li>'+
+                    '<div class="xk-edit-left-tab hand">次数</div>'+
+                    '<p><span class="hand">2</span><span class="hand">3</span><span class="hand">4</span><span class="hand">5</span><span class="hand">无限</span></p>'+
+                    '</li>';
+
+                var str_207='<li>'+
+                    '<div class="xk-edit-left-tab hand">方向</div>'+
+                    '<p><span class="hand">上下</span><span class="hand">左右</span></p>'+
+                    '</li>'+
+                    '<li>'+
+                    '<div class="xk-edit-left-tab hand">中心点</div>'+
+                    '<p><span class="hand">中心</span><span class="hand">左</span><span class="hand">右</span><span class="hand">上</span><span class="hand">下</span><span class="hand">左上</span><span class="hand">右上</span><span class="hand">左下</span><span class="hand">右下</span></p>'+
+                    '</li>'+
+                    '<li>'+
+                    '<div class="xk-edit-left-tab hand">强度</div>'+
+                    '<p><span class="hand">很弱</span><span class="hand">弱</span><span class="hand">普通</span><span class="hand">强</span><span class="hand">很强</span></p>'+
+                    '</li>'+
+                    '<li>'+
+                    '<div class="xk-edit-left-tab hand">次数</div>'+
+                    '<p><span class="hand">2</span><span class="hand">3</span><span class="hand">4</span><span class="hand">5</span><span class="hand">无限</span></p>'+
+                    '</li>';
+                var daTa;
+                switch (data){
+                    case '移动':
+                        daTa=str_201;
+                        break;
+                    case '旋转':
+                        daTa=str_202;
+                        break;
+                    case '缩放':
+                        daTa=str_203;
+                        break;
+                    case '透明度':
+                        daTa=str_204;
+                        break;
+                    case '摇晃':
+                        daTa=str_207;
+                        break;
+                    case '漂浮':
+                        daTa=str_208;
+                        break;
+                    case '闪烁':
+                        daTa=str_209;
+                        break;
+                    case '逐帧动画':
+                        daTa=str_209;
+                        break;
+                }
+
+                var str='<p class="noselect"><span class="hand">动效说明</span><span class="float_right hand">'+data+'</span></p>'+
+                    '<progress value="10" max="100"></progress>'+
+                    '<div class="xk-edit-left-body-box">'+
+                    '<ul>'+
+                    '<li>'+
+                    '<div class="xk-edit-left-tab hand">触发点</div>'+
+                    '<p><span class="hand">图层出现时</span><span class="hand">Page出现时</span><span class="hand">与上一个动效一起</span><span class="hand">上个动效结束后</span></p>'+
+                    '</li>'+
+                    '<li>'+
+                    '<div class="xk-edit-left-tab hand">速度</div>'+
+                    '<p><span class="hand">很慢</span><span class="hand">慢</span><span class="hand">普通</span><span class="hand">快</span><span class="hand">很快</span></p>'+
+                    '</li>'+
+                    '<li>'+
+                    '<div class="xk-edit-left-tab hand">延迟</div>'+
+                    '<p><span class="hand">无</span><span class="hand">很少</span><span class="hand">少</span><span class="hand">普通</span><span class="hand">多</span><span class="hand">很多</span></p>'+
+                    '</li>'+daTa+
+                    '</ul>'+
+                    '</div>';
+                return str;
+
             }
-        }
-        aniclick.onfor(aniTab, anitab)
+        };
+        var anitab=document.getElementById('xk-edit-effect-edit').getElementsByClassName('xk-edit-left-bottom-body')[0]
+        var aniTab=document.getElementById('xk-edit-anitab').getElementsByTagName('span');
+        aniclick.onfor(aniTab,anitab);
+        XkTool.addEvent(anitab,'mousedown',function (e) {
+            var target=e.target||e.srcElement;
+            console.log(target);
+            if (target.className=='xk-edit-left-tab hand'){
+                target.onclick=function () {
+                    var ani=aniclick.siblings(target)[0];
+                    aniclick.double_click(ani)
+                }
+            }
+
+        })
         /*end*/
     });
 });
