@@ -557,6 +557,7 @@ require(['config'], function () {
                 // 动效div
                 that.effectPanel = doc.getElementById('xk-edit-effect-edit');
                 that.effectPanelBox = doc.getElementById('xk-edit-effect-panel');
+                that.effectani = doc.getElementById('xk-edit-anitab');
 
                 // 画布侦听
                 var llli = that.pagePanel.firstElementChild.childNodes;
@@ -701,7 +702,7 @@ require(['config'], function () {
 
 
                         parentEle = e.currentTarget;
-                        element = e.target;
+                        element = e.target||e.srcElement;
                         eleId = e.currentTarget.id;
                         _mx = _x = e.pageX;
                         _my = _y = e.pageY;
@@ -753,10 +754,26 @@ require(['config'], function () {
                         switch (eleId) {
                             case 'xk-edit-effect-panel':
                                 // 效果层
-                                // console.log(e.currentTarget.id,element);
-                                // dropLayer(selectUl,selectLi,that.eff_select,function () {
-                                //     console.log('xk-edit-effect-panel');
-                                // });
+                                console.log(e.currentTarget.id,element);
+                                var target=element;
+                                if (target.className=='xk-edit-left-tab hand'){
+                                    target.onclick=function () {
+                                        var ani=aniclick.siblings(target)[0];
+                                        aniclick.double_click(ani);
+                                    }
+                                }
+                                dropLayer(selectUl,selectLi,that.eff_select,function () {
+                                    console.log('xk-edit-effect-panel');
+                                });
+                                break;
+                            case 'xk-edit-anitab':
+                                var effect_tab=that.effectPanelBox.getElementsByClassName('xk-edit-left-bottom-body')[0];
+                                var layer_tab_li=that.layerPanelBox.getElementsByTagName('li');
+                                for (var i=0;i<layer_tab_li.length;i++){
+                                    if (XkTool.hasClass(layer_tab_li[i],'box-bg-blue')){
+                                        aniclick.onfor(that.effectani.getElementsByTagName('span'),effect_tab);
+                                    }
+                                }
                                 break;
                             case 'xk-edit-sub-panel':
                                 // 组件层
@@ -766,6 +783,7 @@ require(['config'], function () {
                                 that.sub_show_id = indexUl;
                                 dropItem(selectUl, selectLi, that.sub_select[indexUl], function () {
                                     console.log('xk-edit-sub-panel');
+                                    console.log(that.subBox_layer_curr_select_ul)
                                 });
                                 break;
                             case 'xk-edit-layer-panel':
@@ -2009,7 +2027,10 @@ require(['config'], function () {
                     }
 
 
+
+
                     XkTool.addEvent(that.subPanelBox, 'mousedown', subDownEvent);
+                    XkTool.addEvent(that.effectani, 'mousedown', subDownEvent);
                     XkTool.addEvent(that.layerPanelBox, 'mousedown', subDownEvent);
                     XkTool.addEvent(that.effectPanelBox, 'mousedown', subDownEvent);
 
@@ -3328,8 +3349,22 @@ require(['config'], function () {
                         elm[i].onclick=function () {
                             var str=aniclick.addTab(elm_attr);
                             var li = document.createElement('li');
-                            li.innerHTML =str;
-                            elm2.appendChild(li);
+                            var elm2_child=elm2.children;
+                            if(elm2_child.length==0){
+                                li.innerHTML =str;
+                                li.setAttribute('name',elm_attr)
+                                elm2.appendChild(li);
+                            }else {
+                                var elm2_attr=[];
+                                for (var j=0;j<elm2_child.length;j++){
+                                    elm2_attr.push(elm2_child[j].getAttribute('name'));
+                                };
+                                if (elm2_attr.indexOf(elm_attr)==-1){
+                                    li.setAttribute('name',elm_attr);
+                                    li.innerHTML =str;
+                                    elm2.appendChild(li);
+                                }
+                            }
                         }
                     })(i)
                 }
@@ -3463,20 +3498,8 @@ require(['config'], function () {
 
             }
         };
-        var anitab=document.getElementById('xk-edit-effect-edit').getElementsByClassName('xk-edit-left-bottom-body')[0]
-        var aniTab=document.getElementById('xk-edit-anitab').getElementsByTagName('span');
-        aniclick.onfor(aniTab,anitab);
-        XkTool.addEvent(anitab,'mousedown',function (e) {
-            var target=e.target||e.srcElement;
-            console.log(target);
-            if (target.className=='xk-edit-left-tab hand'){
-                target.onclick=function () {
-                    var ani=aniclick.siblings(target)[0];
-                    aniclick.double_click(ani)
-                }
-            }
 
-        })
+
         /*end*/
     });
 });

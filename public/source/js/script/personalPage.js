@@ -224,7 +224,7 @@ $('.xk-per-cartoon-addbtn').click(function () {
             inNumber.css('border','1px solid #ddd');
         };
         if (inName.val()!==""&&inNumber.val()!==""){
-            $('.xk-per-box-but-yes').removeAttr('disabled')
+            $('.xk-per-box-but-yes').removeAttr('disabled');
         }
     });
 
