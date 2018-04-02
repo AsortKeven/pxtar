@@ -3420,6 +3420,7 @@ require(['config'], function () {
         init();
 
         /*XkTool.addEvent(document,'readystatechange',initDoc);
+
          function initDoc(e) {
          console.log('渲染完成');
          }*/
