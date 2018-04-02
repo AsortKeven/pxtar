@@ -50,7 +50,6 @@ $('#xk-per-modify').unbind('click').click(function () {
             $(this).find('span').removeAttr('value');
             var name = $(this).find('span').attr('id')
             var temp = this.innerHTML;
-            console.log($(this))
             var str1 = /<span/g;
             var str2 = /<\/span>/g;
             nodeInfos += '<p>'+temp+'</p>';
@@ -71,6 +70,7 @@ $('#xk-per-modify').unbind('click').click(function () {
             lists='';
         };
         if (this.getAttribute('name')=='yes'){//确定修改
+            var formdata=upFile.objFile(xkform,xkfile);
            xkInpur.children().each(function () {
                var _this=$(this);
                var vaLue=_this.children().val();
@@ -83,16 +83,13 @@ $('#xk-per-modify').unbind('click').click(function () {
             xkInpur.html(html);
             nodeInfos='';
             lists='';
-            var formdata=upFile.objFile(xkform,xkfile)
             xkimg.attr('src',formdata.objfile)
-            console.log(formdata)
+            console.log(xkform)
             $.ajax({//上传修改数据
                 type:'post',
                 url:'/modify',
                 datatype:'json',
                 data:formdata.formdata,
-                async: false,
-                cache: false,
                 contentType:false,
                 processData:false,
                 success:function (req) {
@@ -136,7 +133,7 @@ $('.xk-per-cartoon-addbtn').click(function () {
     });
     upload.unbind('change').on("change",function(e){
         var _thisf=e.target.files[0];
-        objUrl=getObjectURL(_thisf);
+        objUrl=upFile.getObjectURL(_thisf);
         var formdata = new FormData($('.xk-per-box')[0]);
         reader=formdata;
         console.log(reader)

@@ -3448,8 +3448,22 @@ require(['config'], function () {
                         elm[i].onclick=function () {
                             var str=aniclick.addTab(elm_attr);
                             var li = document.createElement('li');
-                            li.innerHTML =str;
-                            elm2.appendChild(li);
+                            var elm2_child=elm2.children;
+                            if(elm2_child.length==0){
+                                li.innerHTML =str;
+                                li.setAttribute('name',elm_attr)
+                                elm2.appendChild(li);
+                            }else {
+                                var elm2_attr=[];
+                                for (var j=0;j<elm2_child.length;j++){
+                                    elm2_attr.push(elm2_child[j].getAttribute('name'));
+                                };
+                                if (elm2_attr.indexOf(elm_attr)==-1){
+                                    li.setAttribute('name',elm_attr);
+                                    li.innerHTML =str;
+                                    elm2.appendChild(li);
+                                }
+                            }
                         }
                     })(i)
                 }
@@ -3583,20 +3597,6 @@ require(['config'], function () {
 
             }
         };
-        var anitab=document.getElementById('xk-edit-effect-edit').getElementsByClassName('xk-edit-left-bottom-body')[0]
-        var aniTab=document.getElementById('xk-edit-anitab').getElementsByTagName('span');
-        aniclick.onfor(aniTab,anitab);
-        XkTool.addEvent(anitab,'mousedown',function (e) {
-            var target=e.target||e.srcElement;
-            console.log(target);
-            if (target.className=='xk-edit-left-tab hand'){
-                target.onclick=function () {
-                    var ani=aniclick.siblings(target)[0];
-                    aniclick.double_click(ani)
-                }
-            }
-
-        })
         /*end*/
     });
 });
