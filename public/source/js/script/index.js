@@ -18,7 +18,6 @@ require(['config'], function () {
             that.name = name;
             var i = 0, len;
             var doc = document;
-            console.log(list);
             for (i in list) {
                 that.tabBox[i] = list[i];
                 var panel = doc.createElement('ul');
@@ -27,12 +26,12 @@ require(['config'], function () {
                 // panel.innerHTML = '<li>' + i + '</li>';
                 that.panelBox[i] = panel;
                 panel.style.display = 'none';
-                if (i == 0){
-                    XkTool.addClass(panel,'xk-edit-sub-img');
+                if (i == 0) {
+                    XkTool.addClass(panel, 'xk-edit-sub-img');
                     panel.style.display = 'block';
                 }
-                if(i == 1){
-                    XkTool.addClass(panel,'xk-edit-sub-music');
+                if (i == 1) {
+                    XkTool.addClass(panel, 'xk-edit-sub-music');
                 }
                 panelCon.appendChild(panel);
             }
@@ -106,6 +105,8 @@ require(['config'], function () {
             preValue: '',
             init: function (o) {
                 var that = this;
+                XkTool.cancelRightMenu();
+                that.rightMenu();
                 var page = o.page;
                 var imgList = o.imgList;
                 var musicList = o.musicList;
@@ -150,8 +151,6 @@ require(['config'], function () {
                     }
                     pageEdit.firstElementChild.innerHTML = nodeString;
                 }
-                ;
-
 
                 if ((imgList && typeof imgList !== undefined && typeof imgList === 'object') || (musicList && typeof musicList !== undefined && typeof musicList === 'object')) {
                     // 初始化组件
@@ -179,26 +178,26 @@ require(['config'], function () {
                             subItem = subList[i];
                             subItemTab = subItem.tab;
 
-                            console.log(subItemTab, subList[i]);
+                            // console.log(subItemTab, subList[i]);
                             switch (subItemTab) {
                                 case 0:
                                     // 图片tab
-                                    subNameList[subItemTab] += '<li><div class="xk-edit-right-top">' +
+                                    subNameList[subItemTab] += '<li data-id="' + subList[i].id + '"><div class="xk-edit-right-top">' +
                                         '<span data-id="422" class="xk-edit-right-label xk-edit-right-img"> </span>' +
-                                        '<span data-id="423" class="xk-edit-right-label ">'+ subList[i].name +'</span>' +
+                                        '<span data-id="423" class="xk-edit-right-label ">' + subList[i].name + '</span>' +
                                         '<span data-id="425" class="xk-edit-right-label xk-edit-right-label-dir"></span></div>' +
                                         ' <div class="xk-edit-right-data xk-edit-right-data-none">' +
-                                        '<p><span>W:<i>'+subList[i].width+'</i></span><span class="">H:<i>'+subList[i].height+'</i></span></p>' +
-                                        '<p><span>类型：<i>'+subList[i].src.split('.')[1]+'</i></span><span class="">大小:<i>'+subList[i].size+'</i></span></p>' +
+                                        '<p><span>W:<i>' + subList[i].width + '</i></span><span class="">H:<i>' + subList[i].height + '</i></span></p>' +
+                                        '<p><span>类型：<i>' + subList[i].src.split('.')[1] + '</i></span><span class="">大小:<i>' + subList[i].size + '</i></span></p>' +
                                         '</div></li>';
                                     break;
                                 case 1:
-                                    subNameList[subItemTab] += '<li><div class="xk-edit-right-top">' +
+                                    subNameList[subItemTab] += '<li data-id="' + subList[i].id + '"><div class="xk-edit-right-top">' +
                                         '<span data-id="422" class="xk-edit-right-label xk-edit-right-img"></span>' +
-                                        '<span data-id="423" class="xk-edit-right-label">'+ subList[i].name +'</span>' +
+                                        '<span data-id="423" class="xk-edit-right-label">' + subList[i].name + '</span>' +
                                         '<span data-id="425" class="xk-edit-right-label xk-edit-right-label-dir xk-edit-right-label-dir"></span></div>' +
                                         '<div class="xk-edit-right-data xk-edit-right-data-none">' +
-                                        '<p><span>类型：<i>'+subList[i].src.split('.')[1]+'</i></span><span class="">大小:<i>'+ subList[i].size +'</i></span></p>' +
+                                        '<p><span>类型：<i>' + subList[i].src.split('.')[1] + '</i></span><span class="">大小:<i>' + subList[i].size + '</i></span></p>' +
                                         '</div></li>';
                                     break;
                             }
@@ -501,6 +500,64 @@ require(['config'], function () {
                     };
                 }
 
+            },
+            //自定义右键菜单
+            rightMenu: function () {
+                var body = document.querySelector('body');
+                var rightMenuContainer = document.createElement('div');
+                var rightMenu = document.createElement('div');
+                XkTool.addClass(rightMenu, 'xk-right-menu');
+                XkTool.addClass(rightMenuContainer, 'xk-right-menu-container');
+                document.oncontextmenu = function (e) {
+                    var xkMenuStr = '';
+                    var event = e || window.event;
+                    var t = event.target;
+                    var klass;
+                    //判断点击位置
+                    if (XkTool.hasClass(t, 'xk-edit-right-top') || XkTool.hasClass(t.parentNode, 'xk-edit-right-top')) {
+                        klass = 'toolsOrLayer';
+                    } else if (XkTool.hasClass(t.parentNode, 'xk-edit-center-page-page')) {
+                        klass = 'pageImg';
+                    } else if (XkTool.hasClass(t, 'xk-edit-effect-item')) {
+                        klass = 'effect';
+                    }
+                    console.log(klass);
+                    switch (klass) {
+                        case 'toolsOrLayer':
+                            //组件或者图层
+                            xkMenuStr = ' <p id="xk-upper">上移</p>' +
+                                '<p id="xk-lower">下移</p>' +
+                                '<p id="xk-preview">预览</p>' +
+                                '<p id="xk-del">删除</p>';
+                            break;
+                        case 'pageImg':
+                            xkMenuStr = ' <p id="xk-upper">上移一层</p>' +
+                                '<p id="xk-lower">下移一层</p>' +
+                                '<p id="xk-del">删除</p>' +
+                                '<p id="xk-position">定位方式</p>';
+                            break;
+                        case 'effect':
+                            //动效右键菜单
+                            break
+                    }
+                    if (xkMenuStr !== '') {
+                        rightMenu.innerHTML = xkMenuStr;
+                        rightMenuContainer.appendChild(rightMenu);
+                        body.appendChild(rightMenuContainer);
+                        XkTool.addClass(rightMenuContainer, 'xk-right-menu-container');
+                        XkTool.addClass(rightMenu, 'xk-right-menu');
+                        XkTool.setStyle(rightMenuContainer, {
+                            'display': 'block',
+                            left: event.pageX + 'px',
+                            top: event.pageY + 'px'
+                        });
+                        document.onclick = function () {
+                            XkTool.setStyle(rightMenuContainer, {display: 'none'});
+                        };
+                    }
+                    //必须加return false屏蔽默认事件
+                    return false;
+                }
             }
 
         };
@@ -702,8 +759,10 @@ require(['config'], function () {
 
 
                         parentEle = e.currentTarget;
-                        element = e.target||e.srcElement;
-                        eleId = e.currentTarget.id;
+                        element = e.target;
+                        if (e.button == 0) {
+                            eleId = e.currentTarget.id;
+                        }
                         _mx = _x = e.pageX;
                         _my = _y = e.pageY;
 
@@ -783,7 +842,6 @@ require(['config'], function () {
                                 that.sub_show_id = indexUl;
                                 dropItem(selectUl, selectLi, that.sub_select[indexUl], function () {
                                     console.log('xk-edit-sub-panel');
-                                    console.log(that.subBox_layer_curr_select_ul)
                                 });
                                 break;
                             case 'xk-edit-layer-panel':
@@ -1137,7 +1195,10 @@ require(['config'], function () {
 
                                         if (!isTop && excEle != cuLi) {
                                             cuUl.insertBefore(removeEle, excEle);
-                                        } else {
+                                        } else if (removeEle === excNode) {
+                                            cuUl.insertBefore(removeEle, cuUl.firstElementChild);
+                                        }
+                                        else {
                                             cuUl.insertBefore(removeEle, excNode);
                                         }
                                         arrIndex = Index(cuUl, removeEle);
@@ -1505,7 +1566,10 @@ require(['config'], function () {
 
                                             if (!isTop && excEle != cuLi) {
                                                 cuUl.insertBefore(removeEle, excEle);
-                                            } else {
+                                            } else if (removeEle === excNode) {
+                                                cuUl.insertBefore(removeEle, cuUl.firstElementChild)
+                                            }
+                                            else {
                                                 cuUl.insertBefore(removeEle, excNode);
                                             }
                                             arrIndex = Index(cuUl, removeEle);
@@ -1562,7 +1626,7 @@ require(['config'], function () {
                                                 for (i = 0; i < len; i++) {
                                                     sctEle = selectArr[i];
 
-                                                    // 通过选择的 li 包含的 data-subId ，然后在 数据层 遍历，找到这个 数据。
+                                                    // 通过选择的 li 包含的 data-subId，然后在 数据层 遍历，找到这个 数据。
                                                     // 目前 先随便获取，后面数据对应后，再删除这里
                                                     dataItem = _Model.subList[sctEle.index];
                                                     if (dataItem.tab != 0) return;
@@ -2027,12 +2091,10 @@ require(['config'], function () {
                     }
 
 
-
-
                     XkTool.addEvent(that.subPanelBox, 'mousedown', subDownEvent);
-                    XkTool.addEvent(that.effectani, 'mousedown', subDownEvent);
                     XkTool.addEvent(that.layerPanelBox, 'mousedown', subDownEvent);
                     XkTool.addEvent(that.effectPanelBox, 'mousedown', subDownEvent);
+                    XkTool.addEvent(that.effectani, 'mousedown', subDownEvent);
 
                 }
 
@@ -2274,30 +2336,31 @@ require(['config'], function () {
 
                         break;
                     case 404:
+                        //还需要同步移除页面上的组件以及Model里面的组件
                         var show_panel = getChildes(that.subPanelBox)[that.sub_show_id];
                         var data = that.sub_select[that.sub_show_id], len = data.length;
                         while (len--) {
-                            show_panel.removeChild(data[len]);
+                            show_panel.removeChild(data[len].ele);
                             data.splice(len, 1);
                         }
 
                         break;
                     case 406:
-                        if (!that.page_currentTarget_select) return;
+                        //判断page是否有选中的，没有的话直接返回。
+                        if (JSON.stringify(that.page_currentTarget_select) === '{}')
+                            return;
                         var data = that.layer_select, len = data.length;
                         if (len <= 0) return;
                         var show_panel = that.layerPanelBox.firstElementChild;
                         var show_list = getChildes(show_panel), panel_len, index = 0, i = 0;
-
                         while (len--) {
                             for (i = 0, panel_len = show_list.length; i < panel_len; i++) {
-
-                                if (data[len] == show_list[i]) {
+                                if (data[len].ele == show_list[i]) {
                                     index = i;
                                     break;
                                 }
                             }
-                            _Model.page[that.page_currentTarget_select].layerList.splice(index, 1);
+                            _Model.page[that.page_currentTarget_select.index].layerList.splice(index, 1);
                             show_panel.removeChild(data[len].ele);
                             data.splice(len, 1);
                         }
@@ -2306,7 +2369,7 @@ require(['config'], function () {
                 }
             },
             //进度条的拖动事件
-            setProg: function (id, ele, proVal) {
+            setProg: function (id, ele) {
                 switch (id) {
                     case 304:
                         var nodeUl = document.getElementById('xk-edit-center-edit').firstElementChild;
@@ -2327,6 +2390,21 @@ require(['config'], function () {
                         this.setChildrenStyle(nodeUl, percent);
                         this.v.preValue = ~~ele.value;
                         break;
+                }
+            },
+            changeName: function (e, cb) {
+                e.innerHTML = '<input type="text" id="tempInput" value="' + e.innerHTML + '" style="border: none;width: 100px">';
+                e.onkeydown = function (ev) {
+                    if (ev.keyCode == 13) {
+                        e.firstElementChild.removeEventListener('blur', setVal);
+                        e.innerHTML = document.getElementById('tempInput').value;
+                        cb(e.innerHTML, ~~e.parentNode.parentNode.getAttribute('data-id'));
+                    }
+                };
+                e.firstElementChild.addEventListener('blur', setVal);
+                function setVal() {
+                    e.innerHTML = document.getElementById('tempInput').value;
+                    cb(e.innerHTML, ~~e.parentNode.parentNode.getAttribute('data-id'));
                 }
             },
             //遍历设置子节点属性
@@ -3085,7 +3163,7 @@ require(['config'], function () {
             });
 
             _Model.musicList.push({
-                id: 11113,
+                id: 21111,
                 tab: 1,
                 type: 'music',
                 name: '草泥马',
@@ -3096,7 +3174,7 @@ require(['config'], function () {
             });
 
             _Model.musicList.push({
-                id: 11114,
+                id: 21112,
                 tab: 1,
                 type: 'music',
                 name: '测试mp3',
@@ -3105,7 +3183,6 @@ require(['config'], function () {
                 duration: '3',
                 citeAdd: [],
             });
-
             _Model.page[0] = {
                 id: 0,
                 rect: {
@@ -3290,7 +3367,7 @@ require(['config'], function () {
             var v = new _View({page: _Model.page, musicList: _Model.musicList, imgList: _Model.imgList});
             var c = new _Controller({name: 'zfc'}, v);
             XkTool.addEvent(window, 'mousedown', function (e) {
-                // e.preventDefault();
+                // e.preventDefault(); 会影响双击修改名称
 
             }, true);
             XkTool.addEvent(window, 'mouseup', function (e) {
@@ -3311,10 +3388,32 @@ require(['config'], function () {
                 var len = progressGroup.length;
                 while (len--) {
                     if (~~_dataId === progressGroup[len]) {
-                        c.setProg(~~_dataId, e.target, v.preValue);
+                        c.setProg(~~_dataId, e.target);
                     }
                 }
             }, true);
+            //双击事件 主要用于双击改名，后期可扩展
+            XkTool.addEvent(window, 'dblclick', function (e) {
+                var _dataId = e.target.getAttribute('data-id');
+                if (_dataId == 423) {
+                    c.changeName(e.target, function (val, id) {
+                        if (id.toString().split('')[0] == 1) {
+                            _Model.imgList.forEach(function (el, index) {
+                                if (el.id === id) {
+                                    el.name = val;
+                                }
+                            })
+                        } else {
+                            _Model.musicList.forEach(function (el, index) {
+                                if (el.id === id) {
+                                    el.name = val;
+                                }
+                            })
+                        }
+
+                    });
+                }
+            })
 
         }
 
@@ -3349,22 +3448,8 @@ require(['config'], function () {
                         elm[i].onclick=function () {
                             var str=aniclick.addTab(elm_attr);
                             var li = document.createElement('li');
-                            var elm2_child=elm2.children;
-                            if(elm2_child.length==0){
-                                li.innerHTML =str;
-                                li.setAttribute('name',elm_attr)
-                                elm2.appendChild(li);
-                            }else {
-                                var elm2_attr=[];
-                                for (var j=0;j<elm2_child.length;j++){
-                                    elm2_attr.push(elm2_child[j].getAttribute('name'));
-                                };
-                                if (elm2_attr.indexOf(elm_attr)==-1){
-                                    li.setAttribute('name',elm_attr);
-                                    li.innerHTML =str;
-                                    elm2.appendChild(li);
-                                }
-                            }
+                            li.innerHTML =str;
+                            elm2.appendChild(li);
                         }
                     })(i)
                 }
@@ -3498,8 +3583,20 @@ require(['config'], function () {
 
             }
         };
+        var anitab=document.getElementById('xk-edit-effect-edit').getElementsByClassName('xk-edit-left-bottom-body')[0]
+        var aniTab=document.getElementById('xk-edit-anitab').getElementsByTagName('span');
+        aniclick.onfor(aniTab,anitab);
+        XkTool.addEvent(anitab,'mousedown',function (e) {
+            var target=e.target||e.srcElement;
+            console.log(target);
+            if (target.className=='xk-edit-left-tab hand'){
+                target.onclick=function () {
+                    var ani=aniclick.siblings(target)[0];
+                    aniclick.double_click(ani)
+                }
+            }
 
-
+        })
         /*end*/
     });
 });
