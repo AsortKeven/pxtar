@@ -4,15 +4,15 @@
  * Created by Administrator on 2018/1/30.
  */
 
-var serverConfig = function serverConfig(app,express) {
+var serverConfig = function serverConfig(app, express) {
     var path = require('path');
     var bodyParser = require('body-parser');
     var multer = require('multer');
     var mysql = require('mysql');
     var upload = multer();
-    var utils = require('./Utils');
-    var sendMail = require('./mail');
-
+    var utils = require('./ES6-Utils');
+    var sendMail = require('./ES6-mail');
+    var fs = require('fs');
 
     var loginResult = {
         loginStatus: false,
@@ -29,13 +29,12 @@ var serverConfig = function serverConfig(app,express) {
 
     app.set('title', 'Pxtar Engine');
     app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({extended: true}));
+    app.use(bodyParser.urlencoded({ extended: true }));
 
     var currentDir = __dirname.split('WEB-INF');
-   // console.log(currentDir[0], __dirname);
+    // console.log(currentDir[0],__dirname);
     app.set('views', path.join(currentDir[0], 'public', 'views'));
-    // app.set('views', path.join(__dirname, 'views'));
-    app.use(express.static(path.join(currentDir[0], 'public','source')));
+    app.use(express.static(path.join(currentDir[0], 'public', 'source')));
     app.set('view engine', 'html');
     app.engine('html', require('ejs').renderFile);
     app.set('port', process.env.PORT || 3000);
@@ -46,13 +45,13 @@ var serverConfig = function serverConfig(app,express) {
 
     //暂时测试用，之后edit页面需要改为post请求，详情查看文档
     app.get('/edit', function (req, res) {
-        //res.type('html');
+        res.type('html');
         res.render('edit');
     });
 
     app.get('/login', function (req, res) {
         res.type('html');
-        res.render('login', {result: ''});
+        res.render('login', { result: '' });
     });
 
     app.post('/login', upload.array(), function (req, res, next) {
@@ -92,13 +91,41 @@ var serverConfig = function serverConfig(app,express) {
         search().then(function (msg) {
             console.log(msg);
             res.type('html');
-            res.render('personalPage', {result: msg});
+            res.render('personalPage', { result: msg });
         });
     });
 
     app.get('/personalPage', function (req, res) {
         res.type('html');
-        res.render('personalPage', {datas: 1111});
+        var imgurl = [];
+        var imgUrl = function imgUrl(path) {
+            //图片传输
+            return new Promise(function (resolve, reject) {
+                fs.readdir(path, function (err, files) {
+                    //读取文件夹内所有图片
+                    if (err) {
+                        return console.log(err);
+                    }
+                    files.forEach(function (filename) {
+                        var file = fs.readFileSync(path + '/' + filename); //读取单个图片
+                        var result = {
+                            name: '画诡',
+                            num: '第二话',
+                            img: 'data:image/png;base64,' + file.toString('base64')
+                        };
+                        imgurl.push(result);
+                    });
+                    resolve(imgurl);
+                });
+            });
+        };
+        imgUrl('./uploads').then(function (data) {
+            var datas = {
+                uuid: '大神',
+                nav: data
+            };
+            res.render('personalPage', { datas: datas });
+        });
     });
 
     //提交uuid到后台数据库，查询数据并返回
@@ -107,7 +134,7 @@ var serverConfig = function serverConfig(app,express) {
         var searchAll = function searchAll() {
             return new Promise(function (resolve, reject) {
                 connection.query(utils.sqls.selectLogininfo, uuid, function (err, result) {
-                    if (err) return console.error(err); else {
+                    if (err) return console.error(err);else {
                         var _ref2 = [true, result[0].uuid, result[0].userInfos, result[0].isChecked];
                         loginResult.loginStatus = _ref2[0];
                         loginResult.uuid = _ref2[1];
@@ -120,7 +147,7 @@ var serverConfig = function serverConfig(app,express) {
         };
         searchAll().then(function (msg) {
             connection.query(utils.sqls.selectUserinfo, uuid, function (err, result) {
-                if (err) return console.error(err); else {
+                if (err) return console.error(err);else {
                     ;
                     var _ref3 = [result[0].discription, result[0].photo, result[0].address, result[0].production, result[0].profession, result[0].authority];
                     msg.discription = _ref3[0];
@@ -129,8 +156,7 @@ var serverConfig = function serverConfig(app,express) {
                     msg.production = _ref3[3];
                     msg.profession = _ref3[4];
                     msg.authority = _ref3[5];
-                }
-                msg.userinfo = JSON.parse(msg.userinfo);
+                }msg.userinfo = JSON.parse(msg.userinfo);
                 console.log(msg);
                 res.type('html');
                 res.send(msg);
@@ -156,7 +182,7 @@ var serverConfig = function serverConfig(app,express) {
 
         var userRandom = utils.userRandom();
         var tousers = [user.uuid, user.nickname, user.job];
-        var userinfo = JSON.stringify({用户名: user.username, 手机: user.phone, 邮箱: user.email});
+        var userinfo = JSON.stringify({ 用户名: user.username, 手机: user.phone, 邮箱: user.email });
         var tologin = [user.uuid, userinfo, user.password];
         var flag = true;
         console.log(user);
@@ -192,18 +218,18 @@ var serverConfig = function serverConfig(app,express) {
         var addUser = function addUser() {
             return new Promise(function (resolve, reject) {
                 connection.query(utils.sqls.register.toUsers, tousers, function (err, result) {
-                    if (err) return console.error(err); else console.log(result);
+                    if (err) return console.error(err);else console.log(result);
                 });
 
                 connection.query(utils.sqls.register.toLogin, tologin, function (err, result) {
-                    if (err) return console.error(err); else console.log(result);
+                    if (err) return console.error(err);else console.log(result);
                 });
                 resolve();
             });
         };
         addUser().then(function () {
             res.type('html');
-            res.render('about', {Hello: user.job});
+            res.render('about', { Hello: user.job });
         });
     });
 
@@ -213,7 +239,7 @@ var serverConfig = function serverConfig(app,express) {
         trunk += req.body.dataName;
         console.log(req.body.dataName);
         res.type('html');
-        res.render('about', {Hello: trunk});
+        res.render('about', { Hello: trunk });
     });
 
     //result
@@ -223,7 +249,7 @@ var serverConfig = function serverConfig(app,express) {
         console.log(req.query.input);
         console.log(trunk);
         res.type('html');
-        res.render('result', {Hello: trunk});
+        res.render('result', { Hello: trunk });
     });
 
     //获取验证码
@@ -434,9 +460,10 @@ var serverConfig = function serverConfig(app,express) {
         });
     });
 
-    //新建单话 暂停
+    //新建单话
     //存储封面及信息到userinfo的production中
     //同时建立txt配置文件
+    // 目前前端数据缺少用户的uuid，需要封装在req中一起传输过来
     var storage = multer.diskStorage({
         destination: './uploads', //存储路径
         filename: function filename(req, file, cb) {
@@ -454,6 +481,7 @@ var serverConfig = function serverConfig(app,express) {
             num = _ref5[2],
             savePath = _ref5[3];
 
+        console.log(req.body);
         var str = void 0;
         var search = function search() {
             return new Promise(function (resolve, reject) {
@@ -495,6 +523,10 @@ var serverConfig = function serverConfig(app,express) {
         });
     });
 
+    app.post('/modify', imgUploader.single('file', 400), function (req, res) {
+        console.log(req.body);
+        res.send(req.body);
+    });
     //用户主动触发保存 或者每隔五分钟保存
     //当前路径为桌面，部署到服务器再进行配置
     /*
@@ -512,16 +544,19 @@ var serverConfig = function serverConfig(app,express) {
         //let datas = req.body.datas;
         //let uuid = datas.uuid;
         // let name = datas.name;
-        // let model = datas.model;
-        var datas = {a: 'sadada', b: 'swwww', c: 'asdasafas'};
-        var file = void 0;
-        connection.query(utils.sqls.updateComic, 'bda67ce4-31b1-40d9-8d65-2a8cfe468956', function (err, result) {
+        var name = '画诡1.txt';
+        var datas = { a: 'sadada', b: 'swwww', c: 'asdasafas' };
+        connection.query(utils.sqls.selectComic, 'bda67ce4-31b1-40d9-8d65-2a8cfe468956', function (err, result) {
             if (err || !result) {
                 return console.error(err || !result);
             } else {
-                file = result[0].sourceName;
-                if (utils.newFile(file, JSON.stringify(datas))) {
-                    res.send('信息保存成功！');
+                var length = result.length;
+                for (var i = 0; i < length; i++) {
+                    if (name === result[i].sourceName) {
+                        if (utils.newFile(name, JSON.stringify(datas))) {
+                            res.send('信息保存成功！');
+                        }
+                    }
                 }
             }
         });
@@ -534,20 +569,21 @@ var serverConfig = function serverConfig(app,express) {
     });
 
     var trunk = '<a href="/register">注册</a>';
+
     app.get('/', function (req, res) {
         res.type('html');
-        res.render('index', {Hello: trunk});
+        res.render('index', { Hello: trunk });
     });
 
-    app.use('*',function (req,res) {
+    app.use('*', function (req, res) {
         res.type('html');
         res.render('404');
     });
 
-
-    app.listen(3000, function () {
+    app.listen(app.get('port'), function () {
         console.log('Express started on http://localhost:' + app.get('port'));
     });
 };
 
 module.exports = serverConfig;
+//# sourceMappingURL=serverConfig.js.map
