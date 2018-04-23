@@ -1533,7 +1533,12 @@
 
  }*/
 
+
 var _Model = {
+    page: [],
+    musicList: [],
+    imgList: [],
+    history: [],
     chufaBody: [
         {
             text: '图层出现时',
