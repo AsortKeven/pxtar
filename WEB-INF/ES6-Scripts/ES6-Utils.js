@@ -100,7 +100,7 @@ const utils = {
     //生成验证码
     checkNum:()=>{
         let s =[];
-        let hexDigits ='0123456789abcdefghijklmnopqretuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        let hexDigits ='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         for(let i = 0; i < 6; i++){
             s[i] = hexDigits.substr(Math.floor(Math.random() * 62),1);
         }

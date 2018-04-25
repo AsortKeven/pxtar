@@ -328,6 +328,8 @@ const serverConfig = (app, express) => {
             if (user === curChecks.userstr[i]) {
                 if (checkNum === curChecks.checkNum[i]) {
                     checkResult = true;
+                    curChecks.userstr.splice(i,1);
+                    curChecks.checkNum.splice(i,1);
                 }
             }
         }
@@ -436,7 +438,6 @@ const serverConfig = (app, express) => {
                         }
                         resolve(temp);
                     }
-
                 })
             })
         };
