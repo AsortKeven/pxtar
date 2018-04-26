@@ -10,7 +10,7 @@ const serverConfig = (app, express) => {
     const upload = multer();
     const utils = require('./ES6-Utils');
     const sendMail = require('./ES6-mail');
-    const fs=require('fs');
+    const fs = require('fs');
 
     const loginResult = {
         loginStatus: false,
@@ -24,6 +24,10 @@ const serverConfig = (app, express) => {
         profession: '',
         authority: ''
     };
+
+    //解除上传图片大小限制，目前50
+    app.use(bodyParser.json({limit: '50mb'}));
+    app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
     app.set('title', 'Pxtar Engine');
     app.use(bodyParser.json());
@@ -92,34 +96,35 @@ const serverConfig = (app, express) => {
         })
     });
 
+    //暂时测试
     app.get('/personalPage', (req, res) => {
         res.type('html');
-        let imgurl=[];
-        let imgUrl=(path)=>{//图片传输
-             return new Promise((resolve,reject)=>{
-                 fs.readdir(path,(err,files)=>{//读取文件夹内所有图片
-                     if (err){
-                         return console.log(err)
-                     }
-                     files.forEach((filename)=>{
-                         let file=fs.readFileSync(path+'/'+filename);//读取单个图片
-                         let result={
-                             name:'画诡',
-                             num:'第二话',
-                             img:'data:image/png;base64,'+file.toString('base64')
-                         }
-                         imgurl.push(result);
-                     });
-                     resolve(imgurl)
-                 });
-             })
+        let imgurl = [];
+        let imgUrl = (path) => {//图片传输
+            return new Promise((resolve, reject) => {
+                fs.readdir(path, (err, files) => {//读取文件夹内所有图片
+                    if (err) {
+                        return console.log(err)
+                    }
+                    files.forEach((filename) => {
+                        let file = fs.readFileSync(path + '/' + filename);//读取单个图片
+                        let result = {
+                            name: '画诡',
+                            num: '第二话',
+                            img: 'data:image/png;base64,' + file.toString('base64')
+                        }
+                        imgurl.push(result);
+                    });
+                    resolve(imgurl)
+                });
+            })
         };
-        imgUrl('./uploads').then((data)=>{
-            let datas={
-                uuid:'大神',
-                nav:data
+        imgUrl('./uploads').then((data) => {
+            let datas = {
+                uuid: '大神',
+                nav: data
             };
-            res.render('personalPage', {datas:datas});
+            res.render('personalPage', {datas: datas});
         })
     });
 
@@ -328,8 +333,8 @@ const serverConfig = (app, express) => {
             if (user === curChecks.userstr[i]) {
                 if (checkNum === curChecks.checkNum[i]) {
                     checkResult = true;
-                    curChecks.userstr.splice(i,1);
-                    curChecks.checkNum.splice(i,1);
+                    curChecks.userstr.splice(i, 1);
+                    curChecks.checkNum.splice(i, 1);
                 }
             }
         }
@@ -438,7 +443,6 @@ const serverConfig = (app, express) => {
                         }
                         resolve(temp);
                     }
-
                 })
             })
         };
@@ -501,73 +505,98 @@ const serverConfig = (app, express) => {
 //存储封面及信息到userinfo的production中
 //同时建立txt配置文件
 // 目前前端数据缺少用户的uuid，需要封装在req中一起传输过来
-    let storage = multer.diskStorage({
-        destination: './uploads', //存储路径
-        filename(req, file, cb){
-            cb(null, file.originalname);
-        } //文件名
-    });
-    let imgUploader = multer({storage: storage});
-    app.post('/newComic', imgUploader.single('file', 40), (req, res) => {
+//     let storage = multer.diskStorage({
+//         destination: 'C:/Users/Administrator/Desktop/', //存储路径
+//         filename(req, file, cb){
+//             cb(null, file.originalname);
+//         } //文件名
+//     });
+//     let imgUploader = multer({storage: storage});
+    //   app.post('/newComic', imgUploader.single('file', 40), (req, res) => {
+    app.post('/newComic', upload.array(), (req, res) => {
         let [
             uuid,
             name,
             num,
-            savePath
+            imgData
         ] = [
-            //req.file.uuid,
+            //req.body.uuid,
             'bda67ce4-31b1-40d9-8d65-2a8cfe468956',
             req.body.name,
-            req.body.number,
-            req.file.path
+            req.body.num,
+            req.body.imgData
         ];
-        console.log(req.body)
-        let str;
-        let search = () => {
+        let path = 'C:/Users/Administrator/Desktop/';
+        let str, fileName;
+        let postName = 'post.png';
+        utils.newDir(path, uuid);
+        let findName = () => {
             return new Promise((resolve, reject) => {
-                connection.query(utils.sqls.modifyInfo.getProduction, uuid, (err, result) => {
-                    if (err) {
-                        return console.error(err);
+                connection.query(utils.sqls.findComicName, '', (err, result) => {
+                    if (err || !result) {
+                        return console.error(err)
                     } else {
-                        if(result[0].production !== ""){
-                            let products = result[0].production + ',' + name;
-                            str = [products, uuid];
-                        }else {
-                            str = [name,uuid];
+                        let resL = result.length;
+                        let flag = true;
+                        for (let i = 0; i < resL; i++) {
+                            if (name + num === result[i].comicName) {
+                                flag = false;
+                                res.send(false);
+                            }
+                        }
+                        if (flag) {
+                            resolve();
                         }
                     }
-                    resolve();
-                });
-
+                })
             })
         };
-        search().then(() => {
-            console.log(str);
-            connection.query(utils.sqls.modifyInfo.toProduction, str, (err, result) => {
+        findName().then(() => {
+            connection.query(utils.sqls.modifyInfo.getProduction, uuid, (err, result) => {
                 if (err) {
                     return console.error(err);
                 } else {
-                  console.log("新建单话成功！");
+                    if (utils.newDir(path + '/' + uuid, name + num)) {
+                        let base64Data = imgData.replace(/^data:image\/\w+;base64,/, "");
+                        let dataBuffer = new Buffer(base64Data, 'base64');
+                        fileName = path + uuid + '/' + name + num;
+                        if (utils.newFile(fileName, postName, dataBuffer)) {
+                            if (err) {
+                                return console.error(err);
+                            }
+                        }
+                        if (result[0].production !== "") {
+                            let products = result[0].production + ',' + name;
+                            str = [products, uuid];
+                        } else {
+                            str = [name, uuid];
+                        }
+                        connection.query(utils.sqls.modifyInfo.toProduction, str, (err, result) => {
+                            if (err) {
+                                return console.error(err);
+                            }
+                        })
+                    }
                 }
-            })
+            });
         }).then(() => {
-            let str2 = [uuid, name, name + '.txt'];
+            let str2 = [uuid, name + num, name + num + '.txt', utils.chToPy(name) + num, path + uuid + '/' + name + num, postName];
             connection.query(utils.sqls.insertComic, str2, (err, result) => {
                 if (err) {
                     return console.error(err);
                 } else {
-                    if (utils.newFile(name + '.txt', null)) {
-                        console.log('配置文件生成成功');
-                    }
+                    utils.newFile(path + uuid + '/' + name + num, name + num + '.txt', null)
                 }
             })
+        }).then(() => {
+            res.send('success');
         })
     });
 
-    app.post('/modify',imgUploader.single('file', 400), (req,res) =>{
-        console.log(req.body);
-        res.send(req.body)
-    })
+    /* app.post('/modify', imgUploader.single('file', 400), (req, res) => {
+     console.log(req.body);
+     res.send(req.body)
+     })*/
 //用户主动触发保存 或者每隔五分钟保存
 //当前路径为桌面，部署到服务器再进行配置
     /*

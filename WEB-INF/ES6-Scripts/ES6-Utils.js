@@ -4,70 +4,91 @@
 const fs = require('fs');
 const pinyin = require('pinyin');
 const crypto = require('crypto.js');
-const  archiver = require('archiver');
+const archiver = require('archiver');
 const unzip = require("unzip");
 
 const utils = {
-    con:{
-        host:'localhost',
-        user:'root',
-        password:'123456',
-        database:'pxtar'
+    con: {
+        host: 'localhost',
+        user: 'root',
+        password: '123456',
+        database: 'pxtar'
     },
 
     sqls: {
-        inviteNums:{
-            getAll:'select * from inviteNums',
-            isUsed:'select usable from invitenums where inviteNum = ?',
-            changeUsable:'update invitenums set usable = "0" where inviteNum = ?'
+        inviteNums: {
+            getAll: 'select * from inviteNums',
+            isUsed: 'select usable from invitenums where inviteNum = ?',
+            changeUsable: 'update invitenums set usable = "0" where inviteNum = ?'
         },
         register: {
             toUsers: 'insert into userinfo(UUID,nickName,profession) values(?,?,?)',
             toLogin: 'insert into logininfo(UUID,userInfos,password) values(?,?,?)'
         },
         modifyInfo: {
-            toAuthority:'update userinfo set authority = "2" where uuid = ?',
+            toAuthority: 'update userinfo set authority = "2" where uuid = ?',
             toDiscription: 'update userinfo set discription = ? where uuid = ?',
             toAddress: 'update userinfo set address = ? where uuid = ?',
-            getProduction:'select production from userinfo where uuid = ?',
+            getProduction: 'select production from userinfo where uuid = ?',
             toProduction: 'update userinfo set production = ? where uuid = ?',
             toPassword: 'update logininfo set password = ? where uuid = ?',
             toNormal: 'update userinfo set nickname = ?,photo = ?,qq = ? where uuid = ?',
-            toUserInfo:'update logininfo set userInfos = ? where uuid = ?',
-            selectUserInfos:'select userInfos from logininfo where uuid = ?'
+            toUserInfo: 'update logininfo set userInfos = ? where uuid = ?',
+            selectUserInfos: 'select userInfos from logininfo where uuid = ?'
         },
         selectComic: 'select * from comics where uuid = ?',
-        insertComic:'insert into comics(uuid,comicName,sourceName) values(?,?,?)',
+        insertComic: 'insert into comics(uuid,comicName,sourceName,innerName,sourceFile,postImg) values(?,?,?,?,?,?)',
+        findComicName: 'select comicName from comics',
         logincheck: 'select * from logininfo where userinfos like ?',
         selectUserinfo: 'select * from userinfo where uuid=?',
         selectLogininfo: 'select * from logininfo where uuid=?'
     },
 
-    //新建配置文件,当前默认到桌面
-    newFile: (name, infos) => {
-        let destination = 'C:/Users/Administrator/Desktop/' + name;
-        fs.writeFile(destination, infos, (err) => {
-            if (err)
-                return console.error(err);
+    //新建配置文件
+    newFile: (path, name, infos) => {
+        let destination = path + '/' + name;
+        fs.exists(destination, (exist) => {
+            if (!exist) {
+                fs.writeFile(destination, infos, (err) => {
+                    if (err)
+                        return console.error(err);
+                });
+            } else
+                return true;
+        });
+        return true;
+    },
+
+    //新建资源文件夹
+    newDir: (path, name) => {
+        let destination = path + '/' + name;
+        fs.exists(destination, (exist) => {
+            if (!exist) {
+                fs.mkdir(destination, (err) => {
+                    if (err)
+                        return console.error(err);
+                });
+            } else
+                return true;
         });
         return true;
     },
 
     //文件夹的复制
-    createAndCopy:(exsitDir, newDir)=>{
+    createAndCopy: (exsitDir, newDir) => {
         let source = __dirname + '/' + exsitDir;
-        let destination = __dirname + '/' +newDir;
+        let destination = __dirname + '/' + newDir;
 
-        fs.mkdir(destination,(err)=>{
-            if(err)
+        fs.mkdir(destination, (err) => {
+            if (err)
                 return console.error(err);
             else
-                console.log('Create dir'+ newDir + 'success');
+                console.log('Create dir' + newDir + 'success');
         });
 
         let list = fs.readdirSync(source);
 
-        for(let i in list){
+        for (let i in list) {
             fs.createReadStream(source + '/' + list[i]).pipe(fs.createWriteStream(destination + '/' + list[i]));
         }
         console.log('Files copy success!');
@@ -78,8 +99,8 @@ const utils = {
         let s = [];
         let hexDigits = '0123456789abcdef';
 
-        for(let i = 0; i < 36; i++){
-            s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10),1);
+        for (let i = 0; i < 36; i++) {
+            s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
         }
         s[14] = "4";
         s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);
@@ -88,35 +109,35 @@ const utils = {
     },
 
     //生成用户名
-    userRandom: ()=>{
-        let s ='pxtar';
+    userRandom: () => {
+        let s = 'pxtar';
         let hexDigits = '0123456789';
-        for(let i = 0; i < 6; i++){
+        for (let i = 0; i < 6; i++) {
             s += hexDigits.substr(Math.floor(Math.random() * 10), 1);
         }
         return s;
     },
 
     //生成验证码
-    checkNum:()=>{
-        let s =[];
-        let hexDigits ='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        for(let i = 0; i < 6; i++){
-            s[i] = hexDigits.substr(Math.floor(Math.random() * 62),1);
+    checkNum: () => {
+        let s = [];
+        let hexDigits = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        for (let i = 0; i < 6; i++) {
+            s[i] = hexDigits.substr(Math.floor(Math.random() * 62), 1);
         }
         return s.join("");
     },
 
     //汉字转拼音
-    chToPy:(str)=>{
+    chToPy: (str) => {
 
-        let temp = pinyin(str,{
-            style:pinyin.STYLE_FIRST_LETTER,
-            heteronym:true
+        let temp = pinyin(str, {
+            style: pinyin.STYLE_FIRST_LETTER,
+            heteronym: true
         });
 
         let final = '';
-        for(let i = 0; i < temp.length; i ++){
+        for (let i = 0; i < temp.length; i++) {
             final += temp[i].toString();
         }
 
@@ -124,17 +145,17 @@ const utils = {
     },
 
     //字符串转base64
-    strToBase64:(str,key)=>{
-        return crypto.cipher('aes-128-cbc',str,key);
+    strToBase64: (str, key) => {
+        return crypto.cipher('aes-128-cbc', str, key);
     },
 
     //base64转字符串
-    base64ToStr:(str,key)=>{
-        return crypto.decipher('aes-128-cbc',str,key);
+    base64ToStr: (str, key) => {
+        return crypto.decipher('aes-128-cbc', str, key);
     },
 
     //检查登录信息
-    check:(userstr)=>{
+    check: (userstr) => {
         if (userstr.match(/^(pxtar)/)) {
             console.log("it's username");
             return true;
@@ -152,24 +173,24 @@ const utils = {
     },
 
     //压缩文件
-    zipFile:()=>{
+    zipFile: () => {
         const dirPath = __dirname + '/views/';
-        const  dir = fs.readdirSync(dirPath);
-        const  zipPath = 'test.zip';
+        const dir = fs.readdirSync(dirPath);
+        const zipPath = 'test.zip';
         const output = fs.createWriteStream(zipPath);
-        const  zipArchiver = archiver('zip');
+        const zipArchiver = archiver('zip');
 
         zipArchiver.pipe(output);
 
-        for(let i =0; i < dir.length; i++){
-            zipArchiver.append(fs.createReadStream(dirPath+dir[i]), {'name': dir[i]});
+        for (let i = 0; i < dir.length; i++) {
+            zipArchiver.append(fs.createReadStream(dirPath + dir[i]), {'name': dir[i]});
         }
         zipArchiver.finalize();
     },
 
     //解压文件
-    unzipFile:(filename,unzipPath)=>{
-        fs.createReadStream(filename).pipe(unzip.Extract({ path: unzipPath }));
+    unzipFile: (filename, unzipPath) => {
+        fs.createReadStream(filename).pipe(unzip.Extract({path: unzipPath}));
     }
 };
 
