@@ -27,6 +27,10 @@ var serverConfig = function serverConfig(app, express) {
         authority: ''
     };
 
+    //解除上传图片大小限制，目前50
+    app.use(bodyParser.json({ limit: '50mb' }));
+    app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+
     app.set('title', 'Pxtar Engine');
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));
@@ -95,6 +99,7 @@ var serverConfig = function serverConfig(app, express) {
         });
     });
 
+    //暂时测试
     app.get('/personalPage', function (req, res) {
         res.type('html');
         var imgurl = [];
@@ -298,6 +303,8 @@ var serverConfig = function serverConfig(app, express) {
             if (user === curChecks.userstr[i]) {
                 if (checkNum === curChecks.checkNum[i]) {
                     checkResult = true;
+                    curChecks.userstr.splice(i, 1);
+                    curChecks.checkNum.splice(i, 1);
                 }
             }
         }
@@ -464,69 +471,96 @@ var serverConfig = function serverConfig(app, express) {
     //存储封面及信息到userinfo的production中
     //同时建立txt配置文件
     // 目前前端数据缺少用户的uuid，需要封装在req中一起传输过来
-    var storage = multer.diskStorage({
-        destination: './uploads', //存储路径
-        filename: function filename(req, file, cb) {
-            cb(null, file.originalname);
-        } //文件名
-
-    });
-    var imgUploader = multer({ storage: storage });
-    app.post('/newComic', imgUploader.single('file', 40), function (req, res) {
+    /*
+     *
+     * 前端数据格式：{
+     *                   uuid:'', //用户唯一标识符
+     *                   name:'', //新建的名称
+     *                   num:'',  //话数
+     *                   imgData:'' //图片的base64数据
+     *               }
+     * */
+    app.post('/newComic', upload.array(), function (req, res) {
         var _ref5 = [
-                //req.file.uuid,
-                'bda67ce4-31b1-40d9-8d65-2a8cfe468956', req.body.name, req.body.number, req.file.path],
+                //req.body.uuid,
+                'bda67ce4-31b1-40d9-8d65-2a8cfe468956', req.body.name, req.body.num, req.body.imgData],
             uuid = _ref5[0],
             name = _ref5[1],
             num = _ref5[2],
-            savePath = _ref5[3];
+            imgData = _ref5[3];
 
-        console.log(req.body);
-        var str = void 0;
-        var search = function search() {
+        var path = 'C:/Users/Administrator/Desktop/';
+        var str = void 0,
+            fileName = void 0;
+        var postName = 'post.png';
+        utils.newDir(path, uuid);
+        var findName = function findName() {
             return new Promise(function (resolve, reject) {
-                connection.query(utils.sqls.modifyInfo.getProduction, uuid, function (err, result) {
-                    if (err) {
+                connection.query(utils.sqls.findComicName, '', function (err, result) {
+                    if (err || !result) {
                         return console.error(err);
                     } else {
+                        var resL = result.length;
+                        var flag = true;
+                        for (var i = 0; i < resL; i++) {
+                            if (name + num === result[i].comicName) {
+                                flag = false;
+                                res.send(false);
+                            }
+                        }
+                        if (flag) {
+                            resolve();
+                        }
+                    }
+                });
+            });
+        };
+        findName().then(function () {
+            connection.query(utils.sqls.modifyInfo.getProduction, uuid, function (err, result) {
+                if (err) {
+                    return console.error(err);
+                } else {
+                    if (utils.newDir(path + '/' + uuid, name + num)) {
+                        var base64Data = imgData.replace(/^data:image\/\w+;base64,/, "");
+                        var dataBuffer = new Buffer(base64Data, 'base64');
+                        fileName = path + uuid + '/' + name + num;
+                        if (utils.newFile(fileName, postName, dataBuffer)) {
+                            if (err) {
+                                return console.error(err);
+                            }
+                        }
                         if (result[0].production !== "") {
                             var products = result[0].production + ',' + name;
                             str = [products, uuid];
                         } else {
                             str = [name, uuid];
                         }
+                        connection.query(utils.sqls.modifyInfo.toProduction, str, function (err, result) {
+                            if (err) {
+                                return console.error(err);
+                            }
+                        });
                     }
-                    resolve();
-                });
-            });
-        };
-        search().then(function () {
-            console.log(str);
-            connection.query(utils.sqls.modifyInfo.toProduction, str, function (err, result) {
-                if (err) {
-                    return console.error(err);
-                } else {
-                    console.log("新建单话成功！");
                 }
             });
         }).then(function () {
-            var str2 = [uuid, name, name + '.txt'];
+            var str2 = [uuid, name + num, name + num + '.txt', utils.chToPy(name) + num, path + uuid + '/' + name + num, postName];
             connection.query(utils.sqls.insertComic, str2, function (err, result) {
                 if (err) {
                     return console.error(err);
                 } else {
-                    if (utils.newFile(name + '.txt', null)) {
-                        console.log('配置文件生成成功');
-                    }
+                    utils.newFile(path + uuid + '/' + name + num, name + num + '.txt', null);
                 }
             });
+        }).then(function () {
+            res.send('success');
         });
     });
 
-    app.post('/modify', imgUploader.single('file', 400), function (req, res) {
-        console.log(req.body);
-        res.send(req.body);
-    });
+    /* app.post('/modify', imgUploader.single('file', 400), (req, res) => {
+     console.log(req.body);
+     res.send(req.body)
+     })*/
     //用户主动触发保存 或者每隔五分钟保存
     //当前路径为桌面，部署到服务器再进行配置
     /*
@@ -586,4 +620,3 @@ var serverConfig = function serverConfig(app, express) {
 };
 
 module.exports = serverConfig;
-//# sourceMappingURL=serverConfig.js.map

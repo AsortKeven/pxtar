@@ -31,7 +31,7 @@ var utils = {
             toAuthority: 'update userinfo set authority = "2" where uuid = ?',
             toDiscription: 'update userinfo set discription = ? where uuid = ?',
             toAddress: 'update userinfo set address = ? where uuid = ?',
-            getProduction:'select production from userinfo where uuid = ?',
+            getProduction: 'select production from userinfo where uuid = ?',
             toProduction: 'update userinfo set production = ? where uuid = ?',
             toPassword: 'update logininfo set password = ? where uuid = ?',
             toNormal: 'update userinfo set nickname = ?,photo = ?,qq = ? where uuid = ?',
@@ -39,17 +39,35 @@ var utils = {
             selectUserInfos: 'select userInfos from logininfo where uuid = ?'
         },
         selectComic: 'select * from comics where uuid = ?',
-        insertComic:'insert into comics(uuid,comicName,sourceName) values(?,?,?)',
+        insertComic: 'insert into comics(uuid,comicName,sourceName,innerName,sourceFile,postImg) values(?,?,?,?,?,?)',
+        findComicName: 'select comicName from comics',
         logincheck: 'select * from logininfo where userinfos like ?',
         selectUserinfo: 'select * from userinfo where uuid=?',
         selectLogininfo: 'select * from logininfo where uuid=?'
     },
 
-    //新建配置文件,当前默认到桌面
-    newFile: function newFile(name, infos) {
-        var destination = 'C:/Users/Administrator/Desktop/' + name;
-        fs.writeFile(destination, infos, function (err) {
-            if (err) return console.error(err);
+    //新建配置文件
+    newFile: function newFile(path, name, infos) {
+        var destination = path + '/' + name;
+        fs.exists(destination, function (exist) {
+            if (!exist) {
+                fs.writeFile(destination, infos, function (err) {
+                    if (err) return console.error(err);
+                });
+            } else return true;
+        });
+        return true;
+    },
+
+    //新建资源文件夹
+    newDir: function newDir(path, name) {
+        var destination = path + '/' + name;
+        fs.exists(destination, function (exist) {
+            if (!exist) {
+                fs.mkdir(destination, function (err) {
+                    if (err) return console.error(err);
+                });
+            } else return true;
         });
         return true;
     },
@@ -98,7 +116,7 @@ var utils = {
     //生成验证码
     checkNum: function checkNum() {
         var s = [];
-        var hexDigits = '0123456789abcdefghijklmnopqretuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        var hexDigits = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         for (var i = 0; i < 6; i++) {
             s[i] = hexDigits.substr(Math.floor(Math.random() * 62), 1);
         }
@@ -166,6 +184,4 @@ var utils = {
         fs.createReadStream(filename).pipe(unzip.Extract({ path: unzipPath }));
     }
 };
-
 module.exports = utils;
-//# sourceMappingURL=Utils.js.map
