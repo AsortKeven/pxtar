@@ -199,7 +199,6 @@ a{
     width: 4rem;
     height: 2rem;
 }
-
 .xk-per-list{
     position: relative;
     width: 100%;
@@ -331,6 +330,11 @@ a{
     position: absolute;
     bottom:5px;
 }
+
+.xk-per-box input[type=text]{
+    width: 160px;
+}
+
 .xk-per-box-but-no{
     right:5px;
 }
