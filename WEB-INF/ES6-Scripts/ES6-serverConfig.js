@@ -505,14 +505,15 @@ const serverConfig = (app, express) => {
 //存储封面及信息到userinfo的production中
 //同时建立txt配置文件
 // 目前前端数据缺少用户的uuid，需要封装在req中一起传输过来
-//     let storage = multer.diskStorage({
-//         destination: 'C:/Users/Administrator/Desktop/', //存储路径
-//         filename(req, file, cb){
-//             cb(null, file.originalname);
-//         } //文件名
-//     });
-//     let imgUploader = multer({storage: storage});
-    //   app.post('/newComic', imgUploader.single('file', 40), (req, res) => {
+    /*
+    *
+    * 前端数据格式：{
+    *                   uuid:'', //用户唯一标识符
+    *                   name:'', //新建的名称
+    *                   num:'',  //话数
+    *                   imgData:'' //图片的base64数据
+    *               }
+    * */
     app.post('/newComic', upload.array(), (req, res) => {
         let [
             uuid,
