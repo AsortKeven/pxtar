@@ -380,7 +380,8 @@ require(['config'], function () {
                         'border-radius:5px;' +
                         'position:absolute;' +
                         'top:50px;' +
-                        'left:' + (document.documentElement.clientWidth - obj.w) / 2 + 'px;';
+                        'left:' + (document.documentElement.clientWidth - obj.w) / 2 + 'px;' +
+                        'z-index:9999';
 
                     var close = document.createElement('span');//关闭按钮
                     var image = document.createElement('img');//图片显示区
@@ -412,7 +413,8 @@ require(['config'], function () {
                         'border-radius:5px;' +
                         'position:absolute;' +
                         'top:200px;' +
-                        'left:' + (document.documentElement.clientWidth - 250) / 2 + 'px;';
+                        'left:' + (document.documentElement.clientWidth - 250) / 2 + 'px;' +
+                        'z-index:9999';
 
                     var innerDiv = document.createElement('div');//内容块
                     var cancle = document.createElement('input');//取消按钮
@@ -442,8 +444,8 @@ require(['config'], function () {
 
                     ensure.addEventListener('click', obj.fn);
                     cancle.addEventListener('click', function () {
-                        opac.style.display = 'none';
-                        div.style.display = 'none';
+                        body.removeChild(opac);
+                        body.removeChild(div);
                     })
 
                 }
@@ -461,8 +463,8 @@ require(['config'], function () {
                 body.appendChild(div);
 
                 opac.addEventListener('click', function () {
-                    this.style.display = 'none';
-                    div.style.display = 'none';
+                    body.removeChild(opac);
+                    body.removeChild(div);
                 });
 
                 title.onmousedown = function (ev) {
@@ -813,24 +815,24 @@ require(['config'], function () {
                         switch (eleId) {
                             case 'xk-edit-effect-panel':
                                 // 效果层
-                                console.log(e.currentTarget.id,element);
-                                var target=element;
-                                if (target.className=='xk-edit-left-tab hand'){
-                                    target.onclick=function () {
-                                        var ani=aniclick.siblings(target)[0];
+                                console.log(e.currentTarget.id, element);
+                                var target = element;
+                                if (target.className == 'xk-edit-left-tab hand') {
+                                    target.onclick = function () {
+                                        var ani = aniclick.siblings(target)[0];
                                         aniclick.double_click(ani);
                                     }
                                 }
-                                dropLayer(selectUl,selectLi,that.eff_select,function () {
+                                dropLayer(selectUl, selectLi, that.eff_select, function () {
                                     console.log('xk-edit-effect-panel');
                                 });
                                 break;
                             case 'xk-edit-anitab':
-                                var effect_tab=that.effectPanelBox.getElementsByClassName('xk-edit-left-bottom-body')[0];
-                                var layer_tab_li=that.layerPanelBox.getElementsByTagName('li');
-                                for (var i=0;i<layer_tab_li.length;i++){
-                                    if (XkTool.hasClass(layer_tab_li[i],'box-bg-blue')){
-                                        aniclick.onfor(that.effectani.getElementsByTagName('span'),effect_tab);
+                                var effect_tab = that.effectPanelBox.getElementsByClassName('xk-edit-left-bottom-body')[0];
+                                var layer_tab_li = that.layerPanelBox.getElementsByTagName('li');
+                                for (var i = 0; i < layer_tab_li.length; i++) {
+                                    if (XkTool.hasClass(layer_tab_li[i], 'box-bg-blue')) {
+                                        aniclick.onfor(that.effectani.getElementsByTagName('span'), effect_tab);
                                     }
                                 }
                                 break;
@@ -2335,6 +2337,77 @@ require(['config'], function () {
                         // console.log(id,_Model.config[id]);
 
                         break;
+
+                    //新增组件事件
+                    case 403:
+                        var uploadForm = document.createElement('form');
+                        var panel = document.querySelector('#xk-edit-sub-panel');
+                        var panelChild = panel.children, panelLen = panelChild.length;
+                        var fileType;
+                        for (var i = 0; i < panelLen; i++) {
+                            if (panelChild[i].style.display === 'block') {
+                                if (i === 0) {
+                                    fileType = 'image/*'
+                                } else if (i === 1) {
+                                    fileType = 'audio/*'
+                                }
+                            }
+                        }
+                        uploadForm.enctype = 'multipart/form-data';
+                        uploadForm.style.cssText = 'width:300px;height:110px;z-index:9999;';
+                        uploadForm.innerHTML = '<input type="file" id="upFile" accept="' + fileType + '" style="width:200px;;position:relative;left:50px;top: 40px;">'
+                        var obj = {
+                            type: 'node',
+                            value: uploadForm,
+                            name: '上传组件',
+                            fn: function () {
+                                var datas = {};
+                                //限制大小2M以下
+                                var allowSize = 2100000;
+                                var files = document.querySelector('#upFile').files[0];
+                                var reader = new FileReader();
+                                var fileBase64 = reader.readAsDataURL(files);
+                                reader.onload = function () {
+                                    if (allowSize !== 0 && allowSize < reader.result.length) {
+                                        alert('上传失败，请选择小于2M的组件');
+                                        return;
+                                    } else {
+                                        datas.fileSize = Math.floor(reader.result.length / 1048) + 'KB';
+                                        datas.fileData = reader.result;
+                                        datas.fileType = fileType;
+                                        datas.fileName = files.name;
+                                        //todo 当前用户的uuid与当前漫画名称需要获取，暂时手动设置
+                                        datas.comicName = '画诡5';
+                                        datas.uuid = 'bda67ce4-31b1-40d9-8d65-2a8cfe468956';
+                                        console.log(datas);
+                                        $.ajax({
+                                            type: 'post',
+                                            url: '/newTools',
+                                            datatype: 'json',
+                                            data: datas,
+                                            success: function (res) {
+                                                if(res.status){
+                                                    if(datas.filetype = 'image/*'){
+                                                        datas.imageWidth = res.imgW;
+                                                        datas.imageHeight = res.imgH;
+                                                    }else {
+
+                                                    }
+                                                }else {
+                                                    alert('组件已存在!');
+                                                }
+                                            }
+                                        });
+                                        var tbody = document.querySelector('body');
+                                        tbody.removeChild(document.querySelector('#alertWindow'));
+                                        tbody.removeChild(document.querySelector('#opac'));
+                                    }
+                                }
+                            }
+                        };
+                        that.v.alertWindow(obj);
+                        break;
+
                     case 404:
                         //还需要同步移除页面上的组件以及Model里面的组件
                         var show_panel = getChildes(that.subPanelBox)[that.sub_show_id];
@@ -2428,8 +2501,6 @@ require(['config'], function () {
                 }
             }
         };
-
-
 
 
         function init() {
@@ -2761,35 +2832,36 @@ require(['config'], function () {
 
 
         //动效Tab
-        var aniclick={
-            siblings:function (elm) {//获取兄弟元素
+        var aniclick = {
+            siblings: function (elm) {//获取兄弟元素
                 var a = [];
                 var p = elm.parentNode.children;
-                for(var i =0,pl= p.length;i<pl;i++) {
-                    if(p[i] !== elm) a.push(p[i]);
+                for (var i = 0, pl = p.length; i < pl; i++) {
+                    if (p[i] !== elm) a.push(p[i]);
                 }
                 return a;
             },
-            onfor:function (elm,elm2) {
-                for (var i=0;i<elm.length-1;i++){
+            onfor: function (elm, elm2) {
+                for (var i = 0; i < elm.length - 1; i++) {
                     (function (i) {
-                        var elm_attr=elm[i].innerText;
-                        elm[i].onclick=function () {
-                            var str=aniclick.addTab(elm_attr);
+                        var elm_attr = elm[i].innerText;
+                        elm[i].onclick = function () {
+                            var str = aniclick.addTab(elm_attr);
                             var li = document.createElement('li');
-                            var elm2_child=elm2.children;
-                            if(elm2_child.length==0){
-                                li.innerHTML =str;
-                                li.setAttribute('name',elm_attr)
+                            var elm2_child = elm2.children;
+                            if (elm2_child.length == 0) {
+                                li.innerHTML = str;
+                                li.setAttribute('name', elm_attr)
                                 elm2.appendChild(li);
-                            }else {
-                                var elm2_attr=[];
-                                for (var j=0;j<elm2_child.length;j++){
+                            } else {
+                                var elm2_attr = [];
+                                for (var j = 0; j < elm2_child.length; j++) {
                                     elm2_attr.push(elm2_child[j].getAttribute('name'));
-                                };
-                                if (elm2_attr.indexOf(elm_attr)==-1){
-                                    li.setAttribute('name',elm_attr);
-                                    li.innerHTML =str;
+                                }
+                                ;
+                                if (elm2_attr.indexOf(elm_attr) == -1) {
+                                    li.setAttribute('name', elm_attr);
+                                    li.innerHTML = str;
                                     elm2.appendChild(li);
                                 }
                             }
@@ -2797,130 +2869,130 @@ require(['config'], function () {
                     })(i)
                 }
             },
-            double_click:function (obj) {
-                var a=aniclick.getstyle(obj,'display');
-                if (a=='none'){
-                    obj.style.display='block'
-                }else if (obj.style.display == "block"){
-                    obj.style.display='none'
+            double_click: function (obj) {
+                var a = aniclick.getstyle(obj, 'display');
+                if (a == 'none') {
+                    obj.style.display = 'block'
+                } else if (obj.style.display == "block") {
+                    obj.style.display = 'none'
                 }
             },
-            getstyle:function (obj, cssproperty, csspropertyNS){//提取外联css属性兼容
-                if(obj.style[cssproperty]){
+            getstyle: function (obj, cssproperty, csspropertyNS) {//提取外联css属性兼容
+                if (obj.style[cssproperty]) {
                     return obj.style[cssproperty];
                 }
                 if (obj.currentStyle) {// IE5+
                     return obj.currentStyle[cssproperty];
-                }else if (document.defaultView.getComputedStyle(obj, null)) {// FF/Mozilla
+                } else if (document.defaultView.getComputedStyle(obj, null)) {// FF/Mozilla
                     var currentStyle = document.defaultView.getComputedStyle(obj, null);
                     var value = currentStyle.getPropertyValue(csspropertyNS);
-                    if(!value){//try this method
+                    if (!value) {//try this method
                         value = currentStyle[cssproperty];
                     }
                     return value;
-                }else if (window.getComputedStyle) {// NS6+
+                } else if (window.getComputedStyle) {// NS6+
                     var currentStyle = window.getComputedStyle(obj, "");
                     return currentStyle.getPropertyValue(csspropertyNS);
                 }
             },
-            addTab:function (data) {
-                var str_201='<li>'+
-                    '<div class="xk-edit-left-tab hand">位置</div>'+
-                    '<p>X: <input type="txt">'+
-                    'Y: <input type="txt"></p>'+
+            addTab: function (data) {
+                var str_201 = '<li>' +
+                    '<div class="xk-edit-left-tab hand">位置</div>' +
+                    '<p>X: <input type="txt">' +
+                    'Y: <input type="txt"></p>' +
                     '</li>';
 
-                var str_203='<li>'+
-                    '<div class="xk-edit-left-tab hand">缩放</div>'+
-                    '<p><span>缩放: <input type="txt"></span></p>'+
+                var str_203 = '<li>' +
+                    '<div class="xk-edit-left-tab hand">缩放</div>' +
+                    '<p><span>缩放: <input type="txt"></span></p>' +
                     '</li>';
 
-                var str_204='<li>'+
-                    '<div class="xk-edit-left-tab hand">透明度</div>'+
-                    '<p><span>透明度: <input type="txt"></span></p>'+
+                var str_204 = '<li>' +
+                    '<div class="xk-edit-left-tab hand">透明度</div>' +
+                    '<p><span>透明度: <input type="txt"></span></p>' +
                     '</li>';
 
-                var str_209='<li>'+
-                    '<div class="xk-edit-left-tab hand">次数</div>'+
-                    '<p><span class="hand">2</span><span class="hand">3</span><span class="hand">4</span><span class="hand">5</span><span class="hand">无限</span></p>'+
+                var str_209 = '<li>' +
+                    '<div class="xk-edit-left-tab hand">次数</div>' +
+                    '<p><span class="hand">2</span><span class="hand">3</span><span class="hand">4</span><span class="hand">5</span><span class="hand">无限</span></p>' +
                     '</li>';
 
-                var str_202='<li>'+
-                    '<div class="xk-edit-left-tab hand">旋转</div>'+
-                    '<p><span>顺时针: <input type="txt"></span>'+
-                    '<span>逆时针: <input type="txt"></span></p>'+
+                var str_202 = '<li>' +
+                    '<div class="xk-edit-left-tab hand">旋转</div>' +
+                    '<p><span>顺时针: <input type="txt"></span>' +
+                    '<span>逆时针: <input type="txt"></span></p>' +
                     '</li>';
 
-                var str_208='<li>'+
-                    '<div class="xk-edit-left-tab hand">强度</div>'+
-                    '<p><span class="hand">很弱</span><span class="hand">弱</span><span class="hand">普通</span><span class="hand">强</span><span class="hand">很强</span></p>'+
-                    '</li>'+
-                    '<li>'+
-                    '<div class="xk-edit-left-tab hand">次数</div>'+
-                    '<p><span class="hand">2</span><span class="hand">3</span><span class="hand">4</span><span class="hand">5</span><span class="hand">无限</span></p>'+
+                var str_208 = '<li>' +
+                    '<div class="xk-edit-left-tab hand">强度</div>' +
+                    '<p><span class="hand">很弱</span><span class="hand">弱</span><span class="hand">普通</span><span class="hand">强</span><span class="hand">很强</span></p>' +
+                    '</li>' +
+                    '<li>' +
+                    '<div class="xk-edit-left-tab hand">次数</div>' +
+                    '<p><span class="hand">2</span><span class="hand">3</span><span class="hand">4</span><span class="hand">5</span><span class="hand">无限</span></p>' +
                     '</li>';
 
-                var str_207='<li>'+
-                    '<div class="xk-edit-left-tab hand">方向</div>'+
-                    '<p><span class="hand">上下</span><span class="hand">左右</span></p>'+
-                    '</li>'+
-                    '<li>'+
-                    '<div class="xk-edit-left-tab hand">中心点</div>'+
-                    '<p><span class="hand">中心</span><span class="hand">左</span><span class="hand">右</span><span class="hand">上</span><span class="hand">下</span><span class="hand">左上</span><span class="hand">右上</span><span class="hand">左下</span><span class="hand">右下</span></p>'+
-                    '</li>'+
-                    '<li>'+
-                    '<div class="xk-edit-left-tab hand">强度</div>'+
-                    '<p><span class="hand">很弱</span><span class="hand">弱</span><span class="hand">普通</span><span class="hand">强</span><span class="hand">很强</span></p>'+
-                    '</li>'+
-                    '<li>'+
-                    '<div class="xk-edit-left-tab hand">次数</div>'+
-                    '<p><span class="hand">2</span><span class="hand">3</span><span class="hand">4</span><span class="hand">5</span><span class="hand">无限</span></p>'+
+                var str_207 = '<li>' +
+                    '<div class="xk-edit-left-tab hand">方向</div>' +
+                    '<p><span class="hand">上下</span><span class="hand">左右</span></p>' +
+                    '</li>' +
+                    '<li>' +
+                    '<div class="xk-edit-left-tab hand">中心点</div>' +
+                    '<p><span class="hand">中心</span><span class="hand">左</span><span class="hand">右</span><span class="hand">上</span><span class="hand">下</span><span class="hand">左上</span><span class="hand">右上</span><span class="hand">左下</span><span class="hand">右下</span></p>' +
+                    '</li>' +
+                    '<li>' +
+                    '<div class="xk-edit-left-tab hand">强度</div>' +
+                    '<p><span class="hand">很弱</span><span class="hand">弱</span><span class="hand">普通</span><span class="hand">强</span><span class="hand">很强</span></p>' +
+                    '</li>' +
+                    '<li>' +
+                    '<div class="xk-edit-left-tab hand">次数</div>' +
+                    '<p><span class="hand">2</span><span class="hand">3</span><span class="hand">4</span><span class="hand">5</span><span class="hand">无限</span></p>' +
                     '</li>';
                 var daTa;
-                switch (data){
+                switch (data) {
                     case '移动':
-                        daTa=str_201;
+                        daTa = str_201;
                         break;
                     case '旋转':
-                        daTa=str_202;
+                        daTa = str_202;
                         break;
                     case '缩放':
-                        daTa=str_203;
+                        daTa = str_203;
                         break;
                     case '透明度':
-                        daTa=str_204;
+                        daTa = str_204;
                         break;
                     case '摇晃':
-                        daTa=str_207;
+                        daTa = str_207;
                         break;
                     case '漂浮':
-                        daTa=str_208;
+                        daTa = str_208;
                         break;
                     case '闪烁':
-                        daTa=str_209;
+                        daTa = str_209;
                         break;
                     case '逐帧动画':
-                        daTa=str_209;
+                        daTa = str_209;
                         break;
                 }
 
-                var str='<p class="noselect"><span class="hand">动效说明</span><span class="float_right hand">'+data+'</span></p>'+
-                    '<progress value="10" max="100"></progress>'+
-                    '<div class="xk-edit-left-body-box">'+
-                    '<ul>'+
-                    '<li>'+
-                    '<div class="xk-edit-left-tab hand">触发点</div>'+
-                    '<p><span class="hand">图层出现时</span><span class="hand">Page出现时</span><span class="hand">与上一个动效一起</span><span class="hand">上个动效结束后</span></p>'+
-                    '</li>'+
-                    '<li>'+
-                    '<div class="xk-edit-left-tab hand">速度</div>'+
-                    '<p><span class="hand">很慢</span><span class="hand">慢</span><span class="hand">普通</span><span class="hand">快</span><span class="hand">很快</span></p>'+
-                    '</li>'+
-                    '<li>'+
-                    '<div class="xk-edit-left-tab hand">延迟</div>'+
-                    '<p><span class="hand">无</span><span class="hand">很少</span><span class="hand">少</span><span class="hand">普通</span><span class="hand">多</span><span class="hand">很多</span></p>'+
-                    '</li>'+daTa+
-                    '</ul>'+
+                var str = '<p class="noselect"><span class="hand">动效说明</span><span class="float_right hand">' + data + '</span></p>' +
+                    '<progress value="10" max="100"></progress>' +
+                    '<div class="xk-edit-left-body-box">' +
+                    '<ul>' +
+                    '<li>' +
+                    '<div class="xk-edit-left-tab hand">触发点</div>' +
+                    '<p><span class="hand">图层出现时</span><span class="hand">Page出现时</span><span class="hand">与上一个动效一起</span><span class="hand">上个动效结束后</span></p>' +
+                    '</li>' +
+                    '<li>' +
+                    '<div class="xk-edit-left-tab hand">速度</div>' +
+                    '<p><span class="hand">很慢</span><span class="hand">慢</span><span class="hand">普通</span><span class="hand">快</span><span class="hand">很快</span></p>' +
+                    '</li>' +
+                    '<li>' +
+                    '<div class="xk-edit-left-tab hand">延迟</div>' +
+                    '<p><span class="hand">无</span><span class="hand">很少</span><span class="hand">少</span><span class="hand">普通</span><span class="hand">多</span><span class="hand">很多</span></p>' +
+                    '</li>' + daTa +
+                    '</ul>' +
                     '</div>';
                 return str;
 

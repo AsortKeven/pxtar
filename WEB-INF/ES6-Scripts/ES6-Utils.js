@@ -49,7 +49,7 @@ const utils = {
         let destination = path + '/' + name;
         fs.exists(destination, (exist) => {
             if (!exist) {
-                fs.writeFile(destination, infos, (err) => {
+                fs.writeFileSync(destination, infos, (err) => {
                     if (err)
                         return console.error(err);
                 });

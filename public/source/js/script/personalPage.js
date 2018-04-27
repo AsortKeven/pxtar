@@ -103,8 +103,8 @@ $('#xk-per-modify').unbind('click').click(function () {
 });
 
 $('#xk-per-beVip').click(function () {
-    console.log(this.parentNode.childNodes.length === 12);
-    if (this.parentNode.childNodes.length === 12) {
+    //console.log(this.parentNode.childNodes.length === 12);
+   // if (this.parentNode.childNodes.length === 12) {
         var node = document.createElement('form');
         var childnode = document.createElement('input');
         var submit = document.createElement('input');
@@ -117,7 +117,7 @@ $('#xk-per-beVip').click(function () {
         node.appendChild(childnode);
         node.appendChild(submit);
         this.parentNode.appendChild(node);
-    }
+  //  }
 });
 
 //新建单话
