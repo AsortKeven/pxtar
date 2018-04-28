@@ -36,7 +36,7 @@ const serverConfig = (app, express) => {
 
     let currentDir = __dirname.split('WEB-INF');
     let dir = __dirname.split('pxtar');
-     console.log(dir[0],__dirname);
+   //  console.log(dir[0],__dirname);
     app.set('views', path.join(currentDir[0], 'public', 'views'));
     app.use(express.static(path.join(currentDir[0], 'public', 'source')));
     app.use(express.static(path.join(dir[0])));
@@ -662,9 +662,10 @@ const serverConfig = (app, express) => {
                 if (fileType === 'image/*') {
                     sendDatas.imgW = images(dataBuffer).width();
                     sendDatas.imgH = images(dataBuffer).height();
-                    sendDatas.url = 'localhost:3000/'+uuid+'/'+comicName+'/sourceFiles/'+fileName;
+                    sendDatas.url =uuid+'/'+comicName+'/sourceFiles/'+fileName;
                     sendDatas.status = true;
                 } else {
+                    sendDatas.url = uuid+'/'+comicName+'/sourceFiles/'+fileName;
                     sendDatas.status = true;
                 }
             }else {
