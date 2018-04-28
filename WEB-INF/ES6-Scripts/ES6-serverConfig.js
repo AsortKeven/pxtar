@@ -653,7 +653,12 @@ const serverConfig = (app, express) => {
             req.body.uuid
         ];
         let sendDatas = {};
-        let base64Data = fileData.replace(/^data:image\/\w+;base64,/, "");
+        let base64Data;
+        if(fileType === 'image/*'){
+            base64Data  = fileData.replace(/^data:image\/\w+;base64,/, "");
+        }else {
+            base64Data  = fileData.replace(/^data:audio\/\w+;base64,/, "");
+        }
         let dataBuffer = new Buffer(base64Data, 'base64');
         let filePath = 'G:/Pxtar/LocalGit/';
         let newPath = filePath + uuid + '/' + comicName;

@@ -2388,6 +2388,8 @@ require(['config'], function () {
                                             success: function (res) {
                                                 if (res.status) {
                                                     var list = {};
+                                                    var subNameList;
+                                                    var content = document.querySelector('#xk-edit-sub-panel').children;
                                                     if (datas.fileType === 'image/*') {
                                                         list.citeAdd = [];
                                                         list.height = res.imgH + 'px';
@@ -2399,9 +2401,17 @@ require(['config'], function () {
                                                         list.tab = 0;
                                                         list.type = 'image';
                                                         _Model.imgList.push(list);
+                                                        //图片组件
+                                                        subNameList = '<li data-id="' + list.id + '"><div class="xk-edit-right-top">' +
+                                                            '<span data-id="422" class="xk-edit-right-label xk-edit-right-img"> </span>' +
+                                                            '<span data-id="423" class="xk-edit-right-label ">' + list.name + '</span>' +
+                                                            '<span data-id="425" class="xk-edit-right-label xk-edit-right-label-dir"></span></div>' +
+                                                            ' <div class="xk-edit-right-data xk-edit-right-data-none">' +
+                                                            '<p><span>W:<i>' + list.width + '</i></span><span class="">H:<i>' + list.height + '</i></span></p>' +
+                                                            '<p><span>类型：<i>' + list.src.split('.')[1] + '</i></span><span class="">大小:<i>' + list.size + '</i></span></p>' +
+                                                            '</div></li>';
+                                                        content[list.tab].innerHTML += subNameList;
                                                     } else if (datas.fileType === 'audio/*') {
-                                                        //todo 音乐时长获取存在问题，返回服务器链接得到206状态码
-                                                        list.duration = '5';
                                                         list.citeAdd = [];
                                                         list.id = 21111 + _Model.imgList.length;
                                                         list.name = datas.fileName;
@@ -2409,40 +2419,26 @@ require(['config'], function () {
                                                         list.src = res.url;
                                                         list.tab = 1;
                                                         list.type = 'music';
-                                                   /*   var audio = document.createElement('audio');
-                                                        audio.innerHTML = '<source src='+'\"'+res.url+'\"'+'>';
+                                                        var audio = document.createElement('audio');
+                                                        audio.innerHTML = '<source src=' + '\"' + res.url + '\"' + '>';
+                                                        audio.muted = true;
                                                         audio.play();
-                                                        console.log(audio);
                                                         audio.oncanplay = function () {
-                                                            console.log(audio.duration);
-                                                        }*/
-                                                    }
-                                                   var subNameList;
-                                                   switch (list.tab) {
-                                                        case 0:
-                                                            // 图片tab
-                                                            subNameList = '<li data-id="' + list.id + '"><div class="xk-edit-right-top">' +
-                                                                '<span data-id="422" class="xk-edit-right-label xk-edit-right-img"> </span>' +
-                                                                '<span data-id="423" class="xk-edit-right-label ">' + list.name + '</span>' +
-                                                                '<span data-id="425" class="xk-edit-right-label xk-edit-right-label-dir"></span></div>' +
-                                                                ' <div class="xk-edit-right-data xk-edit-right-data-none">' +
-                                                                '<p><span>W:<i>' + list.width + '</i></span><span class="">H:<i>' + list.height + '</i></span></p>' +
-                                                                '<p><span>类型：<i>' + list.src.split('.')[1] + '</i></span><span class="">大小:<i>' + list.size + '</i></span></p>' +
-                                                                '</div></li>';
-                                                            break;
-                                                        case 1:
+                                                            list.duration = audio.duration;
+                                                            _Model.musicList.push(list);
+                                                            //音效组件
                                                             subNameList = '<li data-id="' + list.id + '"><div class="xk-edit-right-top">' +
                                                                 '<span data-id="422" class="xk-edit-right-label xk-edit-right-img"></span>' +
                                                                 '<span data-id="423" class="xk-edit-right-label">' + list.name + '</span>' +
                                                                 '<span data-id="425" class="xk-edit-right-label xk-edit-right-label-dir xk-edit-right-label-dir"></span></div>' +
                                                                 '<div class="xk-edit-right-data xk-edit-right-data-none">' +
                                                                 '<p><span>类型：<i>' + list.src.split('.')[1] + '</i></span><span class="">大小:<i>' + list.size + '</i></span></p>' +
+                                                                '<p><span>时长：<i>' + list.duration.toFixed(2)+ '秒' + '</i></span></p>' +
                                                                 '</div></li>';
-                                                            break;
+                                                            content[list.tab].innerHTML += subNameList;
+                                                        };
                                                     }
-                                                    var content = document.querySelector('#xk-edit-sub-panel').children;
-                                                    console.log(content);
-                                                    content[list.tab].innerHTML += subNameList;
+
                                                 } else {
                                                     alert('组件已存在!');
                                                 }
