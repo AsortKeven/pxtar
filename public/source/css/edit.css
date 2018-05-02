@@ -568,20 +568,21 @@ input[type=range]:focus {
 /*右键菜单样式*/
 .xk-right-menu-container{
     position: absolute;
+    box-shadow: 5px 5px 4px darkgray;
     z-index: 99999;
     overflow: hidden;
     width: 100px;
     background-color: #FFFFFF;
     border: darkgray 1px solid !important;
-    border-radius: 5px;
     font-size: 14px;
-    list-style-type: none;
     display: none;
 }
 .xk-right-menu p{
     cursor: pointer;
     text-align: center;
+    border-bottom: 1px solid rgba(0,0,0,0.3);
 }
 .xk-right-menu p:hover{
     background-color: darkgray;
+    color: white;
 }

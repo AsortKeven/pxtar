@@ -455,6 +455,7 @@ require(['config'], function () {
                     'background-color:darkgray;' +
                     'opacity:0.5;' +
                     'position:absolute;' +
+                    'z-index:9998;' +
                     'left:0;' +
                     'top:0;';
 
@@ -508,10 +509,16 @@ require(['config'], function () {
                 var body = document.querySelector('body');
                 var rightMenuContainer = document.createElement('div');
                 var rightMenu = document.createElement('div');
+                var secondMenuContainer = document.createElement('div');
+                var secondMenu = document.createElement('div');
+                var containerEnter = false;
+                /*XkTool.addClass(secondMenu, 'xk-right-menu');
+                XkTool.addClass(secondMenuContainer, 'xk-right-menu-container');*/
                 XkTool.addClass(rightMenu, 'xk-right-menu');
                 XkTool.addClass(rightMenuContainer, 'xk-right-menu-container');
                 document.oncontextmenu = function (e) {
                     var xkMenuStr = '';
+                    var secondMenuStr = '';
                     var event = e || window.event;
                     var t = event.target;
                     var klass;
@@ -523,7 +530,8 @@ require(['config'], function () {
                     } else if (XkTool.hasClass(t, 'xk-edit-effect-item')) {
                         klass = 'effect';
                     }
-                    console.log(klass);
+                    XkTool.addClass(secondMenu, 'xk-right-menu');
+                    XkTool.addClass(secondMenuContainer, 'xk-right-menu-container');
                     switch (klass) {
                         case 'toolsOrLayer':
                             //组件或者图层
@@ -533,29 +541,89 @@ require(['config'], function () {
                                 '<p id="xk-del">删除</p>';
                             break;
                         case 'pageImg':
+                            //page
                             xkMenuStr = ' <p id="xk-upper">上移一层</p>' +
                                 '<p id="xk-lower">下移一层</p>' +
                                 '<p id="xk-del">删除</p>' +
                                 '<p id="xk-position">定位方式</p>';
+
+                            secondMenuStr = '<p id="xk-style-top">顶部对齐</p>' +
+                                '<p id="xk-style-bottom">底部对齐</p>' +
+                                '<p id="xk-style-left">左对齐</p>' +
+                                '<p id="xk-style-right">右对齐</p>';
                             break;
                         case 'effect':
                             //动效右键菜单
                             break
                     }
+
+
                     if (xkMenuStr !== '') {
                         rightMenu.innerHTML = xkMenuStr;
                         rightMenuContainer.appendChild(rightMenu);
                         body.appendChild(rightMenuContainer);
-                        XkTool.addClass(rightMenuContainer, 'xk-right-menu-container');
-                        XkTool.addClass(rightMenu, 'xk-right-menu');
                         XkTool.setStyle(rightMenuContainer, {
                             'display': 'block',
                             left: event.pageX + 'px',
                             top: event.pageY + 'px'
                         });
-                        document.onclick = function () {
-                            XkTool.setStyle(rightMenuContainer, {display: 'none'});
-                        };
+                        if(klass === 'pageImg'){
+                            var pos = document.querySelector('#xk-position');
+                            XkTool.addEvent(pos, 'mouseout', function () {
+                                XkTool.setStyle(secondMenuContainer, {display: 'none'});
+                            });
+                            XkTool.addEvent(pos, 'mouseenter', function () {
+                                secondMenu.innerHTML = secondMenuStr;
+                                secondMenuContainer.appendChild(secondMenu);
+                                body.appendChild(secondMenuContainer);
+                                var rect = XkTool.getRect(rightMenuContainer);
+                                var x = rect.left + rect.width - 3 + 'px';
+                                var y = rect.top + (rect.height - 2) * 3 / 4 + 1 + 'px';
+                                XkTool.setStyle(secondMenuContainer, {
+                                    'box-shadow': '-4px 0 5px -3px #696969',
+                                    'z-index': '99999',
+                                    'display': 'block',
+                                    left: x,
+                                    top: y
+                                })
+                            });
+                            if (!containerEnter) {
+                                XkTool.addEvent(secondMenuContainer, 'mouseenter', function () {
+                                    containerEnter = true;
+                                    XkTool.addClass(pos,':hover');
+                                    XkTool.setStyle(secondMenuContainer, {display: 'block'});
+                                });
+                                XkTool.addEvent(secondMenuContainer,'mouseout',function () {
+                                    XkTool.removeClass(pos,':hover');
+                                });
+                                //todo 事件处理
+                                XkTool.addEvent(secondMenuContainer, 'click', function (e) {
+                                    switch (e.target.id) {
+                                        case 'xk-style-top':
+                                            console.log('top!');
+                                            break;
+                                        case 'xk-style-bottom':
+                                            console.log('bottom!');
+                                            break;
+                                        case 'xk-style-left':
+                                            console.log('left!');
+                                            break;
+                                        case 'xk-style-right':
+                                            console.log('right!');
+                                            break;
+                                    }
+                                });
+                            }
+                            document.onclick = function () {
+                                XkTool.setStyle(rightMenuContainer, {display: 'none'});
+                                XkTool.setStyle(secondMenuContainer, {display: 'none'});
+                            };
+                        }else {
+                            document.onclick = function () {
+                                XkTool.setStyle(rightMenuContainer, {display: 'none'});
+                            };
+                        }
+
                     }
                     //必须加return false屏蔽默认事件
                     return false;
@@ -2433,7 +2501,7 @@ require(['config'], function () {
                                                                 '<span data-id="425" class="xk-edit-right-label xk-edit-right-label-dir xk-edit-right-label-dir"></span></div>' +
                                                                 '<div class="xk-edit-right-data xk-edit-right-data-none">' +
                                                                 '<p><span>类型：<i>' + list.src.split('.')[1] + '</i></span><span class="">大小:<i>' + list.size + '</i></span></p>' +
-                                                                '<p><span>时长：<i>' + list.duration.toFixed(2)+ '秒' + '</i></span></p>' +
+                                                                '<p><span>时长：<i>' + list.duration.toFixed(2) + '秒' + '</i></span></p>' +
                                                                 '</div></li>';
                                                             content[list.tab].innerHTML += subNameList;
                                                         };

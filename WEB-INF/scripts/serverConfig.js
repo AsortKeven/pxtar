@@ -10,8 +10,9 @@ var serverConfig = function serverConfig(app, express) {
     var multer = require('multer');
     var mysql = require('mysql');
     var upload = multer();
-    var utils = require('./ES6-Utils');
-    var sendMail = require('./ES6-mail');
+    var utils = require('./Utils');
+    var sendMail = require('./mail');
+    var images = require('images');
     var fs = require('fs');
 
     var loginResult = {
@@ -36,9 +37,11 @@ var serverConfig = function serverConfig(app, express) {
     app.use(bodyParser.urlencoded({ extended: true }));
 
     var currentDir = __dirname.split('WEB-INF');
-    // console.log(currentDir[0],__dirname);
+    var dir = __dirname.split('pxtar');
+    //  console.log(dir[0],__dirname);
     app.set('views', path.join(currentDir[0], 'public', 'views'));
     app.use(express.static(path.join(currentDir[0], 'public', 'source')));
+    app.use(express.static(path.join(dir[0])));
     app.set('view engine', 'html');
     app.engine('html', require('ejs').renderFile);
     app.set('port', process.env.PORT || 3000);
@@ -489,9 +492,10 @@ var serverConfig = function serverConfig(app, express) {
             num = _ref5[2],
             imgData = _ref5[3];
 
-        var path = 'C:/Users/Administrator/Desktop/';
+        var path = 'G:/Pxtar/LocalGit/';
         var str = void 0,
             fileName = void 0;
+        var innerName = utils.chToPy(name);
         var postName = 'post.png';
         utils.newDir(path, uuid);
         var findName = function findName() {
@@ -520,10 +524,10 @@ var serverConfig = function serverConfig(app, express) {
                 if (err) {
                     return console.error(err);
                 } else {
-                    if (utils.newDir(path + '/' + uuid, name + num)) {
+                    if (utils.newDir(path + '/' + uuid, innerName + num)) {
                         var base64Data = imgData.replace(/^data:image\/\w+;base64,/, "");
                         var dataBuffer = new Buffer(base64Data, 'base64');
-                        fileName = path + uuid + '/' + name + num;
+                        fileName = path + uuid + '/' + innerName + num;
                         if (utils.newFile(fileName, postName, dataBuffer)) {
                             if (err) {
                                 return console.error(err);
@@ -544,12 +548,12 @@ var serverConfig = function serverConfig(app, express) {
                 }
             });
         }).then(function () {
-            var str2 = [uuid, name + num, name + num + '.txt', utils.chToPy(name) + num, path + uuid + '/' + name + num, postName];
+            var str2 = [uuid, name + num, name + num + '.txt', innerName + num, path + uuid + '/' + innerName + num, postName];
             connection.query(utils.sqls.insertComic, str2, function (err, result) {
                 if (err) {
                     return console.error(err);
                 } else {
-                    utils.newFile(path + uuid + '/' + name + num, name + num + '.txt', null);
+                    utils.newFile(path + uuid + '/' + innerName + num, innerName + num + '.txt', null);
                 }
             });
         }).then(function () {
@@ -557,10 +561,6 @@ var serverConfig = function serverConfig(app, express) {
         });
     });
 
-    /* app.post('/modify', imgUploader.single('file', 400), (req, res) => {
-     console.log(req.body);
-     res.send(req.body)
-     })*/
     //用户主动触发保存 或者每隔五分钟保存
     //当前路径为桌面，部署到服务器再进行配置
     /*
@@ -596,6 +596,46 @@ var serverConfig = function serverConfig(app, express) {
         });
     });
 
+    /*
+     * 组件上传页面
+     * */
+    app.post('/newTools', upload.array(), function (req, res) {
+        var _ref6 = [req.body.fileData, req.body.fileSize, req.body.fileType, req.body.fileName, utils.chToPy(req.body.comicName), req.body.uuid],
+            fileData = _ref6[0],
+            fileSize = _ref6[1],
+            fileType = _ref6[2],
+            fileName = _ref6[3],
+            comicName = _ref6[4],
+            uuid = _ref6[5];
+
+        var sendDatas = {};
+        var base64Data = void 0;
+        if (fileType === 'image/*') {
+            base64Data = fileData.replace(/^data:image\/\w+;base64,/, "");
+        } else {
+            base64Data = fileData.replace(/^data:audio\/\w+;base64,/, "");
+        }
+        var dataBuffer = new Buffer(base64Data, 'base64');
+        var filePath = 'G:/Pxtar/LocalGit/';
+        var newPath = filePath + uuid + '/' + comicName;
+        if (utils.newDir(newPath, 'sourceFiles')) {
+            if (utils.newFile(newPath + '/sourceFiles', fileName, dataBuffer)) {
+                if (fileType === 'image/*') {
+                    sendDatas.imgW = images(dataBuffer).width();
+                    sendDatas.imgH = images(dataBuffer).height();
+                    sendDatas.url = uuid + '/' + comicName + '/sourceFiles/' + fileName;
+                    sendDatas.status = true;
+                } else {
+                    sendDatas.url = uuid + '/' + comicName + '/sourceFiles/' + fileName;
+                    sendDatas.status = true;
+                }
+            } else {
+                sendDatas.status = false;
+            }
+        }
+        res.send(sendDatas);
+    });
+
     //about页面
     app.get('/about', function (req, res) {
         res.type('html');
@@ -620,3 +660,4 @@ var serverConfig = function serverConfig(app, express) {
 };
 
 module.exports = serverConfig;
+//# sourceMappingURL=server.js.map
