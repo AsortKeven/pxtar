@@ -165,8 +165,8 @@ i{
 .xk-edit-left-bottom-nav{
     padding: 5px;
 }
-.xk-edit-left-bottom-nav:nth-child(2){
-    margin-left: 150px;
+.xk-edit-left-bottom-nav:nth-child(3){
+    margin-left: 90px;
 }
 
 .xk-edit-left-bottom-body p {
@@ -565,6 +565,12 @@ input[type=range]:focus {
     border-bottom: none;
 }
 
+/*弹窗*/
+/*标题*/
+.xk-alert-title{
+    text-align: center;
+}
+
 /*右键菜单样式*/
 .xk-right-menu-container{
     position: absolute;
@@ -585,4 +591,37 @@ input[type=range]:focus {
 .xk-right-menu p:hover{
     background-color: darkgray;
     color: white;
+}
+
+/*新增背景音乐样式*/
+.xk-bgmDiv{
+    text-align: center;
+    width:400px;
+    height:200px;
+    margin:0 auto;
+}
+/*图片样式*/
+.xk-bgm-img{
+    width: 150px;
+    height: 150px;
+    cursor: pointer;
+}
+/*上传DIV 选择DIV 参数DIV*/
+.xk-addDiv, .xk-selectDiv, .xk-detailDiv{
+    width: 400px;
+    height: 200px;
+    margin: 0 auto;
+    text-align: center;
+    display: none;
+}
+
+/*返回按钮*/
+.xk-insertbgm-back{
+    cursor: pointer;
+}
+.xk-bgm-list{
+    overflow-y: auto;
+}
+.xk-bgm-list li{
+    cursor: pointer;
 }

@@ -680,6 +680,35 @@ const serverConfig = (app, express) => {
         res.send(sendDatas);
     });
 
+    //上传bgm
+    app.post('/newBgm',upload.array(),(req,res)=>{
+        var [
+            fileName,
+            fileData,
+            fileType,
+            uuid,
+            comicName
+        ] = [
+            req.body.fileName,
+            req.body.fileData,
+            req.body.fileType,
+            req.body.uuid,
+            utils.chToPy(req.body.comicName),
+        ];
+        let sendDatas ={};
+        let base64Data  = fileData.replace(/^data:audio\/\w+;base64,/, "");
+        let dataBuffer = new Buffer(base64Data, 'base64');
+        let filePath = 'G:/Pxtar/LocalGit/';
+        let newPath = filePath + uuid + '/' + comicName;
+            if (utils.newFile(newPath + '/sourceFiles', fileName, dataBuffer)) {
+                    sendDatas.url = uuid+'/'+comicName+'/sourceFiles/'+fileName;
+                    sendDatas.status = true;
+            }else {
+                sendDatas.status = false;
+            }
+        res.send(sendDatas);
+    });
+
     //about页面
     app.get('/about', (req, res) => {
         res.type('html');
