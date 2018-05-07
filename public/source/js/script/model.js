@@ -1541,11 +1541,11 @@ var _Model = {
     history: [],
     chufaBody: [
         {
-            text: '图层出现时',
+            text: 'page出现时',
             value: 0
         },
         {
-            text: 'page出现时',
+            text: '图层出现时',
             value: 1
         },
         {
@@ -1557,52 +1557,52 @@ var _Model = {
             value: 3
         }
     ],
-    speedBody: [
+    speedBody: [//当前page高度的百分比
         {
             text: '很慢',
-            value: 1
+            value: 't0'//100
         },
         {
             text: '慢',
-            value: 0.8
+            value: 't1'//80
         },
         {
             text: '普通',
-            value: 0.6
+            value: 't2'//60
         },
         {
             text: '快',
-            value: 0.4
+            value: 't3'//40
         },
         {
             text: '很快',
-            value: 0.2
+            value: 't4'//20
         }
     ],
-    delayBody: [
+    delayBody: [//当前屏幕的高度延迟
         {
             text: '无',
             value: 0
         },
         {
             text: '很少',
-            value: 0.1
+            value: 0.05
         },
         {
             text: '少',
-            value: 0.2
+            value: 0.1
         },
         {
             text: '普通',
-            value: 0.4
+            value: 0.2
         },
         {
             text: '多',
-            value: 0.6
+            value: 0.35
         },
         {
             text: '很多',
-            value: 0.8
+            value: 0.6
         }
     ],
     timesBody: [

@@ -146,7 +146,10 @@ i{
 .xk-edit-left-bottom {
     height: 60%;
 }
-
+.xk-edit-left-tab{
+    float: left;
+    width: 70px;
+}
 
 .xk-edit-left-bottom-title{
     height: 45px;
@@ -180,6 +183,17 @@ i{
     padding: 5px;
     margin-top: 10px;
 }
+.xk-edit-left-bottom .xk-edit-left-body-box input[type=range]{
+    width:100%;
+    display: block;
+}
+.xk-edit-left-bottom .xk-edit-left-body-box li{
+    padding: 5px 0;
+}
+/*.xk-edit-left-bottom .xk-edit-left-body-box input[type=range]::-webkit-slider-runnable-track{*/
+    /*!*background: cornflowerblue;*!*/
+    /*background: -webkit-linear-gradient(#61bd12, #61bd12) no-repeat, #ddd;*/
+/*}*/
 
 progress{
     width: 230px;
@@ -191,7 +205,10 @@ progress{
     font-size: 12px;
 }
 .xk-edit-left-bottom-body  .xk-edit-dis,.xk-edit-left-body-box li p{
-    display: none;
+    /*display: none;*/
+    float: left;
+    line-height: 20px;
+    margin-bottom: 5px;
  }
 
 .xk-edit-left-bottom .xk-edit-left-body-box input[type=txt]{
@@ -473,6 +490,7 @@ input[type=range] {
     -webkit-appearance: none;
     width: 100px;
     border-radius: 10px;
+    background: #F7F7F7;
 }
 
 input[type=range]::-webkit-slider-thumb {
@@ -484,12 +502,6 @@ input[type=range]::-webkit-slider-thumb {
     border-radius: 50%;
     border: solid 0.125em rgba(205, 224, 230, 0.5);
     box-shadow: 0 .125em .125em #3b4547;
-}
-
-input[type=range]::-webkit-slider-runnable-track {
-    height: 5px;
-    border-radius: 10px;
-    background: #f7f7f7;
 }
 
 input[type=range]:focus {
