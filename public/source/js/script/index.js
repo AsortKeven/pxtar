@@ -903,7 +903,7 @@ require(['config'], function () {
                                     }
                                     ;
                                     break;
-                                case 'xk-edit-anitab':
+                               /* case 'xk-edit-anitab':
                                     var effect_tab = that.effectPanelBox.getElementsByClassName('xk-edit-left-bottom-body')[0];
                                     var layer_tab_li = that.layerPanelBox.getElementsByTagName('li');
                                     for (var i = 0; i < layer_tab_li.length; i++) {
@@ -911,7 +911,7 @@ require(['config'], function () {
                                             aniclick.onfor(that.effectani.getElementsByTagName('span'), effect_tab);
                                         }
                                     }
-                                    break;
+                                    break;*/
                                 case 'xk-edit-sub-panel':
                                     // 组件层
                                     // console.log(e.currentTarget.id,element,indexUl);
@@ -2261,7 +2261,6 @@ require(['config'], function () {
                                     aniclick.addLi(obj_201, effect_tab)
                                 }
                             }
-                            ;
                             break;
                         case 202:
                             console.log(id, _Model.config[id]);
@@ -2277,7 +2276,6 @@ require(['config'], function () {
                                     aniclick.addLi(obj_202, effect_tab)
                                 }
                             }
-                            ;
                             break;
                         case 203:
                             console.log(id, _Model.config[id]);
@@ -2292,7 +2290,6 @@ require(['config'], function () {
                                     aniclick.addLi(obj_203, effect_tab)
                                 }
                             }
-                            ;
                             break;
                         case 204:
                             console.log(id, _Model.config[id]);
