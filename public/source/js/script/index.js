@@ -885,17 +885,23 @@ require(['config'], function () {
                             switch (eleId) {
                                 case 'xk-edit-effect-panel':
                                     // 效果层
-                                    console.log(e.currentTarget.id, element);
+                                    //  console.log(e.currentTarget.id, element);
                                     var target = element;
-                                    if (target.className == 'xk-edit-left-tab hand') {
-                                        target.onclick = function () {
-                                            var ani = aniclick.siblings(target)[0];
-                                            aniclick.double_click(ani);
-                                        }
+                                    if (target.getAttribute('type') === 'range') {//组件滑动速度模块
+                                        var demo_obj = target.parentNode.parentNode.parentNode.previousSibling;
+                                        aniclick.Rangesider(target, demo_obj)
+                                    } else {
+                                        dropLayer(selectUl, selectLi, that.eff_select, function () {
+                                            // console.log('xk-edit-effect-panel');
+                                        });
                                     }
-                                    dropLayer(selectUl, selectLi, that.eff_select, function () {
-                                        console.log('xk-edit-effect-panel');
-                                    });
+                                    if (target.title) {
+                                        var obj1 = target.parentNode.parentNode.parentNode.parentNode.previousSibling;
+                                        var obj2;
+                                        target.parentNode.parentNode.previousSibling != null ? obj2 = target.parentNode.parentNode.previousSibling.childNodes[1].firstChild : obj2 = null;
+                                        aniclick.Choice(target, obj1, obj2);
+                                    }
+                                    ;
                                     break;
                                 case 'xk-edit-anitab':
                                     var effect_tab = that.effectPanelBox.getElementsByClassName('xk-edit-left-bottom-body')[0];
@@ -3292,7 +3298,7 @@ require(['config'], function () {
                         })(i)
                     }
                 },
-                addLi:function (obj,obj2) {//添加动效具体模块
+                addLi: function (obj, obj2) {//添加动效具体模块
                     var li = document.createElement('li');
                     var elm2 = obj2,
                         elm = obj;
@@ -3306,7 +3312,8 @@ require(['config'], function () {
                         var elm2_attr = [];
                         for (var j = 0; j < elm2_child.length; j++) {
                             elm2_attr.push(elm2_child[j].getAttribute('name'));
-                        };
+                        }
+                        ;
                         if (elm2_attr.indexOf(elm.name) == -1) {
                             li.setAttribute('name', elm.name);
                             li.innerHTML = str;
@@ -3340,104 +3347,121 @@ require(['config'], function () {
                         return currentStyle.getPropertyValue(csspropertyNS);
                     }
                 },
-                Rangesider:function (obj,obj1) {
-                    var range=obj;//滑块对象
-                    var pross=obj1;//滑块关联对象
-                    range.addEventListener('input',function () {
-                        range.previousSibling.firstChild.value='自定义';
-                        range.parentNode.nextSibling.lastChild.firstChild.value='无';
-                        range.setAttribute('value',this.value);
-                        pross.setAttribute('value',this.value);
-                        range.style.background='linear-gradient(to right, #059CFA, white ' + this.value + '%, white)';
-                    },false);
+                Rangesider: function (obj, obj1) {
+                    var range = obj;//滑块对象
+                    var pross = obj1;//滑块关联对象
+                    range.addEventListener('input', function () {
+                        range.previousSibling.firstChild.value = '自定义';
+                        range.parentNode.nextSibling.lastChild.firstChild.value = '无';
+                        range.setAttribute('value', this.value);
+                        pross.setAttribute('value', this.value);
+                        range.style.background = 'linear-gradient(to right, #059CFA, white ' + this.value + '%, white)';
+                    }, false);
 
                 },
-                Choice:function (obj,objs,obj3) {//具体动效交互
-                    var obj_title=obj.title||null;
-                    var obj2=objs||null;
-                    switch (obj_title){
+                Choice: function (obj, objs, obj3) {//具体动效交互
+                    var obj_title = obj.title || null;
+                    var obj2 = objs || null;
+                    switch (obj_title) {
                         case '触发点':
                             console.log(obj_title)
-                            XkTool.addEvent(obj,'change',function (e) {
-                                if (obj.value==='上个动效结束后'){
-                                    var ele=e.target||e.srcElement;
-                                    var ele_val=ele.parentNode.parentNode.parentNode.parentNode.previousSibling;
-                                    var next_obj=ele.parentNode.parentNode.parentNode.parentNode.parentNode.previousSibling;
-                                    var previous_obj=next_obj.childNodes[1];
-                                    var pre_val=previous_obj!=null?previous_obj.value:null;
-                                    if (pre_val+ele_val.value>=100){
-                                        console.log(previous_obj.value+ele_val.value)
+                            XkTool.addEvent(obj, 'change', function (e) {
+                                if (obj.value === '上个动效结束后') {
+                                    var ele = e.target || e.srcElement;
+                                    var ele_val = ele.parentNode.parentNode.parentNode.parentNode.previousSibling;
+                                    var next_obj = ele.parentNode.parentNode.parentNode.parentNode.parentNode.previousSibling;
+                                    var previous_obj = next_obj.childNodes[1];
+                                    var pre_val = previous_obj != null ? previous_obj.value : null;
+                                    if (pre_val + ele_val.value >= 100) {
+                                        console.log(previous_obj.value + ele_val.value)
                                     }
                                 }
                             })
                             break;
                         case '速度':
-                            var relevant_obj={};
-                            relevant_obj.delay=obj.parentNode.parentNode.nextSibling.lastChild.firstChild;
-                            relevant_obj.speed=obj.parentNode.nextSibling;
-                            relevant_obj.delay.value='无';
-                            obj.addEventListener('change',function () {
-                                relevant_obj.speed.value=0;
-                                relevant_obj.speed.setAttribute('value',0);
-                                relevant_obj.speed.style.background='linear-gradient(to right, #059CFA, white 0%, white)';
-                                if (obj.value==='很慢'){
-                                    obj2.setAttribute('value',100);
-                                };
-                                if (obj.value==='慢'){
-                                    obj2.setAttribute('value',80);
-                                };
-                                if (obj.value==='普通'){
-                                    obj2.setAttribute('value',60);
-                                };
-                                if (obj.value==='快'){
-                                    obj2.setAttribute('value',40);
-                                };
-                                if (obj.value==='很快'){
-                                    obj2.setAttribute('value',20);
-                                };
-                            },false);
+                            var relevant_obj = {};
+                            relevant_obj.delay = obj.parentNode.parentNode.nextSibling.lastChild.firstChild;
+                            relevant_obj.speed = obj.parentNode.nextSibling;
+                            relevant_obj.delay.value = '无';
+                            obj.addEventListener('change', function () {
+                                relevant_obj.speed.value = 0;
+                                relevant_obj.speed.setAttribute('value', 0);
+                                relevant_obj.speed.style.background = 'linear-gradient(to right, #059CFA, white 0%, white)';
+                                if (obj.value === '很慢') {
+                                    obj2.setAttribute('value', 100);
+                                }
+                                ;
+                                if (obj.value === '慢') {
+                                    obj2.setAttribute('value', 80);
+                                }
+                                ;
+                                if (obj.value === '普通') {
+                                    obj2.setAttribute('value', 60);
+                                }
+                                ;
+                                if (obj.value === '快') {
+                                    obj2.setAttribute('value', 40);
+                                }
+                                ;
+                                if (obj.value === '很快') {
+                                    obj2.setAttribute('value', 20);
+                                }
+                                ;
+                            }, false);
                             break;
                         case '延迟':
-                            var old_val=obj3.value;
-                            if (old_val==='很慢'){
-                                old_val=100;
-                            };
-                            if (old_val==='慢'){
-                                old_val=80;
-                            };
-                            if (old_val==='普通'){
-                                old_val=60;
-                            };
-                            if (old_val==='快'){
-                                old_val=40;
-                            };
-                            if (old_val==='很快'){
-                                old_val=20;
-                            };
-                            if (old_val==='自定义'){
-                                old_val=obj3.parentNode.nextSibling;
-                                old_val=Number(old_val.value);
-                            };
-                            obj.addEventListener('change',function () {
-                                if (obj.value==='无'){
-                                    obj2.setAttribute('value',old_val);
-                                };
-                                if (obj.value==='很少'){
-                                    obj2.setAttribute('value',old_val+5);
-                                };
-                                if (obj.value==='少'){
-                                    obj2.setAttribute('value',old_val+10);
-                                };
-                                if (obj.value==='普通'){
-                                    obj2.setAttribute('value',old_val+20);
-                                };
-                                if (obj.value==='很多'){
-                                    obj2.setAttribute('value',old_val+60);
-                                };
-                                if (obj.value==='多'){
-                                    obj2.setAttribute('value',old_val+40);
-                                };
-                            },false);
+                            var old_val = obj3.value;
+                            if (old_val === '很慢') {
+                                old_val = 100;
+                            }
+                            ;
+                            if (old_val === '慢') {
+                                old_val = 80;
+                            }
+                            ;
+                            if (old_val === '普通') {
+                                old_val = 60;
+                            }
+                            ;
+                            if (old_val === '快') {
+                                old_val = 40;
+                            }
+                            ;
+                            if (old_val === '很快') {
+                                old_val = 20;
+                            }
+                            ;
+                            if (old_val === '自定义') {
+                                old_val = obj3.parentNode.nextSibling;
+                                old_val = Number(old_val.value);
+                            }
+                            ;
+                            obj.addEventListener('change', function () {
+                                if (obj.value === '无') {
+                                    obj2.setAttribute('value', old_val);
+                                }
+                                ;
+                                if (obj.value === '很少') {
+                                    obj2.setAttribute('value', old_val + 5);
+                                }
+                                ;
+                                if (obj.value === '少') {
+                                    obj2.setAttribute('value', old_val + 10);
+                                }
+                                ;
+                                if (obj.value === '普通') {
+                                    obj2.setAttribute('value', old_val + 20);
+                                }
+                                ;
+                                if (obj.value === '很多') {
+                                    obj2.setAttribute('value', old_val + 60);
+                                }
+                                ;
+                                if (obj.value === '多') {
+                                    obj2.setAttribute('value', old_val + 40);
+                                }
+                                ;
+                            }, false);
                             break;
                     }
                 },
