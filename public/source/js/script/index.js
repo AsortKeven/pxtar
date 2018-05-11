@@ -2214,6 +2214,8 @@ require(['config'], function () {
                 },
                 setType: function (id, ele) {
                     var that = this;
+                    var effect_tab = that.effectPanelBox.getElementsByClassName('xk-edit-left-bottom-body')[0];
+                    var layer_tab_li = that.layerPanelBox.getElementsByTagName('li');
                     switch (id) {
                         case 101:
                             console.log(id, _Model.config[id]);
