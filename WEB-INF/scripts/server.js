@@ -7,5 +7,4 @@ var express = require('express');
 var serverConfig = require('./serverConfig');
 var app = express();
 
-
 serverConfig(app,express);
